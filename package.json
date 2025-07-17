@@ -13,7 +13,9 @@
     "prettier": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,css,md}\"",
     "prepare": "husky install",
     "test": "jest",
-    "cypress:open": "cypress open"
+    "cypress:open": "cypress open",
+    "stylelint": "stylelint '**/*.module.css' --fix",
+    "stylelint:check": "stylelint '**/*.module.css'"
   },
   "dependencies": {
     "@laynezh/vite-plugin-lib-assets": "^1.1.0",
@@ -72,6 +74,9 @@
     "prettier": "^3.6.2",
     "storybook": "^8.6.14",
     "storybook-addon-pseudo-states": "^4.0.4",
+    "stylelint": "^14.16.1",
+    "stylelint-config-prettier": "^8.0.2",
+    "stylelint-config-standard": "^25.0.0",
     "ts-jest": "^29.4.0",
     "ts-node": "^10.9.2",
     "typescript": "~5.7.2",
@@ -93,5 +98,14 @@
     "src/**/*.{ts,tsx}": [
       "bash -c 'tsc --noEmit --project tsconfig.json'"
     ]
+  },
+  "stylelint": {
+    "extends": [
+      "stylelint-config-standard",
+      "stylelint-config-prettier"
+    ],
+    "rules": {
+      "selector-class-pattern": null
+    }
   }
 }
