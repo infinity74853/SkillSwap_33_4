@@ -1,10 +1,13 @@
-import { BrowserRouter, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './styles/index.css';
+import TextTestComponent from '@/components/test-component/TestComponent';
 
 function App() {
   return (
     <BrowserRouter>
-      <Routes></Routes>
+      <Routes>
+        <Route path="/" element={<TextTestComponent />} />
+      </Routes>
     </BrowserRouter>
   );
 }

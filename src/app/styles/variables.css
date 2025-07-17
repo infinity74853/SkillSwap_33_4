@@ -1,3 +1,8 @@
+/* Основные переменные для светлой темы */
 :root {
-  /* TODO */
+  --bg-color: #fff;
+  --text-color: #000;
+  --link-color: #1a73e8;
+  --button-bg: #f0f0f0;
+  --button-text: #000;
 }
