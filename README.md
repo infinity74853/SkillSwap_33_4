@@ -7,16 +7,18 @@
 
 ## 🚀 Основные команды
 
-| Назначение            | Скрипт                 |
-| --------------------- | ---------------------- |
-| Запуск dev-сервера    | `npm run dev`          |
-| Сборка для production | `npm run build`        |
-| Запуск Storybook      | `npm run storybook`    |
-| Запуск Prettier       | `npm run prettier`     |
-| Линтинг               | `npm run lint`         |
-| Unit-тесты (Jest)     | `npm run test`         |
-| Cypress (UI E2E)      | `npm run cypress:open` |
-| Установка Git-хуков   | `npm run prepare`      |
+| Назначение            | Скрипт                    |
+| --------------------- | ------------------------- |
+| Запуск dev-сервера    | `npm run dev`             |
+| Сборка для production | `npm run build`           |
+| Запуск Storybook      | `npm run storybook`       |
+| Запуск Prettier       | `npm run prettier`        |
+| Линтинг               | `npm run lint`            |
+| Unit-тесты (Jest)     | `npm run test`            |
+| Cypress (UI E2E)      | `npm run cypress:open`    |
+| Установка Git-хуков   | `npm run prepare`         |
+| Проверка стилей       | `npm run stylelint:check` |
+| Автоисправление стилей| `npm run stylelint`       |
 
 ---
 
