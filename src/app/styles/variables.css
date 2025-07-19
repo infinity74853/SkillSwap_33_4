@@ -1,3 +1,17 @@
 :root {
-  /* TODO */
+  /* Layout */
+  --skill-component-border-radius: 20px;
+  --skill-component-padding: 8px 12px;
+
+  /* Typography */
+  --skill-component-font-size: 12px;
+  --skill-component-font-weight: 400;
+
+  /* Color schema */
+  --skill-component-bg-business: #eee7f7;
+  --skill-component-bg-creativity: #f7e7f2;
+  --skill-component-bg-languages: #ebe5c5;
+  --skill-component-bg-development: #e7f2f6;
+  --skill-component-bg-home: #f7ebe5;
+  --skill-component-bg-health: #e9f7e7;
 }
