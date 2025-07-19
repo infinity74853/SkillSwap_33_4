@@ -1,6 +1,12 @@
 import React from 'react';
 import styles from './button.module.css';
-import { TButtonProps } from '@/types/types';
+
+export type TButtonProps = {
+  children: React.ReactNode;
+  onClick?: () => void;
+  disabled?: boolean;
+  type?: 'primary' | 'secondary' | 'tertiary';
+};
 
 export const Button: React.FC<TButtonProps> = ({
   children,
@@ -14,9 +20,7 @@ export const Button: React.FC<TButtonProps> = ({
     e.currentTarget.blur();
   };
 
-  const buttonClasses = [styles.button, styles[type], disabled ? styles.disabled : '']
-    .filter(Boolean)
-    .join(' ');
+  const buttonClasses = `${styles.button} ${styles[type]} ${disabled ? styles.disabled : ''}`;
 
   return (
     <button
