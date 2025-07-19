@@ -18,11 +18,21 @@
   --button-secondary-content-pressed-color: #253017;
   --button-secondary-content-disabled-color: #9ca197;
   --button-tertiary-content-color: #253017;
-
-  /* Layout */
-  --button-border-radius: 12px;
+  --skill-component-bg-business: #eee7f7;
+  --skill-component-bg-creativity: #f7e7f2;
+  --skill-component-bg-languages: #ebe5c5;
+  --skill-component-bg-development: #e7f2f6;
+  --skill-component-bg-home: #f7ebe5;
+  --skill-component-bg-health: #e9f7e7;
 
   /* Font */
   --button-font-size: 16px;
   --button-font-weight: 400;
+  --skill-component-font-size: 12px;
+  --skill-component-font-weight: 400;
+
+  /* Layout */
+  --skill-component-border-radius: 20px;
+  --skill-component-padding: 8px 12px;
+  --button-border-radius: 12px;
 }
