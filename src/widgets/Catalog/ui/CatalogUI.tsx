@@ -4,7 +4,7 @@ import styles from './catalog.module.css';
 import { Profile } from '@/types/fakeTypes';
 
 //Временная структура категорий в каталоге, пока не будет API
-type CatalogUIProps = DefaultModeProps | CategoryModeProps;
+export type CatalogUIProps = DefaultModeProps | CategoryModeProps;
 
 // Из чего состоит категория
 interface CategorySection {

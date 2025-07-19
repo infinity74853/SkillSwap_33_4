@@ -1,7 +1,7 @@
 /* ВРЕМЕННОЕ РЕШЕНИЕ */
 
 import React, { useState } from 'react';
-import CatalogUI from './ui/CatalogUI';
+import CatalogUI, { CatalogUIProps } from './ui/CatalogUI';
 import { Profile, ProfileCategory } from '@/types/fakeTypes';
 
 // DELETE: Моковые данные для примера
@@ -212,7 +212,7 @@ const Catalog: React.FC<{ isAuthenticated: boolean }> = ({ isAuthenticated }) =>
   // Используем реальный UI компонент
   // Может ругаться на то, что пропсов будет передано меньше, но это работает
   // Исправится, когда появится реальная логика
-  return <CatalogUI {...getUIProps()} />;
+  return <CatalogUI {...(getUIProps() as CatalogUIProps)} />;
 };
 
 export default Catalog;
