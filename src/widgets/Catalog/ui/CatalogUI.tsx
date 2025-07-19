@@ -1,10 +1,10 @@
 import React from 'react';
-import CatalogCategory from '../../CatalogCategory/fake/CatalogCategory';
+import CatalogCategory from '../../catalogCategory/fake/catalogCategory';
 import styles from './catalog.module.css';
 import { Profile } from '@/types/fakeTypes';
 
 //Временная структура категорий в каталоге, пока не будет API
-export type CatalogUIProps = DefaultModeProps | CategoryModeProps;
+type CatalogUIProps = DefaultModeProps | CategoryModeProps;
 
 // Из чего состоит категория
 interface CategorySection {
@@ -17,7 +17,7 @@ interface CategorySection {
 // Режим по умолчанию
 interface DefaultModeProps {
   mode: 'default';
-  sections: [CategorySection, CategorySection, CategorySection];
+  sections: CategorySection[];
 }
 
 // Режим категории

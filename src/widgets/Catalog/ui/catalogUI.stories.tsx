@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import CatalogUI from './CatalogUI';
+import CatalogUI from './catalogUI';
 import { Profile, ProfileCategory } from '@/types/fakeTypes';
 import { fn } from '@storybook/test';
 
