@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Skill } from './skill';
+import { Skill } from './skill.tsx';
 
 const meta: Meta<typeof Skill> = {
   title: 'Components/Skill',
