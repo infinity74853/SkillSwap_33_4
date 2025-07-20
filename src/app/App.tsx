@@ -1,6 +1,6 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './styles/index.css';
-import TextTestComponent from '@/components/test-component/TestComponent';
+import TextTestComponent from '@/widgets/TestComponent/TestComponent';
 
 function App() {
   return (

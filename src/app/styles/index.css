@@ -62,12 +62,3 @@ caption {
   font-size: 12px;
   line-height: 16px;
 }
-
-button {
-  background-color: var(--button-bg);
-  color: var(--button-text);
-  border: none;
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
-}
