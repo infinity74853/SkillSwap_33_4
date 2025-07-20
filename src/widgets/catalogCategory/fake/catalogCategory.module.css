@@ -1,0 +1,92 @@
+/* ВРЕМЕННОЕ РЕШЕНИЕ */
+
+/* Фейковые стили для каталога категорий, должно быть переделано (можно использовать ховеры) */
+.category {
+  margin-bottom: 40px;
+}
+
+.categoryHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.showAllButton {
+  background: none;
+  border: none;
+  color: #2a5885;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 5px 10px;
+}
+
+.showAllButton:hover {
+  text-decoration: underline;
+}
+
+.profilesGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(324px, 1fr));
+  gap: 20px;
+}
+
+.profileCard {
+  height: 368px;
+  border: 1px solid #e7e8ec;
+  border-radius: 8px;
+  padding: 20px;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.profileCard:hover {
+  transform: translateY(-3px);
+}
+
+.avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  margin: 0 auto 15px;
+  overflow: hidden;
+  background-color: #f5f5f5;
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatarPlaceholder {
+  width: 100%;
+  height: 100%;
+  background-color: #e1e3e6;
+}
+
+.profileName {
+  text-align: center;
+  font-size: 18px;
+}
+
+.skills {
+  margin-bottom: 15px;
+}
+
+.skillSection {
+  margin-bottom: 10px;
+}
+
+.skillSection h4 {
+  font-size: 14px;
+  color: #656565;
+}
+
+.skillSection p {
+  margin: 0;
+  font-size: 15px;
+}
