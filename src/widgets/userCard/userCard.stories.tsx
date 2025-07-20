@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { UserCard } from './userCard.tsx';
 import localImage from '@/app/assets/static/photo_2025-07-19_19-14-41.jpg';
-import { TUserInfoProps } from '@/types/types.ts';
 
 const meta: Meta<typeof UserCard> = {
   title: 'Components/UserCard',
