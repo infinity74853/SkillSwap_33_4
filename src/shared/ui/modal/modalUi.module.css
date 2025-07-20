@@ -1,0 +1,45 @@
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  margin: auto;
+  padding: 80px 60px;
+  background-color: #fff;
+  border-radius: 12px;
+  inline-size: 436px;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 88px;
+  gap: 10px;
+}
+
+.title {
+  margin: 0;
+}
+
+.description {
+  margin: 0;
+}
+
+.img {
+  display: block;
+  margin: auto;
+  min-width: 100px;
+  min-height: 100px;
+  padding-block-end: 52px;
+}
+
+.content {
+  overflow-y: auto;
+}
+
+.buttonContainer {
+  margin-top: 32px;
+  text-align: center;
+}
