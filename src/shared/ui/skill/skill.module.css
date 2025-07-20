@@ -39,3 +39,7 @@
 .default {
   background-color: #fff;
 }
+
+.more {
+  background-color: var(--skill-component-bg-more);
+}
