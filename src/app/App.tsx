@@ -9,7 +9,8 @@ function App() {
       <Routes>
         <Route path="/" element={<TextTestComponent />} />
       </Routes>
-      {/* Отображаем каталог в обход роутов, если нужно авторизоваться - пишем isAuthenticated={true} */}
+      {/* Отображаем каталог в обход роутов,
+       если нужно авторизоваться - пишем isAuthenticated={true} */}
       <Catalog isAuthenticated={false} />
     </BrowserRouter>
   );
