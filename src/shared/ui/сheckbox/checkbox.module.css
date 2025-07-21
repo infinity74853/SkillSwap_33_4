@@ -1,0 +1,40 @@
+.checkboxContainer {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.hiddenCheckbox {
+  position: absolute;
+  opacity: 0;
+  height: 0;
+  width: 0;
+}
+
+.customCheckbox {
+  display: flex;
+  align-items: center;
+  position: relative;
+  padding-inline-start: 24px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkmark {
+  position: absolute;
+  background-color: var(--text, #000);
+  mask-image: url(../../../app/assets/static/images/icons/checkbox-empty.svg);
+  left: 0;
+  height: 24px;
+  width: 24px;
+  transition: all 0.2s;
+}
+
+.hiddenCheckbox:checked + .customCheckbox .checkmark {
+  background-color: var(--accent, #abd27a);
+  mask-image: url(../../../app/assets/static/images/icons/checkbox-done.svg);
+}
+
+.labelText {
+  margin-inline-start: 8px;
+}

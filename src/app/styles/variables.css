@@ -1,32 +1,24 @@
 :root {
   /* Color Scheme */
-  --button-primary-color: #abd27a;
-  --button-primary-hover-color: #deebc5;
-  --button-primary-pressed-color: #508826;
-  --button-disabled: #e4e8df;
-  --button-secondary-color: #fff;
-  --button-secondary-border-color: #abd27a;
-  --button-secondary-hover-border-color: #deebc5;
-  --button-secondary-pressed-border-color: #508826;
-  --button-secondary-disabled-border-color: #e4e8df;
-  --button-tertiary-color: #fff;
-  --button-primary-content-color: #253017;
-  --button-primary-content-pressed-color: #fff;
-  --button-primary-content-disabled-color: #69735d;
-  --button-secondary-content-color: #253017;
-  --button-secondary-content-hover-color: #69735d;
-  --button-secondary-content-pressed-color: #253017;
-  --button-secondary-content-disabled-color: #9ca197;
-  --button-tertiary-content-color: #253017;
-  --skill-component-bg-business: #eee7f7;
-  --skill-component-bg-creativity: #f7e7f2;
-  --skill-component-bg-languages: #ebe5c5;
-  --skill-component-bg-development: #e7f2f6;
-  --skill-component-bg-home: #f7ebe5;
-  --skill-component-bg-health: #e9f7e7;
-  --bg-color: #fff;
-  --text-color: #000;
-  --link-color: #1a73e8;
+  --text: #253017;
+  --caption: #69735d;
+  --disabledText: #9ca197;
+  --toggle: #b2b9a9;
+  --disabled: #e4e8df;
+  --cardInput: #ffffff;
+  --textLink-buttonPressed: #508826;
+  --accent: #abd27a;
+  --buttonHover: #deebc5;
+  --background: #f9faf7;
+  --alarm: #e0796e;
+  --error: #bf3920;
+  --tagBusiness: #eee7f7;
+  --tagCreativityArt: #f7e7f2;
+  --tagLanguages: #ebe5c5;
+  --tagEducationDevelopment: #e7f2f6;
+  --tagHomeComfort: #f7ebe5;
+  --tagHealthLifestyle: #e9f7e7;
+  --tagPlus: #e8ecf7;
 
   /* Font */
   --button-font-size: 16px;
