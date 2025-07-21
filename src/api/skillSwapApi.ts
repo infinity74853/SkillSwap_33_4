@@ -1,58 +1,48 @@
-import { TSkill, TUser } from '@/types/types';
+import { Skill } from '@/entities/skill/model/types';
+import { User } from '@/entities/user/model/types';
 
 const URL = import.meta.env.VITE_SKILLSWAP_API_URL;
 
 const checkResponse = <T>(res: Response): Promise<T> =>
   res.ok ? res.json() : res.json().then(err => Promise.reject(err));
 
-type TServerResponse<T> = {
+const assertSuccess = <T>(response: { success: boolean; data: T }, errorText: string) => {
+  if (!response.success) throw new Error(errorText);
+  return response.data;
+};
+
+type ServerResponse<T> = {
   success: boolean;
 } & T;
 
-type TRefreshResponse = TServerResponse<{
-  refreshToken: string;
-  accessToken: string;
+type SkillResponse = ServerResponse<{
+  data: Skill;
 }>;
 
-type TSkillResponse = TServerResponse<{
-  data: TSkill[];
+type UsersResponse = ServerResponse<{
+  data: User[];
 }>;
 
-type TUsersResponse = TServerResponse<{
-  data: TUser[];
+type AuthResponse = ServerResponse<{
+  data: { accessToken: string; refreshToken: string };
 }>;
 
-type TAuthResponse = TServerResponse<{
-  accessToken: string;
-  refreshToken: string;
-}>;
-
-export const getSkillsApi = () => {
+export const getSkillsApi = () =>
   fetch(`${URL}/api/skills`)
-    .then(res => checkResponse<TSkillResponse>(res))
-    .then(data => {
-      if (data?.success) {
-        return data.data;
-      } else return Promise.reject(data);
-    });
-};
+    .then(res => checkResponse<SkillResponse>(res))
+    .then(res => assertSuccess(res, 'Не удалось получить навыки'));
 
-export const getUsersApi = () => {
+export const getUsersApi = () =>
   fetch(`${URL}/api/users/all`)
-    .then(res => checkResponse<TUsersResponse>(res))
-    .then(data => {
-      if (data?.success) {
-        return data.data;
-      } else return Promise.reject(data);
-    });
-};
+    .then(res => checkResponse<UsersResponse>(res))
+    .then(res => assertSuccess(res, 'Не удалось получить данные о пользователях'));
 
-export type TLoginData = {
+export type LoginData = {
   email: string;
   password: string;
 };
 
-export const loginUserApi = (data: TLoginData) => {
+export const loginUserApi = (data: LoginData) =>
   fetch(`${URL}/api/login`, {
     method: 'POST',
     headers: {
@@ -60,10 +50,5 @@ export const loginUserApi = (data: TLoginData) => {
     },
     body: JSON.stringify(data),
   })
-    .then(res => checkResponse<TAuthResponse>(res))
-    .then(data => {
-      if (data?.success) {
-        return data;
-      } else return Promise.reject(data);
-    });
-};
+    .then(res => checkResponse<AuthResponse>(res))
+    .then(res => assertSuccess(res, 'Не удалось залогиниться'));
