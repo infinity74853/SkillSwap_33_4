@@ -9,9 +9,9 @@ export type GenderOption = {
 };
 
 export type City = {
-  [key: string]: string[];
+  readonly [key: string]: readonly string[];
 };
 
 export type SkillsCategories = {
-  [key: string]: string[];
+  readonly [key: string]: readonly string[];
 };
