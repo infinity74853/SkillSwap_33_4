@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import CatalogCategory from '../../catalogCategory/fake/catalogCategory';
 import styles from './catalog.module.css';
 import { Profile } from '@/types/fakeTypes';
 
 //Временная структура категорий в каталоге, пока не будет API
-type CatalogUIProps = DefaultModeProps | CategoryModeProps;
+type CatalogUIProps = {
+  sections?: CategorySection[];
+} & (DefaultModeProps | CategoryModeProps);
 
 // Из чего состоит категория
 interface CategorySection {
@@ -39,6 +41,29 @@ interface FilterModeProps {
 
 // Рабочий компонент для каталога
 const CatalogUI: React.FC<CatalogUIProps> = props => {
+  const [loadingStates, setLoadingStates] = useState<{ [key: string]: boolean }>({});
+  const [displayedItemsMap, setDisplayedItemsMap] = useState<{ [key: string]: Profile[] }>({});
+
+  useEffect(() => {
+    if (props.mode === 'default') {
+      const recommendedSection = props.sections.find(section => section.title === 'Рекомендуем');
+      if (recommendedSection) {
+        const getColumnsCount = () => {
+          if (window.innerWidth < 768) return 1;
+          if (window.innerWidth < 1024) return 2;
+          return 3;
+        };
+        const columnsCount = getColumnsCount();
+        const minItemsPerLoad = 20;
+        const itemsNeeded = Math.ceil(minItemsPerLoad / columnsCount) * columnsCount;
+        const initialItems = recommendedSection.profiles.slice(0, itemsNeeded);
+        setDisplayedItemsMap(prev => ({
+          ...prev,
+          Рекомендуем: initialItems,
+        }));
+      }
+    }
+  }, [props.mode, props.sections]);
   {
     /* Если передана категория, то отрисовываем ее */
   }
@@ -60,15 +85,75 @@ const CatalogUI: React.FC<CatalogUIProps> = props => {
   }
   return (
     <div className={styles.catalog}>
-      {/* Используем фейковый компонент категории */}
-      {props.sections.map((section, index) => (
-        <CatalogCategory
-          key={index}
-          title={section.title}
-          profiles={section.profiles}
-          onShowAll={section.showAllButton ? section.onShowAll : undefined}
-        />
-      ))}
+      {props.sections?.map(section => {
+        const isRecommended = section.title === 'Рекомендуем';
+        // Добавляем уникальные идентификаторы для элементов
+        const displayedItems = isRecommended
+          ? (displayedItemsMap[section.title] || section.profiles.slice(0, 20)).map(
+              (profile, index) => ({
+                ...profile,
+                id: `${profile.id}-${section.title}-${index}`,
+              }),
+            )
+          : section.profiles.map((profile, index) => ({
+              ...profile,
+              id: `${profile.id}-${section.title}-${index}`,
+            }));
+
+        return (
+          <CatalogCategory
+            key={section.title}
+            title={section.title}
+            profiles={displayedItems}
+            onShowAll={section.showAllButton ? section.onShowAll : undefined}
+            isRecommended={isRecommended}
+            hasMore={isRecommended && displayedItems.length < section.profiles.length}
+            onLoadMore={() => {
+              if (isRecommended) {
+                const currentItems = displayedItemsMap[section.title] || [];
+
+                // Проверяем, есть ли еще карточки для загрузки
+                if (currentItems.length >= section.profiles.length) {
+                  return;
+                }
+
+                setLoadingStates(prev => ({ ...prev, [section.title]: true }));
+                setTimeout(() => {
+                  // Определяем количество колонок в зависимости от ширины экрана
+                  const getColumnsCount = () => {
+                    if (window.innerWidth < 768) return 1;
+                    if (window.innerWidth < 1024) return 2;
+                    return 3;
+                  };
+
+                  // Вычисляем количество элементов для следующей загрузки
+                  const columnsCount = getColumnsCount();
+                  const minItemsPerLoad = 20;
+                  const itemsNeeded = Math.ceil(minItemsPerLoad / columnsCount) * columnsCount;
+
+                  const nextItems = section.profiles.slice(
+                    currentItems.length,
+                    currentItems.length + itemsNeeded,
+                  );
+
+                  // Проверяем, получили ли мы новые элементы
+                  if (nextItems.length === 0) {
+                    setLoadingStates(prev => ({ ...prev, [section.title]: false }));
+                    return;
+                  }
+
+                  setDisplayedItemsMap(prev => ({
+                    ...prev,
+                    [section.title]: [...(prev[section.title] || []), ...nextItems],
+                  }));
+                  setLoadingStates(prev => ({ ...prev, [section.title]: false }));
+                }, 1000);
+              }
+            }}
+            loading={loadingStates[section.title] || false}
+          />
+        );
+      })}
     </div>
   );
 };
