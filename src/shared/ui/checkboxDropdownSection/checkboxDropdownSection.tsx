@@ -10,6 +10,7 @@ interface CheckboxDropdownSectionProps {
   onCategoryChange: (categories: string[]) => void;
   onSubcategoryChange: (subcategories: string[]) => void;
   isSimpleList?: boolean;
+  defaultVisibleItems: number;
 }
 
 export const CheckboxDropdownSection: React.FC<CheckboxDropdownSectionProps> = ({
@@ -20,10 +21,11 @@ export const CheckboxDropdownSection: React.FC<CheckboxDropdownSectionProps> = (
   onCategoryChange,
   onSubcategoryChange,
   isSimpleList = false,
+  defaultVisibleItems,
 }) => {
   const [expanded, setExpanded] = useState(false);
   const categoryKeys = Object.keys(categories);
-  const visibleCategories = expanded ? categoryKeys : categoryKeys.slice(0, 5);
+  const visibleCategories = expanded ? categoryKeys : categoryKeys.slice(0, defaultVisibleItems);
 
   const toggleCategory = (category: string) => {
     onCategoryChange(
@@ -60,26 +62,30 @@ export const CheckboxDropdownSection: React.FC<CheckboxDropdownSectionProps> = (
                 {selectedCategories.includes(category) && (
                   <div className={styles.subcategories}>
                     {categories[category].map(subcategory => (
-                      <CheckboxUI
-                        key={subcategory}
-                        id={`subcategory-${subcategory}`}
-                        name={subcategory}
-                        checked={selectedSubcategories.includes(subcategory)}
-                        onChange={() => toggleSubcategory(subcategory)}
-                        label={subcategory}
-                      />
+                      <div className={styles.simpleContainer}>
+                        <CheckboxUI
+                          key={subcategory}
+                          id={`subcategory-${subcategory}`}
+                          name={subcategory}
+                          checked={selectedSubcategories.includes(subcategory)}
+                          onChange={() => toggleSubcategory(subcategory)}
+                          label={subcategory}
+                        />
+                      </div>
                     ))}
                   </div>
                 )}
               </>
             ) : (
-              <CheckboxUI
-                id={`simple-${category}`}
-                name={category}
-                checked={selectedCategories.includes(category)}
-                onChange={() => toggleCategory(category)}
-                label={category}
-              />
+              <div className={styles.simpleContainer}>
+                <CheckboxUI
+                  id={`simple-${category}`}
+                  name={category}
+                  checked={selectedCategories.includes(category)}
+                  onChange={() => toggleCategory(category)}
+                  label={category}
+                />
+              </div>
             )}
           </div>
         ))}
