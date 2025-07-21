@@ -37,4 +37,5 @@
 
 .labelText {
   margin-inline-start: 8px;
+  color: var(--text, #253017);
 }
