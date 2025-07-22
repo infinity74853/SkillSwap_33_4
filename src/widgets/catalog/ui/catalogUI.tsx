@@ -89,16 +89,8 @@ const CatalogUI: React.FC<CatalogUIProps> = props => {
         const isRecommended = section.title === 'Рекомендуем';
         // Добавляем уникальные идентификаторы для элементов
         const displayedItems = isRecommended
-          ? (displayedItemsMap[section.title] || section.profiles.slice(0, 20)).map(
-              (profile, index) => ({
-                ...profile,
-                id: `${profile.id}-${section.title}-${index}`,
-              }),
-            )
-          : section.profiles.map((profile, index) => ({
-              ...profile,
-              id: `${profile.id}-${section.title}-${index}`,
-            }));
+          ? displayedItemsMap[section.title] || section.profiles.slice(0, 20)
+          : section.profiles;
 
         return (
           <CatalogCategory
