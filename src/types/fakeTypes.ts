@@ -7,7 +7,7 @@ export type ProfileCategory = 'popular' | 'new' | 'ideas' | 'recommended' | 'mat
 
 // Что включает в себя моковый профиль в каталоге
 export interface Profile {
-  id: string | number;
+  id: string;
   name: string;
   avatar?: string;
   canTeach: string;

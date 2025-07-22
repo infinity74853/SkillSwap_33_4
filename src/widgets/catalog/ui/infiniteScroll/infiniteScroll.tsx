@@ -11,7 +11,7 @@ interface InfiniteScrollProps<T> {
   minItems?: number;
 }
 
-export const InfiniteScroll = <T extends { id: string | number }>({
+export const InfiniteScroll = <T extends { id: string }>({
   items,
   renderItem,
   hasMore,
