@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { CheckboxUI } from '../сheckbox/checkbox';
 import styles from './checkboxDropdownSection.module.css';
+import { TOGGLE_TEXTS } from './constants';
 
 interface CheckboxDropdownSectionProps {
   title: string;
@@ -10,7 +11,6 @@ interface CheckboxDropdownSectionProps {
   onCategoryChange: (categories: string[]) => void;
   onSubcategoryChange: (subcategories: string[]) => void;
   isSimpleList?: boolean;
-  defaultVisibleItems: number;
 }
 
 export const CheckboxDropdownSection: React.FC<CheckboxDropdownSectionProps> = ({
@@ -21,11 +21,42 @@ export const CheckboxDropdownSection: React.FC<CheckboxDropdownSectionProps> = (
   onCategoryChange,
   onSubcategoryChange,
   isSimpleList = false,
-  defaultVisibleItems,
 }) => {
   const [expanded, setExpanded] = useState(false);
+  const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
+  const config = TOGGLE_TEXTS[title] || {
+    expand: 'Все категории',
+    collapse: 'Свернуть',
+    defaultVisibleItems: 5,
+  };
+
+  const { expand, collapse, defaultVisibleItems } = config;
   const categoryKeys = Object.keys(categories);
   const visibleCategories = expanded ? categoryKeys : categoryKeys.slice(0, defaultVisibleItems);
+
+  const getDisplayState = (category: string) => {
+    const hasSubcategories = categories[category]?.length > 0;
+    const isCategorySelected = selectedCategories.includes(category);
+
+    // Для простого списка
+    if (isSimpleList) {
+      return isCategorySelected ? 'done' : 'empty';
+    }
+
+    // Для категорий с субкатегориями
+    if (hasSubcategories) {
+      const subcategories = categories[category];
+      const allSelected = subcategories.every(sub => selectedSubcategories.includes(sub));
+      const someSelected = subcategories.some(sub => selectedSubcategories.includes(sub));
+
+      if (allSelected) return 'done';
+      if (someSelected) return 'remove';
+      if (isCategorySelected) return 'empty'; // Категория выбрана, но нет субкатегорий
+    }
+
+    // Для категорий без субкатегорий
+    return isCategorySelected ? 'done' : 'empty';
+  };
 
   const toggleCategory = (category: string) => {
     onCategoryChange(
@@ -43,57 +74,75 @@ export const CheckboxDropdownSection: React.FC<CheckboxDropdownSectionProps> = (
     );
   };
 
+  const getToggleText = () => {
+    return expanded ? collapse : expand;
+  };
+
   return (
     <div className={styles.filterSection}>
       <h3 className={styles.title}>{title}</h3>
       <div className={styles.checkboxDropdown}>
-        {visibleCategories.map(category => (
-          <div key={category} className={styles.categoryItem}>
-            {!isSimpleList ? (
-              <>
-                <CheckboxUI
-                  id={`category-${category}`}
-                  name={category || 'checkbox-group'}
-                  checked={selectedCategories.includes(category)}
-                  onChange={() => toggleCategory(category)}
-                  label={category}
-                />
+        {visibleCategories.map(category => {
+          return (
+            <div
+              key={category}
+              className={`${styles.categoryItem} ${
+                selectedCategories.includes(category) ? styles.expanded : ''
+              }`}
+              onMouseEnter={() => setHoveredCategory(category)}
+              onMouseLeave={() => setHoveredCategory(null)}
+            >
+              <div
+                className={styles.categoryHeader}
+                onClick={() => !isSimpleList && toggleCategory(category)}
+              >
+                <div onClick={e => e.stopPropagation()}>
+                  <CheckboxUI
+                    id={`category-${category}`}
+                    name={category || 'checkbox-group'}
+                    checked={selectedCategories.includes(category)}
+                    onChange={() => toggleCategory(category)}
+                    label={category}
+                    displayState={getDisplayState(category)}
+                  />
+                </div>
 
-                {selectedCategories.includes(category) && (
-                  <div className={styles.subcategories}>
-                    {categories[category].map(subcategory => (
-                      <div className={styles.simpleContainer}>
-                        <CheckboxUI
-                          key={subcategory}
-                          id={`subcategory-${subcategory}`}
-                          name={subcategory}
-                          checked={selectedSubcategories.includes(subcategory)}
-                          onChange={() => toggleSubcategory(subcategory)}
-                          label={subcategory}
-                        />
-                      </div>
-                    ))}
-                  </div>
+                {!isSimpleList && (
+                  <span
+                    className={`${styles.categoryChevron} ${
+                      hoveredCategory === category ? styles.visible : ''
+                    }`}
+                  />
                 )}
-              </>
-            ) : (
-              <div className={styles.simpleContainer}>
-                <CheckboxUI
-                  id={`simple-${category}`}
-                  name={category}
-                  checked={selectedCategories.includes(category)}
-                  onChange={() => toggleCategory(category)}
-                  label={category}
-                />
               </div>
-            )}
-          </div>
-        ))}
 
-        {categoryKeys.length > 5 && (
-          <a className={styles.showMore} onClick={() => setExpanded(!expanded)}>
-            {expanded ? 'Свернуть' : 'Все категории'}
-          </a>
+              {!isSimpleList && selectedCategories.includes(category) && (
+                <div className={styles.subcategories}>
+                  {categories[category].map(subcategory => (
+                    <div key={subcategory} className={styles.simpleContainer}>
+                      <CheckboxUI
+                        id={`subcategory-${subcategory}`}
+                        name={subcategory}
+                        checked={selectedSubcategories.includes(subcategory)}
+                        onChange={() => toggleSubcategory(subcategory)}
+                        label={subcategory}
+                        displayState={
+                          selectedSubcategories.includes(subcategory) ? 'done' : 'empty'
+                        }
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          );
+        })}
+
+        {categoryKeys.length >= defaultVisibleItems && (
+          <div className={styles.showMoreContainer} onClick={() => setExpanded(!expanded)}>
+            <span className={styles.showMoreText}>{getToggleText()}</span>
+            <span className={`${styles.chevron} ${expanded ? styles.rotated : ''}`} />
+          </div>
         )}
       </div>
     </div>

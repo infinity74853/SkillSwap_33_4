@@ -35,7 +35,6 @@ export const FiltersPanel = ({ skillsCategories, cities }: FiltersPanelProps) =>
           selectedSubcategories={selectedSubcategories}
           onCategoryChange={setSelectedCategories}
           onSubcategoryChange={setSelectedSubcategories}
-          defaultVisibleItems={6}
         />
 
         <RadioGroupSection
@@ -52,7 +51,6 @@ export const FiltersPanel = ({ skillsCategories, cities }: FiltersPanelProps) =>
           selectedSubcategories={[]}
           onCategoryChange={setSelectedCities}
           onSubcategoryChange={() => {}}
-          defaultVisibleItems={5}
           isSimpleList={true}
         />
       </div>

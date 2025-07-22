@@ -7,9 +7,17 @@ interface CheckboxUiProps {
   checked: boolean;
   onChange: () => void;
   label: string;
+  displayState?: 'empty' | 'done' | 'remove';
 }
 
-export const CheckboxUI: React.FC<CheckboxUiProps> = ({ id, name, checked, onChange, label }) => {
+export const CheckboxUI: React.FC<CheckboxUiProps> = ({
+  id,
+  name,
+  checked,
+  onChange,
+  label,
+  displayState = 'empty',
+}) => {
   return (
     <div className={styles.checkboxContainer}>
       <input
@@ -20,7 +28,7 @@ export const CheckboxUI: React.FC<CheckboxUiProps> = ({ id, name, checked, onCha
         onChange={onChange}
         className={styles.hiddenCheckbox}
       />
-      <label htmlFor={id} className={styles.customCheckbox}>
+      <label htmlFor={id} className={`${styles.customCheckbox} ${styles[displayState]}`}>
         <span className={styles.checkmark} />
         <span className={styles.labelText}>{label}</span>
       </label>
