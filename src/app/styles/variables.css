@@ -38,4 +38,8 @@
   --skill-component-border-radius: 20px;
   --skill-component-padding: 8px 12px;
   --button-border-radius: 12px;
+
+  /* z-index */
+  --z-index-overlay: 100;
+  --z-index-modal: 101;
 }
