@@ -5,6 +5,6 @@
   bottom: 0;
   left: 0;
   background-color: rgba(142, 142, 142, 0.6);
-  z-index: 2;
-  backdrop-filter: blure(4px);
+  z-index: var(--z-index-overlay);
+  backdrop-filter: blur(4px);
 }
