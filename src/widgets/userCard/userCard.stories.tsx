@@ -7,7 +7,7 @@ const meta: Meta<typeof UserCard> = {
   component: UserCard,
   tags: ['autodocs'],
   argTypes: {
-    birthdate: {
+    birthdayDate: {
       control: 'date',
       description: 'Дата рождения в формате YYYY-MM-DD',
     },
@@ -22,41 +22,47 @@ export default meta;
 
 type Story = StoryObj<typeof UserCard>;
 
-export const userCard: Story = {
+export const Default: Story = {
   args: {
-    image: localImage,
+    _id: '001',
     name: 'Иван',
-    city: 'Санкт - Петербург',
+    image: localImage,
+    city: 'Санкт-Петербург',
+    birthdayDate: '1991-02-05',
+    description: 'Опытный музыкант и преподаватель',
+    likes: ['002', '003', '007'],
     canTeach: {
+      customSkillId: 'skill_001',
       name: 'Игра на барабанах',
-      type: 'Творчество и искусство',
-      subtype: 'Музыка и звук',
+      category: 'Творчество и искусство',
+      subcategory: 'Музыка и звук',
+      subcategoryId: 'music_percussion',
+      image: [''],
       description:
         'Привет! Я играю на барабанах уже больше 10 лет — от репетиций в гараже до выступлений на сцене с живыми группами. Научу основам техники (и как не отбить себе пальцы), играть любимые ритмы и разбирать песни, импровизировать и звучать уверенно даже без паритуры',
     },
     wantsToLearn: [
       {
+        customSkillId: 'skill_101',
         name: 'Тайм-менеджмент',
-        type: 'Образование и развитие',
-        subtype: 'Когнитивные техники',
+        category: 'Образование и развитие',
+        subcategory: 'Личностное развитие',
+        subcategoryId: 'personal_development',
       },
       {
+        customSkillId: 'skill_202',
         name: 'Медитация',
-        type: 'Здоровье и лайфстайл',
-        subtype: 'Йога и медитация',
+        category: 'Здоровье и лайфстайл',
+        subcategory: 'Йога и медитация',
+        subcategoryId: 'yoga_meditation',
       },
       {
+        customSkillId: 'skill_303',
         name: 'Английский',
-        type: 'Иностранные языки',
-        subtype: 'Английский язык',
-      },
-      {
-        name: 'Английский',
-        type: 'Иностранные языки',
-        subtype: 'Английский язык',
+        category: 'Иностранные языки',
+        subcategory: 'Английский',
+        subcategoryId: 'english_lang',
       },
     ],
-    id: '001',
-    birthdate: '1991-02-05',
   },
 };

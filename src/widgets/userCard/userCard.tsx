@@ -2,21 +2,21 @@ import { Skill } from '@/shared/ui/skill/skill.tsx';
 import styles from './userCard.module.css';
 import { Button } from '@/shared/ui/button/button';
 import { useState } from 'react';
-import { TUserInfoProps } from '@/types/types';
 import { calculateAge } from '@/shared/lib/helpers/data';
+import { TUser } from '@/types/types';
 
-export const UserCard: React.FC<TUserInfoProps> = ({
+export const UserCard: React.FC<TUser> = ({
   image,
   name,
   city,
   canTeach,
   wantsToLearn,
-  id,
-  birthdate,
+  _id,
+  birthdayDate,
 }) => {
   const myLikes = ['001', '002', '003']; // Заглушка лайков зарегистрированного пользователя
 
-  const like = myLikes.some(like => like === id);
+  const like = myLikes.some(like => like === _id);
   const [isLiked, setIsliked] = useState(like);
   const [isExchange, setExchange] = useState(true);
   const learnSkill = wantsToLearn.slice(0, 2);
@@ -44,22 +44,22 @@ export const UserCard: React.FC<TUserInfoProps> = ({
         </div>
         <div className={styles.userInfo}>
           <p className={styles.userName}>{name}</p>
-          <p className={styles.userCityAndAge}>{`${city}, ${calculateAge(birthdate)}`}</p>
+          <p className={styles.userCityAndAge}>{`${city}, ${calculateAge(birthdayDate)}`}</p>
         </div>
       </div>
       <div className={styles.bodyCard}>
         <div className={styles.teach}>
           <p className={styles.pointCard}>Может научить:</p>
           <div className={styles.skills}>
-            {canTeach ? <Skill type={canTeach.type}>{canTeach.name}</Skill> : ''}
+            {canTeach ? <Skill type={canTeach.category}>{canTeach.name}</Skill> : ''}
           </div>
         </div>
         <div className={styles.teach}>
           <p className={styles.pointCard}>Хочет научиться:</p>
           <div className={styles.skills}>
             {learnSkill &&
-              learnSkill.map(skill => (
-                <Skill type={skill.type} key={skill.name}>
+              learnSkill.map((skill, index) => (
+                <Skill type={skill.category} key={index}>
                   {skill.name}
                 </Skill>
               ))}

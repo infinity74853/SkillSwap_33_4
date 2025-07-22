@@ -1,6 +1,6 @@
 import { skillsCategories } from '@/shared/lib/categories';
 
-type TSkillCategory = keyof typeof skillsCategories;
+export type TSkillCategory = keyof typeof skillsCategories;
 type TSkillSubcategory<T extends TSkillCategory> = (typeof skillsCategories)[T][number];
 
 export type TSkill = {
@@ -27,5 +27,5 @@ export type TUser = {
   description: string;
   likes: string[];
   canTeach: TCustomSkill;
-  wantsToLearn: Omit<TCustomSkill, 'description' | 'image'>;
+  wantsToLearn: Omit<TCustomSkill, 'description' | 'image'>[];
 };
