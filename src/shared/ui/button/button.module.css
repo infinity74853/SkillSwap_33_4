@@ -16,13 +16,10 @@
     background-color 0.2s ease,
     border-color 0.2s ease,
     color 0.2s ease,
+    opacity 0.2s ease,
     transform 0.2s ease;
   box-sizing: border-box;
   font-family: Roboto, Arial, sans-serif;
-}
-
-.button > * {
-  transition: opacity 0.2s ease;
 }
 
 .primary {
@@ -45,7 +42,7 @@
   color: var(--button-secondary-content-color);
 }
 
-.secondary:not(.disabled):hover > * {
+.secondary:not(.disabled):hover {
   border-color: var(--button-secondary-hover-border-color);
   opacity: 0.6;
 }

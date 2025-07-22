@@ -3,6 +3,7 @@ import styles from './userCard.module.css';
 import { Button } from '@/shared/ui/button/button';
 import { useState } from 'react';
 import { TUserInfoProps } from '@/types/types';
+import { calculateAge } from '@/shared/lib/helpers/data';
 
 export const UserCard: React.FC<TUserInfoProps> = ({
   image,
@@ -20,40 +21,6 @@ export const UserCard: React.FC<TUserInfoProps> = ({
   const [isExchange, setExchange] = useState(true);
   const learnSkill = wantsToLearn.slice(0, 2);
   const moreSkills = wantsToLearn.length - learnSkill.length;
-
-  //Функция расчета и простановки окончания в возрасте
-  const calculateAge = (birthdate: string): string => {
-    const today = new Date();
-    const birthDate = new Date(birthdate);
-
-    if (isNaN(birthDate.getTime())) {
-      return 'возраст неизвестен';
-    }
-
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const monthDiff = today.getMonth() - birthDate.getMonth();
-
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-      age--;
-    }
-    const lastDigit = age % 10;
-    const lastTwoDigits = age % 100;
-
-    if (lastTwoDigits >= 11 && lastTwoDigits <= 14) {
-      return `${age} лет`;
-    }
-
-    switch (lastDigit) {
-      case 1:
-        return `${age} год`;
-      case 2:
-      case 3:
-      case 4:
-        return `${age} года`;
-      default:
-        return `${age} лет`;
-    }
-  };
 
   const handleLikeClick = () => {
     setIsliked(!isLiked);
@@ -90,17 +57,14 @@ export const UserCard: React.FC<TUserInfoProps> = ({
         <div className={styles.teach}>
           <p className={styles.pointCard}>Хочет научиться:</p>
           <div className={styles.skills}>
-            {learnSkill
-              ? learnSkill.map(skill => (
-                  <Skill type={skill.type} key={skill.name}>
-                    {skill.name}
-                  </Skill>
-                ))
-              : ''}
-            {wantsToLearn.length > 2 ? (
+            {learnSkill &&
+              learnSkill.map(skill => (
+                <Skill type={skill.type} key={skill.name}>
+                  {skill.name}
+                </Skill>
+              ))}
+            {wantsToLearn.length > 2 && (
               <Skill type={'Остальные категории'}>{`+ ${moreSkills}`}</Skill>
-            ) : (
-              ''
             )}
           </div>
         </div>
