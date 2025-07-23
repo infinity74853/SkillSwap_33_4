@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import CatalogUI from './catalogUI';
-import { Profile, ProfileCategory } from '@/types/fakeTypes';
 import { fn } from '@storybook/test';
+import { Profile, ProfileCategory } from '@/entities/profile/model/types';
 
 interface CategorySection {
   title: string;
