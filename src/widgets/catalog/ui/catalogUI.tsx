@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import CatalogCategory from '../../catalogCategory/fake/catalogCategory';
 import styles from './catalog.module.css';
-import { Profile } from '@/types/fakeTypes';
+import { Profile } from '@/entities/profile/model/types';
 
 //Временная структура категорий в каталоге, пока не будет API
 type CatalogUIProps = {

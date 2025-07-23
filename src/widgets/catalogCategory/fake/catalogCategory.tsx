@@ -1,8 +1,8 @@
 import React from 'react';
 import styles from './catalogCategory.module.css';
-import { Profile } from '@/types/fakeTypes';
 import { ProfileCard } from '@/widgets/profileCard/profileCard';
 import { InfiniteScroll } from '../../catalog/ui/infiniteScroll/infiniteScroll';
+import { Profile } from '@/entities/profile/model/types';
 
 interface CatalogCategoryProps {
   title: string;

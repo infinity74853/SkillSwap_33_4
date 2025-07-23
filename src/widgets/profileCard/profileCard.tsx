@@ -1,6 +1,6 @@
 import React from 'react';
-import { Profile } from '@/types/fakeTypes';
 import styles from './profileCard.module.css';
+import { Profile } from '@/entities/profile/model/types';
 
 interface ProfileCardProps {
   profile: Profile;
