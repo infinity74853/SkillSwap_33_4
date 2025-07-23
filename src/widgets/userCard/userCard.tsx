@@ -3,9 +3,9 @@ import styles from './userCard.module.css';
 import { Button } from '@/shared/ui/button/button';
 import { useState } from 'react';
 import { calculateAge } from '@/shared/lib/helpers/data';
-import { TUser } from '@/types/types';
+import { User } from '@/entities/user/model/types';
 
-export const UserCard: React.FC<TUser> = ({
+export const UserCard: React.FC<User> = ({
   image,
   name,
   city,
@@ -58,8 +58,8 @@ export const UserCard: React.FC<TUser> = ({
           <p className={styles.pointCard}>Хочет научиться:</p>
           <div className={styles.skills}>
             {learnSkill &&
-              learnSkill.map((skill, index) => (
-                <Skill type={skill.category} key={index}>
+              learnSkill.map(skill => (
+                <Skill type={skill.category} key={skill.customSkillId}>
                   {skill.name}
                 </Skill>
               ))}
