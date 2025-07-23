@@ -13,7 +13,7 @@ interface CategorySection {
 // Генерация тестовых данных
 const generateProfiles = (count: number, category: ProfileCategory): Profile[] =>
   Array.from({ length: count }, (_, i) => ({
-    id: i + 1,
+    id: String(i + 1),
     name: `Пользователь ${i + 1}`,
     avatar: '',
     canTeach: `Навык ${i + 1}`,
