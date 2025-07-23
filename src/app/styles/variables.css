@@ -27,17 +27,29 @@
   --bg-color: #fff;
   --text-color: #000;
   --link-color: #1a73e8;
+  --skill-component-bg-more: #e8ecf7;
+  --user-card-container-bg: #fff;
+  --user-card-like-active-hover: #abd27a;
 
   /* Font */
   --button-font-size: 16px;
   --button-font-weight: 400;
   --skill-component-font-size: 12px;
   --skill-component-font-weight: 400;
+  --user-card-name-font-size: 20px;
+  --user-card-name-font-family: 'Open Sans', arial, sans-serif;
+  --user-card-name-font-weight: 600;
+  --user-card-name-line-height: 24px;
+  --user-card-font-family: roboto, arial, sans-serif;
+  --user-card-city-and-age-font-size: 12px;
+  --user-card-city-and-age-weight: 400;
+  --user-card-point-font-weight: 500;
 
   /* Layout */
   --skill-component-border-radius: 20px;
   --skill-component-padding: 8px 12px;
   --button-border-radius: 12px;
+  --user-card-container-border-radius: 12px;
 
   /* z-index */
   --z-index-overlay: 100;

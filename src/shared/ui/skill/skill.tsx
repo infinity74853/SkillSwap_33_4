@@ -8,7 +8,8 @@ export type SkillCategory =
   | 'Иностранные языки'
   | 'Образование и развитие'
   | 'Дом и уют'
-  | 'Здоровье и лайфстайл';
+  | 'Здоровье и лайфстайл'
+  | 'Остальные категории';
 
 export type TSkillProps = {
   children: React.ReactNode;

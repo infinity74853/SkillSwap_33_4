@@ -9,5 +9,5 @@ export type User = {
   description: string;
   likes: string[];
   canTeach: CustomSkill;
-  wantsToLearn: Omit<CustomSkill, 'description' | 'image'>;
+  wantsToLearn: Omit<CustomSkill, 'description' | 'image'>[];
 };
