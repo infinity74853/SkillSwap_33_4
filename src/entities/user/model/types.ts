@@ -1,6 +1,7 @@
 import { CustomSkill } from '@/entities/skill/model/types';
 
 export type User = {
+  createdAt: string | number | Date;
   _id: string;
   name: string;
   image: string;

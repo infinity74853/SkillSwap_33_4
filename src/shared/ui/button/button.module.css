@@ -53,7 +53,7 @@
 }
 
 .tertiary {
-  background-color: transparent;
+  background-color: var(--button-tertiary-color);
   border: none;
   color: var(--button-tertiary-content-color);
 }

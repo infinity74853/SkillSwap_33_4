@@ -1,18 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { CatalogUI } from './catalogUI';
 import { fn } from '@storybook/test';
-import { Profile, ProfileCategory } from '@/entities/profile/model/types';
-
-// Генерация тестовых данных без изменений
-const generateProfiles = (count: number, category: ProfileCategory): Profile[] =>
-  Array.from({ length: count }, (_, i) => ({
-    id: String(i + 1),
-    name: `Пользователь ${i + 1}`,
-    avatar: '',
-    canTeach: `Навык ${i + 1}`,
-    wantToLearn: `Хочу изучить ${i + 1}`,
-    category: category,
-  }));
+import { Profile } from '@/entities/profile/model/types';
+import { generateProfiles } from '@/shared/mocks/mockUsersData';
 
 const meta = {
   title: 'Components/Catalog/CatalogUI',
@@ -32,19 +22,19 @@ export const Default: Story = {
     sections: [
       {
         title: 'Популярное',
-        profiles: generateProfiles(3, 'popular'),
+        profiles: generateProfiles(3, 'popular') as Profile[],
         showAllButton: true,
         onShowAll: fn(),
       },
       {
         title: 'Новое',
-        profiles: generateProfiles(3, 'new'),
+        profiles: generateProfiles(3, 'new') as Profile[],
         showAllButton: true,
         onShowAll: fn(),
       },
       {
         title: 'Рекомендуем',
-        profiles: generateProfiles(4, 'recommended'),
+        profiles: generateProfiles(4, 'recommended') as Profile[],
         showAllButton: true,
         onShowAll: fn(),
       },
@@ -74,19 +64,19 @@ export const WithManyItems: Story = {
     sections: [
       {
         title: 'Популярное',
-        profiles: generateProfiles(6, 'popular'),
+        profiles: generateProfiles(6, 'popular') as Profile[],
         showAllButton: true,
         onShowAll: fn(),
       },
       {
         title: 'Новое',
-        profiles: generateProfiles(5, 'new'),
+        profiles: generateProfiles(5, 'new') as Profile[],
         showAllButton: true,
         onShowAll: fn(),
       },
       {
         title: 'Рекомендуем',
-        profiles: generateProfiles(7, 'recommended'),
+        profiles: generateProfiles(7, 'recommended') as Profile[],
         showAllButton: true,
         onShowAll: fn(),
       },

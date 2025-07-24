@@ -11,7 +11,7 @@ interface InfiniteScrollProps<T> {
   minItems?: number;
 }
 
-export const InfiniteScroll = <T extends { id: string }>({
+export const InfiniteScroll = <T extends { _id: string }>({
   items,
   renderItem,
   hasMore,
@@ -110,7 +110,7 @@ export const InfiniteScroll = <T extends { id: string }>({
     <div ref={setContainerRef} className={styles.container}>
       <div className={styles.itemsGrid}>
         {displayedItems.map(item => (
-          <div key={item.id} className={styles.itemWrapper}>
+          <div key={item._id} className={styles.itemWrapper}>
             {renderItem(item)}
           </div>
         ))}
