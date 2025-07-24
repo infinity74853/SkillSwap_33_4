@@ -9,34 +9,25 @@
   margin-bottom: 20px;
 }
 
-.showAllButton {
-  background: none;
-  border: none;
-  color: #2a5885;
-  cursor: pointer;
-  font-size: 16px;
-  padding: 5px 10px;
+.customButton {
+  width: 187px;
 }
 
-.showAllButton:hover {
-  text-decoration: underline;
-}
-
-.profilesGrid {
+.usersGrid {
   display: grid;
   grid-template-columns: repeat(3, minmax(324px, 1fr));
   gap: 20px;
 }
 
-/* Адаптивная верстка для сетки профилей */
+/* Адаптивная верстка для сетки пользователей */
 @media (max-width: 767px) {
-  .profilesGrid {
+  .usersGrid {
     grid-template-columns: 1fr;
   }
 }
 
 @media (min-width: 768px) and (max-width: 1023px) {
-  .profilesGrid {
+  .usersGrid {
     grid-template-columns: repeat(2, 1fr);
   }
 }

@@ -2,8 +2,9 @@ import React, { useState, useCallback } from 'react';
 import { CatalogUI, CatalogUIProps } from './ui/catalogUI';
 import { ProfileCategory } from '@/entities/profile/model/types';
 import { profilesData } from './profilesData';
-import CatalogCategory from '../catalogCategory/fake/catalogCategory';
+//import CatalogCategory from '../catalogCategory/fake/catalogCategory';
 import styles from './catalog.module.css';
+import { UserSection } from '../userSection/userSection';
 
 type CategorySection = {
   title: string;
@@ -127,9 +128,9 @@ const Catalog: React.FC<{ isAuthenticated: boolean }> = ({ isAuthenticated }) =>
         <button onClick={handleBack} className={styles.backButton}>
           ← Назад к категориям
         </button>
-        <CatalogCategory
+        <UserSection
           title={getCategoryTitle(currentCategory)}
-          profiles={getProfilesByCategory(currentCategory)}
+          users={getProfilesByCategory(currentCategory)}
         />
       </div>
     );

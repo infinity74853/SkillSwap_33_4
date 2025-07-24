@@ -18,7 +18,7 @@ export const UserCard: React.FC<User> = ({
 
   const like = myLikes.some(like => like === _id);
   const [isLiked, setIsliked] = useState(like);
-  const [isExchange, setExchange] = useState(true);
+  const [isExchange, setExchange] = useState(false);
   const learnSkill = wantsToLearn.slice(0, 2);
   const moreSkills = wantsToLearn.length - learnSkill.length;
 
