@@ -11,7 +11,7 @@ function App() {
   return (
     <Suspense fallback={<></> /*Loader, когда будет готов*/}>
       <Routes>
-        <Route path="/*" element={<ErrorPage type="400"></ErrorPage>} />
+        <Route path="/*" element={<ErrorPage type="404"></ErrorPage>} />
         <Route path="/" element={<></> /*Каталог карточек, когда будет готов */} />
         <Route
           path="/login"
