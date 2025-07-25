@@ -10,10 +10,10 @@ const assertSuccess = <T>(response: { success: boolean; data: T }, errorText: st
   if (!response.success) throw new Error(errorText);
   return response.data;
 };
-
 type ServerResponse<T> = {
   success: boolean;
-} & T;
+  data: T;
+};
 
 type SkillResponse = ServerResponse<{
   data: Skill;
@@ -27,28 +27,31 @@ type AuthResponse = ServerResponse<{
   data: { accessToken: string; refreshToken: string };
 }>;
 
-export const getSkillsApi = () =>
-  fetch(`${URL}/api/skills`)
-    .then(res => checkResponse<SkillResponse>(res))
-    .then(res => assertSuccess(res, 'Не удалось получить навыки'));
+export const getSkillsApi = async () => {
+  const res = await fetch(`${URL}/api/skills`);
+  const checkedRes = await checkResponse<SkillResponse>(res);
+  return assertSuccess(checkedRes, 'Не удалось получить навыки');
+};
 
-export const getUsersApi = () =>
-  fetch(`${URL}/api/users/all`)
-    .then(res => checkResponse<UsersResponse>(res))
-    .then(res => assertSuccess(res, 'Не удалось получить данные о пользователях'));
+export const getUsersApi = async () => {
+  const res = await fetch(`${URL}/api/users/all`);
+  const checkedRes = await checkResponse<UsersResponse>(res);
+  return assertSuccess(checkedRes, 'Не удалось получить данные о пользователях');
+};
 
 export type LoginData = {
   email: string;
   password: string;
 };
 
-export const loginUserApi = (data: LoginData) =>
-  fetch(`${URL}/api/login`, {
+export const loginUserApi = async (data: LoginData) => {
+  const res = await fetch(`${URL}/api/login`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
     },
     body: JSON.stringify(data),
-  })
-    .then(res => checkResponse<AuthResponse>(res))
-    .then(res => assertSuccess(res, 'Не удалось залогиниться'));
+  });
+  const checkedRes = await checkResponse<AuthResponse>(res);
+  return assertSuccess(checkedRes, 'Не удалось залогиниться');
+};
