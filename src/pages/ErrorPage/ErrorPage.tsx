@@ -14,11 +14,13 @@ const errorConfig = {
     header: 'На сервере произошла ошибка',
     text: 'Попробуйте позже или вернитесь на главную страницу',
     icon: icon500,
+    alt: 'Изображение с кодом ошибки 500 - ошибка сервера',
   },
   '404': {
     header: 'Страница не найдена',
     text: 'К сожалению, эта страница недоступна. Вернитесь на главную страницу или попробуйте позже',
     icon: icon404,
+    alt: 'Изображение с кодом ошибки 404 - страница не найдена',
   },
 };
 
@@ -27,7 +29,7 @@ export const ErrorPage: FC<ErrorPageProps> = ({ type }) => {
   const navigate = useNavigate();
   return (
     <div className={styles.container}>
-      <img className={styles.icon} src={config.icon} />
+      <img className={styles.icon} src={config.icon} alt={config.alt} />
       <ErrorBlock
         header={config.header}
         text={config.text}
