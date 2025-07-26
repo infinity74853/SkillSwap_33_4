@@ -1,17 +1,23 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './styles/index.css';
+import { Header } from '@/widgets/Header/Header';
+import { Footer } from '@/widgets/Footer/Footer';
 import TextTestComponent from '@/widgets/TestComponent/TestComponent';
 import Catalog from '@/widgets/catalog/catalog';
 
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<TextTestComponent />} />
-      </Routes>
-      {/* Отображаем каталог в обход роутов,
-       если нужно авторизоваться - пишем isAuthenticated={true} */}
-      <Catalog isAuthenticated={false} />
+      <div>
+        <Header />
+        <main>
+          <Routes>
+            <Route path="/" element={<TextTestComponent />} />
+          </Routes>
+          <Catalog isAuthenticated={false} />
+        </main>
+        <Footer />
+      </div>
     </BrowserRouter>
   );
 }
