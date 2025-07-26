@@ -24,9 +24,9 @@ const SkillCard: React.FC<SkillCardProps> = ({ skill }) => {
       </div>
       <div className={styles.skillDetails}>
         <div className={styles.skillContent}>
-          <h2>{skill.title}</h2>
-          <p>{skill.category}</p>
-          <p>{skill.description}</p>
+          <h1 className={styles.title}>{skill.title}</h1>
+          <caption className={styles.category}>{skill.category}</caption>
+          <p className={styles.description}>{skill.description}</p>
           <button className={styles.button}>Предложить обмен</button>
         </div>
         <div className={styles.skillImage}>

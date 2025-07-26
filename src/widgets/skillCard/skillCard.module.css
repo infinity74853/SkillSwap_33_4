@@ -3,6 +3,8 @@
   flex-direction: column;
   gap: 24px;
   padding: 32px 52px;
+  border-radius: 12px;
+  background-color: var(--color-card, #fff);
 }
 
 .action {
@@ -46,6 +48,30 @@
 .skillContent {
   display: flex;
   flex-direction: column;
+}
+
+.title,
+.category,
+.description {
+  margin: 0;
+  padding: 0;
+}
+
+.title {
+  color: var(--color-text, #253017);
+  margin-bottom: 4px;
+}
+
+.category {
+  text-align: left;
+  color: var(--color-caption, #69735d);
+  margin-bottom: 20px;
+}
+
+.description {
+  color: var(--color-text, #253017);
+  margin-bottom: 28px;
+  letter-spacing: 1.02;
 }
 
 .button {
