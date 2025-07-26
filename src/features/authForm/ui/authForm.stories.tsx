@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { FirstStageUI } from './firstStageUI.tsx';
-import { PAGE_TEXTS } from './firstStage.ts';
+import { AuthFormUI } from './authFormUI';
+import { PAGE_TEXTS } from './authForm';
 
-const meta: Meta<typeof FirstStageUI> = {
+const meta: Meta<typeof AuthFormUI> = {
   title: 'Components/AuthForm',
-  component: FirstStageUI,
+  component: AuthFormUI,
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
@@ -13,7 +13,7 @@ const meta: Meta<typeof FirstStageUI> = {
 
 export default meta;
 
-type Story = StoryObj<typeof FirstStageUI>;
+type Story = StoryObj<typeof AuthFormUI>;
 
 export const Default: Story = {
   args: {

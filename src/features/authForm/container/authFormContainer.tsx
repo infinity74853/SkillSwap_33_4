@@ -1,8 +1,8 @@
-import { PAGE_TEXTS } from '@/shared/ui/firstStage/firstStage';
-import { FirstStageUI } from '@/shared/ui/firstStage/firstStageUI';
+import { PAGE_TEXTS } from '@/features/authForm/ui/authForm';
+import { AuthFormUI } from '@/features/authForm/ui/authFormUI';
 import { useState } from 'react';
 
-export const FirstStageContainer = ({ isFirstStage = true }) => {
+export const AuthFormContainer = ({ isFirstStage = true }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -74,7 +74,7 @@ export const FirstStageContainer = ({ isFirstStage = true }) => {
   };
 
   return (
-    <FirstStageUI
+    <AuthFormUI
       isFirstStage={isFirstStage}
       textContent={textContent}
       showPassword={showPassword}

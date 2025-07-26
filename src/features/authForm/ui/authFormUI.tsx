@@ -1,7 +1,7 @@
 import { Button } from '@/shared/ui/button/button';
-import styles from './firstStageUI.module.css';
+import styles from './authFormUI.module.css';
 
-interface FirstStageUIProps {
+interface AuthFormUIProps {
   isFirstStage: boolean;
   textContent: {
     passwordPlaceholder: string;
@@ -23,7 +23,7 @@ interface FirstStageUIProps {
   handlePasswordChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export const FirstStageUI = ({
+export const AuthFormUI = ({
   isFirstStage,
   textContent,
   showPassword,
@@ -34,7 +34,7 @@ export const FirstStageUI = ({
   togglePasswordVisibility,
   handleEmailChange,
   handlePasswordChange,
-}: FirstStageUIProps) => {
+}: AuthFormUIProps) => {
   return (
     <main className={styles.container}>
       <section aria-label={isFirstStage ? 'Авторизация' : 'Регистрация'} className={styles.block}>
