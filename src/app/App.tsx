@@ -1,9 +1,9 @@
 import { Route, Routes, useLocation } from 'react-router-dom';
 import './styles/index.css';
-// import { Suspense } from 'react';
+import { Suspense } from 'react';
 import { ProtectedRoute } from '@/shared/ui/protectedRoute/protectedRoute';
-import { ErrorPage } from '@/pages/ErrorPage/ErrorPage';
 import SkillPage from '@/widgets/skillPage/skillPage';
+// import { ErrorPage } from '@/pages/ErrorPage/ErrorPage';
 
 function App() {
   /* const navigate = useNavigate(); на будущее для модалок */
@@ -12,7 +12,9 @@ function App() {
   return (
     <Suspense fallback={<></> /*Loader, когда будет готов*/}>
       <Routes>
-        <Route path="/*" element={<ErrorPage type="404"></ErrorPage>} />
+        {/* <Route path="/" element={<TextTestComponent />} /> */}
+        <Route path="/" element={<SkillPage />} />
+        {/* <Route path="/*" element={<ErrorPage type="404"></ErrorPage>} /> */}
         <Route path="/" element={<></> /*Каталог карточек, когда будет готов */} />
         <Route
           path="/login"
