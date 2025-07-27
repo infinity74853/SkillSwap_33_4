@@ -7,6 +7,7 @@ interface SkillCardProps {
 }
 
 const SkillCard: React.FC<SkillCardProps> = ({ skill }) => {
+  const skillId = `${skill.category}-${skill.title}`;
   const imageAltText = skill.title;
   const imagePreviewSrc = skill.imagePreview;
 
@@ -14,7 +15,7 @@ const SkillCard: React.FC<SkillCardProps> = ({ skill }) => {
     <article className={styles.skillCard} aria-label={`Карточка навыка: ${skill.title}`}>
       <div className={styles.action}>
         <LikeButton
-          itemId={skill.title}
+          itemId={skillId}
           className={`${styles.actionButton}`}
           ariaLabel="Поставить лайк"
         />

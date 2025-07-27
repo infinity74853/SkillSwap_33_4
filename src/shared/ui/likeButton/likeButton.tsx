@@ -3,18 +3,16 @@ import { useLike } from '@/shared/hooks/useLike';
 
 interface LikeButtonProps {
   itemId: string;
-  initialLiked?: boolean;
   className?: string;
   ariaLabel?: string;
 }
 
 export const LikeButton: React.FC<LikeButtonProps> = ({
   itemId,
-  initialLiked = false,
   className = '',
   ariaLabel = 'Поставить лайк',
 }) => {
-  const { isLiked, toggleLike } = useLike({ itemId, initialLiked });
+  const { isLiked, toggleLike } = useLike({ itemId });
 
   return (
     <button

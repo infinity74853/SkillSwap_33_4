@@ -1,38 +1,23 @@
-import { useState, useCallback, useEffect } from 'react';
+import { toggleLike } from '@/services/slices/likeSlice';
+import { selectIsLiked, selectLikesLoading } from '@/services/selectors/likeSelectors';
+import { useDispatch, useSelector } from '@/app/providers/store/store';
 
 interface UseLikeProps {
   itemId: string;
-  initialLiked?: boolean;
-  storageKey?: string; // Позволяет использовать хук для разных сущностей
 }
 
-export const useLike = ({
-  itemId,
-  initialLiked = false,
-  storageKey = 'likedSkills',
-}: UseLikeProps) => {
-  const [isLiked, setIsLiked] = useState(initialLiked);
+export const useLike = ({ itemId }: UseLikeProps) => {
+  const dispatch = useDispatch();
+  const isLiked = useSelector(state => selectIsLiked(state, itemId));
+  const isLoading = useSelector(selectLikesLoading);
 
-  useEffect(() => {
-    const liked = JSON.parse(localStorage.getItem(storageKey) || '[]');
-    setIsLiked(liked.includes(itemId));
-  }, [itemId, storageKey]);
-
-  const toggleLike = useCallback(() => {
-    const liked = JSON.parse(localStorage.getItem(storageKey) || '[]');
-    let updated;
-    if (liked.includes(itemId)) {
-      updated = liked.filter((id: string) => id !== itemId);
-      setIsLiked(false);
-    } else {
-      updated = [...liked, itemId];
-      setIsLiked(true);
-    }
-    localStorage.setItem(storageKey, JSON.stringify(updated));
-  }, [itemId, storageKey]);
+  const toggleLikeHandler = () => {
+    dispatch(toggleLike(itemId));
+  };
 
   return {
     isLiked,
-    toggleLike,
+    isLoading,
+    toggleLike: toggleLikeHandler,
   };
 };

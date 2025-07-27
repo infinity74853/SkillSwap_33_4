@@ -4,8 +4,11 @@ import {
   useDispatch as dispatchHook,
   useSelector as selectorHook,
 } from 'react-redux';
+import likeReducer from '@/services/slices/likeSlice';
 
-export const rootReducer = combineReducers({});
+export const rootReducer = combineReducers({
+  likes: likeReducer,
+});
 
 export const store = configureStore({
   reducer: rootReducer,
