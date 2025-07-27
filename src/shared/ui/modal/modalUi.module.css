@@ -1,3 +1,9 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 .modal {
   position: fixed;
   top: 50%;
@@ -5,10 +11,11 @@
   transform: translate(-50%, -50%);
   z-index: var(--z-index-modal);
   margin: auto;
-  padding: 80px 60px;
+  padding: 75px 60px 0;
   background-color: #fff;
   border-radius: 12px;
-  inline-size: 436px;
+  min-height: 420px;
+  min-width: 556px;
 }
 
 .header {
@@ -17,6 +24,7 @@
   align-items: center;
   min-height: 88px;
   gap: 10px;
+  margin-bottom: 10px;
 }
 
 .title {
@@ -30,9 +38,9 @@
 .img {
   display: block;
   margin: auto;
-  min-width: 100px;
-  min-height: 100px;
-  padding-block-end: 52px;
+  min-width: 75px;
+  min-height: 75px;
+  margin-bottom: 60px;
 }
 
 .content {
@@ -40,6 +48,5 @@
 }
 
 .buttonContainer {
-  margin-top: 32px;
   text-align: center;
 }
