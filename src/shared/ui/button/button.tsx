@@ -5,7 +5,7 @@ export type TButtonProps = {
   children: React.ReactNode;
   onClick?: () => void;
   disabled?: boolean;
-  type?: 'primary' | 'secondary' | 'tertiary';
+  type?: 'primary' | 'secondary' | 'tertiary' | 'quaternary';
 };
 
 export const Button: React.FC<TButtonProps> = ({

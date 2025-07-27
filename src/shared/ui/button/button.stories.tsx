@@ -41,6 +41,13 @@ export const Tertiary: Story = {
   },
 };
 
+export const Quaternary: Story = {
+  args: {
+    children: 'Quaternary Button',
+    type: 'quaternary',
+  },
+};
+
 export const Disabled: Story = {
   args: {
     children: 'Disabled Button',

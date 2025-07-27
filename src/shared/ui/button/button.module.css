@@ -80,6 +80,15 @@
   color: var(--button-secondary-content-disabled-color);
 }
 
+.quaternary {
+  background-color: transparent;
+  border: 1px solid var(--button-quaternary-border-color);
+}
+
+.quaternary:not(.disabled):hover {
+  opacity: 0.6;
+}
+
 .content {
   display: flex;
   justify-content: center;
