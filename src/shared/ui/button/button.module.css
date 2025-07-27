@@ -16,7 +16,8 @@
     background-color 0.2s ease,
     border-color 0.2s ease,
     color 0.2s ease,
-    transform 0.1s ease;
+    opacity 0.2s ease,
+    transform 0.2s ease;
   box-sizing: border-box;
   font-family: Roboto, Arial, sans-serif;
 }
@@ -43,7 +44,7 @@
 
 .secondary:not(.disabled):hover {
   border-color: var(--button-secondary-hover-border-color);
-  color: var(--button-secondary-content-hover-color);
+  opacity: 0.6;
 }
 
 .secondary:not(.disabled):active {
@@ -52,7 +53,7 @@
 }
 
 .tertiary {
-  background-color: transparent;
+  background-color: var(--button-tertiary-color);
   border: none;
   color: var(--button-tertiary-content-color);
 }
@@ -79,13 +80,24 @@
   color: var(--button-secondary-content-disabled-color);
 }
 
+.quaternary {
+  background-color: transparent;
+  border: 1px solid var(--button-quaternary-border-color);
+}
+
+.quaternary:not(.disabled):hover {
+  opacity: 0.6;
+}
+
 .content {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
   height: 100%;
-  transition: transform 0.1s ease;
+  transition:
+    transform 0.1s ease,
+    opacity 0.2s ease;
 }
 
 .content:active:not(.disabled *) {

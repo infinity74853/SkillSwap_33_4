@@ -1,146 +1,50 @@
-/* ВРЕМЕННОЕ РЕШЕНИЕ */
+import React, { useState, useCallback } from 'react';
+import { CatalogUI, CatalogUIProps } from './ui/catalogUI';
+import { ProfileCategory } from '@/entities/profile/model/types';
+import { profilesData } from './profilesData';
+//import CatalogCategory from '../catalogCategory/fake/catalogCategory';
+import styles from './catalog.module.css';
+import { UserSection } from '../userSection/userSection';
 
-import React, { useState } from 'react';
-import CatalogUI from './ui/catalogUI';
-import { Profile, ProfileCategory } from '@/types/fakeTypes';
-
-// DELETE: Моковые данные для примера
-const profilesData: Profile[] = [
-  {
-    id: 1,
-    name: 'Алексей Петров',
-    avatar: '',
-    canTeach: 'Программирование на JavaScript',
-    wantToLearn: 'Игра на гитаре',
-    category: 'popular',
-  },
-  {
-    id: 1,
-    name: 'Алексей Петров',
-    avatar: '',
-    canTeach: 'Программирование на JavaScript',
-    wantToLearn: 'Игра на гитаре',
-    category: 'match',
-  },
-  {
-    id: 2,
-    name: 'Мария Иванова',
-    avatar: '',
-    canTeach: 'Дизайн интерфейсов',
-    wantToLearn: 'Английский язык',
-    category: 'popular',
-  },
-  {
-    id: 2,
-    name: 'Мария Иванова',
-    avatar: '',
-    canTeach: 'Дизайн интерфейсов',
-    wantToLearn: 'Английский язык',
-    category: 'popular',
-  },
-  {
-    id: 2,
-    name: 'Мария Иванова',
-    avatar: '',
-    canTeach: 'Дизайн интерфейсов',
-    wantToLearn: 'Английский язык',
-    category: 'popular',
-  },
-  {
-    id: 2,
-    name: 'Мария Иванова',
-    avatar: '',
-    canTeach: 'Дизайн интерфейсов',
-    wantToLearn: 'Английский язык',
-    category: 'popular',
-  },
-  {
-    id: 3,
-    name: 'Иван Сидоров',
-    avatar: '',
-    canTeach: 'Маркетинг, SMM',
-    wantToLearn: 'Английский язык',
-    category: 'new',
-  },
-  {
-    id: 4,
-    name: 'Елена Васильева',
-    avatar: '',
-    canTeach: 'Английский язык',
-    wantToLearn: 'Французский язык',
-    category: 'recommended',
-  },
-  {
-    id: 4,
-    name: 'Елена Васильева',
-    avatar: '',
-    canTeach: 'Английский язык',
-    wantToLearn: 'Французский язык',
-    category: 'recommended',
-  },
-  {
-    id: 4,
-    name: 'Елена Васильева',
-    avatar: '',
-    canTeach: 'Английский язык',
-    wantToLearn: 'Французский язык',
-    category: 'recommended',
-  },
-  {
-    id: 4,
-    name: 'Елена Васильева',
-    avatar: '',
-    canTeach: 'Английский язык',
-    wantToLearn: 'Французский язык',
-    category: 'recommended',
-  },
-  {
-    id: 4,
-    name: 'Елена Васильева',
-    avatar: '',
-    canTeach: 'Английский язык',
-    wantToLearn: 'Французский язык',
-    category: 'recommended',
-  },
-  {
-    id: 4,
-    name: 'Елена Васильева',
-    avatar: '',
-    canTeach: 'Английский язык',
-    wantToLearn: 'Французский язык',
-    category: 'recommended',
-  },
-  {
-    id: 4,
-    name: 'Елена Васильева',
-    avatar: '',
-    canTeach: 'Английский язык',
-    wantToLearn: 'Французский язык',
-    category: 'recommended',
-  },
-];
-
-// TODO: Подключить реальную логику
+type CategorySection = {
+  title: string;
+  profiles: typeof profilesData;
+  showAllButton?: boolean;
+  onShowAll?: () => void;
+};
 
 const Catalog: React.FC<{ isAuthenticated: boolean }> = ({ isAuthenticated }) => {
-  // Необходимо реализовать:
-  // 1. Получение данных профилей из стора
-  // 2. Фильтрация данных по категориям
-
-  // DELETE: МОКОВАЯ ЛОГИКА
-
-  // Стейты
   const [viewMode, setViewMode] = useState<'default' | 'category'>('default');
   const [currentCategory, setCurrentCategory] = useState<ProfileCategory | null>(null);
+  const [recommendedItems, setRecommendedItems] = useState<typeof profilesData>([]);
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
 
-  // Фильтрация профилей под категорию
+  // Определяем количество карточек для загрузки (≥20)
+  const getItemsPerLoad = () => {
+    const width = window.innerWidth;
+    const columns = width < 768 ? 1 : width < 1024 ? 2 : 3;
+    return Math.ceil(20 / columns) * columns;
+  };
+
+  // Инициализация "Рекомендуем"
+  React.useEffect(() => {
+    const initialItems = profilesData
+      .filter(p => p.category === 'recommended')
+      .slice(0, getItemsPerLoad());
+    setRecommendedItems(initialItems);
+    const allRecommendedCount = profilesData.filter(p => p.category === 'recommended').length;
+    setHasMore(initialItems.length < allRecommendedCount);
+  }, []);
+
+  // Фильтрация
   const getProfilesByCategory = (category: ProfileCategory) => {
     return profilesData.filter(profile => profile.category === category);
   };
 
-  // Получение заголовков категорий
+  // Заголовки
   const getCategoryTitle = (category: ProfileCategory): string => {
-    const titles = {
+    const titles: Record<ProfileCategory, string> = {
       match: 'Точное соответствие',
       popular: 'Популярное',
       new: 'Новое',
@@ -150,69 +54,91 @@ const Catalog: React.FC<{ isAuthenticated: boolean }> = ({ isAuthenticated }) =>
     return titles[category];
   };
 
-  // Обработчики кнопки "Показать все", прокидываем выбранную категорию
   const handleShowAll = (category: ProfileCategory) => {
     setViewMode('category');
     setCurrentCategory(category);
   };
 
-  // Обработчик кнопки "Назад" в режиме категории
   const handleBack = () => {
     setViewMode('default');
     setCurrentCategory(null);
   };
 
-  // Подготовка данных для UI
-  const getUIProps = () => {
-    if (viewMode === 'category' && currentCategory) {
-      return {
-        mode: 'category' as const,
-        categoryData: {
-          title: getCategoryTitle(currentCategory),
-          profiles: getProfilesByCategory(currentCategory),
-          onBack: handleBack,
-        },
-      };
+  // Подгрузка "Рекомендуем"
+  const handleLoadMoreRecommended = useCallback(() => {
+    if (loading || !hasMore) return;
+
+    setLoading(true);
+    setTimeout(() => {
+      const allRecommended = profilesData.filter(p => p.category === 'recommended');
+      const currentLength = recommendedItems.length;
+      const nextItems = allRecommended.slice(currentLength, currentLength + getItemsPerLoad());
+
+      if (nextItems.length === 0) {
+        setHasMore(false);
+      } else {
+        setRecommendedItems(prev => [...prev, ...nextItems]);
+        setHasMore(currentLength + nextItems.length < allRecommended.length);
+      }
+      setLoading(false);
+    }, 1000);
+  }, [recommendedItems.length, loading, hasMore]);
+
+  // Подготовка данных
+  const getUIProps = (): Omit<CatalogUIProps, 'sections'> & { sections: CategorySection[] } => {
+    if (viewMode === 'category') {
+      throw new Error('UI props not available in category mode');
     }
 
-    // Категории, которые меняются в зависимости от состоянии логина пользователя
     const firstCategoryType = isAuthenticated ? 'match' : 'popular';
     const secondCategoryType = isAuthenticated ? 'ideas' : 'new';
 
-    // Всегда 3 секции, но верхние два верхних меняются в зависимости от логина
-    // Первая и вторая секции всегда имеют 3 профиля, и могут быть открыты по клику на кнопку "Показать все"
-    // Для этого и передаем категорию в handleShowAll
-    // Третья секция всегда открыта
-    // В итоге передаем мод - default, для показа всех категорий; либо category, для показа одной категории
-    // В будущем должен появится мод filter, для показа фильтров
+    const sections: CategorySection[] = [
+      {
+        title: getCategoryTitle(firstCategoryType),
+        profiles: getProfilesByCategory(firstCategoryType).slice(0, 3),
+        showAllButton: true,
+        onShowAll: () => handleShowAll(firstCategoryType),
+      },
+      {
+        title: getCategoryTitle(secondCategoryType),
+        profiles: getProfilesByCategory(secondCategoryType).slice(0, 3),
+        showAllButton: true,
+        onShowAll: () => handleShowAll(secondCategoryType),
+      },
+      {
+        title: 'Рекомендуем',
+        profiles: recommendedItems,
+        showAllButton: false,
+      },
+    ];
+
     return {
-      mode: 'default' as const,
-      sections: [
-        {
-          title: getCategoryTitle(firstCategoryType),
-          profiles: getProfilesByCategory(firstCategoryType).slice(0, 3),
-          showAllButton: true,
-          onShowAll: () => handleShowAll(firstCategoryType),
-        },
-        {
-          title: getCategoryTitle(secondCategoryType),
-          profiles: getProfilesByCategory(secondCategoryType).slice(0, 3),
-          showAllButton: true,
-          onShowAll: () => handleShowAll(secondCategoryType),
-        },
-        {
-          title: getCategoryTitle('recommended'),
-          profiles: getProfilesByCategory('recommended'),
-          showAllButton: false,
-        },
-      ],
+      sections,
+      onLoadMoreRecommended: handleLoadMoreRecommended,
+      hasMoreRecommended: hasMore,
+      isLoadingRecommended: loading,
     };
   };
 
-  // Используем реальный UI компонент
-  // Может ругаться на то, что пропсов будет передано меньше, но это работает
-  // Исправится, когда появится реальная логика
-  return <CatalogUI {...getUIProps()} />;
+  // Режим: одна категория
+  if (viewMode === 'category' && currentCategory) {
+    return (
+      <div className={styles.catalog}>
+        <button onClick={handleBack} className={styles.backButton}>
+          ← Назад к категориям
+        </button>
+        <UserSection
+          title={getCategoryTitle(currentCategory)}
+          users={getProfilesByCategory(currentCategory)}
+        />
+      </div>
+    );
+  }
+
+  // Режим: все категории
+  const uiProps = getUIProps();
+  return <CatalogUI {...uiProps} />;
 };
 
 export default Catalog;

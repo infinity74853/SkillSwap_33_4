@@ -7,4 +7,5 @@ export const CATEGORY_CLASS_MAP: Record<SkillCategory, string> = {
   'Образование и развитие': 'development',
   'Дом и уют': 'home',
   'Здоровье и лайфстайл': 'health',
+  'Остальные категории': 'more',
 };

@@ -1,76 +1,54 @@
 import React from 'react';
-import CatalogCategory from '../../catalogCategory/fake/catalogCategory';
-import styles from './catalog.module.css';
-import { Profile } from '@/types/fakeTypes';
+import styles from '../catalog.module.css';
+import { Profile } from '@/entities/profile/model/types';
+import { UserSection } from '@/widgets/userSection/userSection';
+//import CatalogCategory from '@/widgets/catalogCategory/fake/catalogCategory';
 
-//Временная структура категорий в каталоге, пока не будет API
-type CatalogUIProps = DefaultModeProps | CategoryModeProps;
-
-// Из чего состоит категория
+// Типы можно оставить как есть или упростить, если компонент всегда получает все пропсы
 interface CategorySection {
   title: string;
   profiles: Profile[];
-  showAllButton: boolean;
+  showAllButton?: boolean;
   onShowAll?: () => void;
 }
 
-// Режим по умолчанию
-interface DefaultModeProps {
-  mode: 'default';
+// Этот компонент должен просто получать все нужные данные и коллбэки как props
+// и не хранить собственное состояние.
+export type CatalogUIProps = {
   sections: CategorySection[];
-}
-
-// Режим категории
-interface CategoryModeProps {
-  mode: 'category';
-  categoryData: {
-    title: string;
-    profiles: Profile[];
-    onBack: () => void;
-  };
-}
-
-// Режим фильтра
-/*
-interface FilterModeProps {
-  //...
-}
-*/
-
-// Рабочий компонент для каталога
-const CatalogUI: React.FC<CatalogUIProps> = props => {
-  {
-    /* Если передана категория, то отрисовываем ее */
-  }
-  if (props.mode === 'category') {
-    return (
-      <div className={styles.catalog}>
-        {/* Функционал кнопки временный, такой кнопки быть не должно */}
-        <button onClick={props.categoryData.onBack} className={styles.backButton}>
-          ← Назад к категориям
-        </button>
-        {/* Используем фейковый компонент категории */}
-        <CatalogCategory title={props.categoryData.title} profiles={props.categoryData.profiles} />
-      </div>
-    );
-  }
-
-  {
-    /* Если передан режим по умолчанию, то отрисовываем все категории */
-  }
-  return (
-    <div className={styles.catalog}>
-      {/* Используем фейковый компонент категории */}
-      {props.sections.map((section, index) => (
-        <CatalogCategory
-          key={index}
-          title={section.title}
-          profiles={section.profiles}
-          onShowAll={section.showAllButton ? section.onShowAll : undefined}
-        />
-      ))}
-    </div>
-  );
+  onLoadMoreRecommended: () => void; // Коллбэк для загрузки "Рекомендуем"
+  hasMoreRecommended: boolean; // Есть ли еще данные для "Рекомендуем"
+  isLoadingRecommended: boolean; // Идет ли загрузка "Рекомендуем"
 };
 
-export default CatalogUI;
+/**
+ * "Глупый" компонент UI для каталога.
+ * Не содержит логики загрузки данных, а только получает их через props.
+ */
+export const CatalogUI: React.FC<CatalogUIProps> = ({
+  sections,
+  onLoadMoreRecommended,
+  hasMoreRecommended,
+  isLoadingRecommended,
+}) => (
+  <div className={styles.catalog}>
+    {sections.map(section => {
+      // Определяем, является ли текущая секция той самой, с бесконечной прокруткой
+      const isRecommended = section.title === 'Рекомендуем';
+
+      return (
+        <UserSection
+          key={section.title}
+          title={section.title}
+          users={section.profiles}
+          onShowAll={section.onShowAll}
+          // Пропсы для бесконечной прокрутки передаем только нужной категории
+          isRecommended={isRecommended}
+          onLoadMore={isRecommended ? onLoadMoreRecommended : undefined}
+          hasMore={isRecommended ? hasMoreRecommended : false}
+          loading={isRecommended ? isLoadingRecommended : false}
+        />
+      );
+    })}
+  </div>
+);

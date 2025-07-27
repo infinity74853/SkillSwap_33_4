@@ -64,3 +64,10 @@ export const Health: Story = {
     type: 'Здоровье и лайфстайл',
   },
 };
+
+export const More: Story = {
+  args: {
+    children: 'Здоровье и лайфстайл',
+    type: 'Здоровье и лайфстайл',
+  },
+};

@@ -1,25 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import CatalogUI from './catalogUI';
-import { Profile, ProfileCategory } from '@/types/fakeTypes';
+import { CatalogUI } from './catalogUI';
 import { fn } from '@storybook/test';
-
-interface CategorySection {
-  title: string;
-  profiles: Profile[];
-  showAllButton: boolean;
-  onShowAll?: () => void;
-}
-
-// Генерация тестовых данных
-const generateProfiles = (count: number, category: ProfileCategory): Profile[] =>
-  Array.from({ length: count }, (_, i) => ({
-    id: i + 1,
-    name: `Пользователь ${i + 1}`,
-    avatar: '',
-    canTeach: `Навык ${i + 1}`,
-    wantToLearn: `Хочу изучить ${i + 1}`,
-    category: category, // Теперь category строго типизирована
-  }));
+import { Profile } from '@/entities/profile/model/types';
+import { generateProfiles } from '@/shared/mocks/mockUsersData';
 
 const meta = {
   title: 'Components/Catalog/CatalogUI',
@@ -28,106 +11,78 @@ const meta = {
     layout: 'fullscreen',
   },
   tags: ['autodocs'],
-  argTypes: {
-    mode: {
-      control: 'radio',
-      options: ['default', 'category'],
-    },
-  },
 } satisfies Meta<typeof CatalogUI>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// Базовые данные для историй
-const defaultSections = [
-  {
-    title: 'Популярное',
-    profiles: generateProfiles(3, 'popular'),
-    showAllButton: true,
-    onShowAll: fn(),
-  },
-  {
-    title: 'Новое',
-    profiles: generateProfiles(3, 'new'),
-    showAllButton: true,
-    onShowAll: fn(),
-  },
-  {
-    title: 'Рекомендуем',
-    profiles: generateProfiles(4, 'recommended'),
-    showAllButton: false,
-  },
-] as [CategorySection, CategorySection, CategorySection];
-
-// История для режима по умолчанию
-export const DefaultView: Story = {
+// Обновляем истории в соответствии с новыми пропсами
+export const Default: Story = {
   args: {
-    mode: 'default',
-    sections: defaultSections,
+    sections: [
+      {
+        title: 'Популярное',
+        profiles: generateProfiles(3, 'popular') as Profile[],
+        showAllButton: true,
+        onShowAll: fn(),
+      },
+      {
+        title: 'Новое',
+        profiles: generateProfiles(3, 'new') as Profile[],
+        showAllButton: true,
+        onShowAll: fn(),
+      },
+      {
+        title: 'Рекомендуем',
+        profiles: generateProfiles(4, 'recommended') as Profile[],
+        showAllButton: true,
+        onShowAll: fn(),
+      },
+    ],
+    onLoadMoreRecommended: fn(),
+    hasMoreRecommended: true,
+    isLoadingRecommended: false,
   },
 };
 
-// История для режима категории
-export const CategoryView: Story = {
+export const Loading: Story = {
   args: {
-    mode: 'category',
-    categoryData: {
-      title: 'Популярное',
-      profiles: generateProfiles(8, 'popular'),
-      onBack: fn(),
-    },
+    ...Default.args,
+    isLoadingRecommended: true,
   },
 };
 
-// История с большим количеством элементов
+export const NoMoreData: Story = {
+  args: {
+    ...Default.args,
+    hasMoreRecommended: false,
+  },
+};
+
 export const WithManyItems: Story = {
   args: {
-    mode: 'default',
     sections: [
       {
         title: 'Популярное',
-        profiles: generateProfiles(6, 'popular'),
+        profiles: generateProfiles(6, 'popular') as Profile[],
         showAllButton: true,
         onShowAll: fn(),
       },
       {
         title: 'Новое',
-        profiles: generateProfiles(5, 'new'),
+        profiles: generateProfiles(5, 'new') as Profile[],
         showAllButton: true,
         onShowAll: fn(),
       },
       {
         title: 'Рекомендуем',
-        profiles: generateProfiles(7, 'recommended'),
-        showAllButton: false,
-      },
-    ] as [CategorySection, CategorySection, CategorySection],
-  },
-};
-
-// История без некоторых категорий
-export const WithEmptySections: Story = {
-  args: {
-    mode: 'default',
-    sections: [
-      {
-        title: 'Популярное',
-        profiles: generateProfiles(2, 'popular'),
+        profiles: generateProfiles(7, 'recommended') as Profile[],
         showAllButton: true,
         onShowAll: fn(),
       },
-      {
-        title: 'Новое',
-        profiles: [],
-        showAllButton: true,
-        onShowAll: fn(),
-      },
-      {
-        title: 'Рекомендуем',
-        profiles: generateProfiles(1, 'recommended'),
-        showAllButton: false,
-      },
-    ] as [CategorySection, CategorySection, CategorySection],
+    ],
+    onLoadMoreRecommended: fn(),
+    hasMoreRecommended: true,
+    isLoadingRecommended: false,
   },
 };
