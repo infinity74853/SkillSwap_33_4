@@ -13,12 +13,6 @@ const SkillCard: React.FC<SkillCardProps> = ({ skill }) => {
   const imageAltText = skill.title;
   const imagePreviewSrc = skill.imagePreview;
 
-  const handleShare = () => {
-    // Логика обработки share
-    console.log('Share skill:', skill.title);
-    // Здесь может быть вызов navigator.share() или кастомная логика
-  };
-
   const handleMore = () => {
     // Логика обработки more button
     console.log('More options for skill:', skill.title);
@@ -30,7 +24,9 @@ const SkillCard: React.FC<SkillCardProps> = ({ skill }) => {
       <div className={styles.action}>
         <LikeButton itemId={skillId} className={styles.actionButton} ariaLabel="Поставить лайк" />
         <ShareButton
-          onClick={handleShare}
+          title={skill.title}
+          text={`Посмотри этот навык: ${skill.title} в категории ${skill.category}`}
+          url={window.location.href}
           className={styles.actionButton}
           aria-label="Поделиться"
         />
