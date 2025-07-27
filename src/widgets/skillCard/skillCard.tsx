@@ -1,5 +1,6 @@
 import styles from './skillCard.module.css';
-import type { Skill } from '../skillPage/skillPage';
+import { Skill } from '@/pages/skillPage/skillPage';
+import { LikeButton } from '@/shared/ui/likeButton/likeButton';
 
 interface SkillCardProps {
   skill: Skill;
@@ -12,10 +13,10 @@ const SkillCard: React.FC<SkillCardProps> = ({ skill }) => {
   return (
     <article className={styles.skillCard} aria-label={`Карточка навыка: ${skill.title}`}>
       <div className={styles.action}>
-        <button
-          type="button"
-          className={`${styles.likeButton} ${styles.actionButton}`}
-          aria-label="Like"
+        <LikeButton
+          itemId={skill.title}
+          className={`${styles.actionButton}`}
+          ariaLabel="Поставить лайк"
         />
         <button
           type="button"
