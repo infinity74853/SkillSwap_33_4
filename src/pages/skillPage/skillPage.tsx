@@ -1,5 +1,5 @@
+import SkillCard from '@/widgets/skillCard/skillCard';
 import styles from './skillPage.module.css';
-import SkillCard from '../skillCard/skillCard';
 
 export interface Skill {
   title: string;
