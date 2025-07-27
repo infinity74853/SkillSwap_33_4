@@ -1,3 +1,4 @@
+import { Dropdown } from '@/shared/ui/dropdown/dropdown';
 import styles from './skillCard.module.css';
 import { Skill } from '@/pages/skillPage/skillPage';
 import { LikeButton } from '@/shared/ui/likeButton/likeButton';
@@ -13,11 +14,22 @@ const SkillCard: React.FC<SkillCardProps> = ({ skill }) => {
   const imageAltText = skill.title;
   const imagePreviewSrc = skill.imagePreview;
 
-  const handleMore = () => {
-    // Логика обработки more button
-    console.log('More options for skill:', skill.title);
-    // Здесь может быть открытие dropdown меню или модального окна
-  };
+  const dropdownItems = [
+    {
+      id: 'copy-link',
+      label: 'Копировать ссылку',
+      icon: (
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+          <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+        </svg>
+      ),
+      onClick: () => {
+        navigator.clipboard.writeText(window.location.href);
+        // TODO: Добавить уведомление об успешном копировании
+      },
+    },
+  ];
 
   return (
     <article className={styles.skillCard} aria-label={`Карточка навыка: ${skill.title}`}>
@@ -30,10 +42,10 @@ const SkillCard: React.FC<SkillCardProps> = ({ skill }) => {
           className={styles.actionButton}
           aria-label="Поделиться"
         />
-        <MoreButton
-          onClick={handleMore}
-          className={`${styles.moreButton} ${styles.actionButton}`}
-          aria-label="More"
+        <Dropdown
+          trigger={<MoreButton className={styles.actionButton} ariaLabel="Еще" />}
+          items={dropdownItems}
+          position="bottom-right"
         />
       </div>
       <div className={styles.skillDetails}>
