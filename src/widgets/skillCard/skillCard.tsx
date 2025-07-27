@@ -1,6 +1,8 @@
 import styles from './skillCard.module.css';
 import { Skill } from '@/pages/skillPage/skillPage';
 import { LikeButton } from '@/shared/ui/likeButton/likeButton';
+import { MoreButton } from '@/shared/ui/moreButton/moreButton';
+import { ShareButton } from '@/shared/ui/shareButton/shareButton';
 
 interface SkillCardProps {
   skill: Skill;
@@ -11,21 +13,29 @@ const SkillCard: React.FC<SkillCardProps> = ({ skill }) => {
   const imageAltText = skill.title;
   const imagePreviewSrc = skill.imagePreview;
 
+  const handleShare = () => {
+    // Логика обработки share
+    console.log('Share skill:', skill.title);
+    // Здесь может быть вызов navigator.share() или кастомная логика
+  };
+
+  const handleMore = () => {
+    // Логика обработки more button
+    console.log('More options for skill:', skill.title);
+    // Здесь может быть открытие dropdown меню или модального окна
+  };
+
   return (
     <article className={styles.skillCard} aria-label={`Карточка навыка: ${skill.title}`}>
       <div className={styles.action}>
-        <LikeButton
-          itemId={skillId}
-          className={`${styles.actionButton}`}
-          ariaLabel="Поставить лайк"
+        <LikeButton itemId={skillId} className={styles.actionButton} ariaLabel="Поставить лайк" />
+        <ShareButton
+          onClick={handleShare}
+          className={styles.actionButton}
+          aria-label="Поделиться"
         />
-        <button
-          type="button"
-          className={`${styles.shareButton} ${styles.actionButton}`}
-          aria-label="Share"
-        />
-        <button
-          type="button"
+        <MoreButton
+          onClick={handleMore}
           className={`${styles.moreButton} ${styles.actionButton}`}
           aria-label="More"
         />
