@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@laynezh/vite-plugin-lib-assets": "^1.1.0",
+    "@reduxjs/toolkit": "^2.8.2",
     "@storybook/addon-themes": "^8.6.14",
     "cors": "^2.8.5",
     "express": "^5.1.0",
@@ -32,7 +33,9 @@
     "react-dom": "^18.3.1",
     "react-helmet-async": "^2.0.5",
     "react-i18next": "^15.5.2",
+    "react-redux": "^9.2.0",
     "react-router-dom": "^7.5.0",
+    "redux": "^5.0.1",
     "translation-check": "^1.1.1",
     "vite-plugin-dts": "^4.5.4",
     "vite-plugin-lib-inject-css": "^2.2.2"
