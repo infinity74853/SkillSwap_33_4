@@ -2,6 +2,7 @@
 
 .filterSection {
   margin: 0;
+  width: 100%;
 }
 
 .title {
@@ -24,8 +25,10 @@
 }
 
 .categoryHeader {
+  position: relative;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   width: 100%;
 }
 
@@ -33,24 +36,20 @@
   opacity: 0;
   width: 24px;
   height: 24px;
-  position: absolute;
-  right: 0;
-  top: 12px;
-  transform: translateY(-50%);
   mask-image: url('../../../app/assets/static/images/icons/chevron-down.svg');
   mask-repeat: no-repeat;
   background-color: var(--text, #253017);
-  pointer-events: none;
   transition: all 0.2s ease;
 }
 
-.categoryItem:hover .categoryChevron {
+.categoryItem:hover .categoryChevron,
+.categoryItem.expanded .categoryChevron,
+.categoryChevron:hover {
   opacity: 1;
 }
 
 .categoryItem.expanded .categoryChevron {
-  opacity: 1;
-  transform: translateY(-50%) rotate(180deg);
+  transform: rotate(180deg);
 }
 
 .simpleContainer {
@@ -67,12 +66,13 @@
 
 .showMoreContainer {
   display: flex;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background-color: inherit;
   align-items: center;
   gap: 4px;
   cursor: pointer;
-}
-
-.showMoreText {
   color: var(--textLink-buttonPressed, #508826);
 }
 

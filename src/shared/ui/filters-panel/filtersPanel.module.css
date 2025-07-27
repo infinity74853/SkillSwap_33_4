@@ -9,10 +9,45 @@
   background-color: var(--cardInput, #ffffff);
 }
 
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-block-end: 40px;
+}
+
+.resetButton {
+  position: relative;
+  background: none;
+  border: none;
+  color: var(--textLink-buttonPressed, #508826);
+  cursor: pointer;
+  line-height: inherit;
+  padding-inline-start: 0;
+  padding-inline-end: 28px;
+  padding-block-start: 0;
+  padding-block-end: 0;
+}
+
+.resetButton::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 24px;
+  height: 24px;
+  mask-image: url('../../../app/assets/static/images/icons/cross.svg');
+  mask-repeat: no-repeat;
+  background-color: currentColor;
+}
+
 .title {
   margin: 0;
-  padding-block-end: 40px;
+
   line-height: 28px;
+  color: var(--text, #253017);
+  font-weight: 500;
+  font-size: 24px;
 }
 
 .section {

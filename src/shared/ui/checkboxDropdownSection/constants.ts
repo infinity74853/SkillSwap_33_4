@@ -8,7 +8,7 @@ export const TOGGLE_TEXTS: Record<
     defaultVisibleItems: 5,
   },
   Навыки: {
-    expand: 'Все навыки',
+    expand: 'Все категории',
     collapse: 'Свернуть',
     defaultVisibleItems: 6,
   },
