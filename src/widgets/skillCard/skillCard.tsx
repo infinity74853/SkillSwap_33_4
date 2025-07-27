@@ -5,6 +5,7 @@ import { LikeButton } from '@/shared/ui/likeButton/likeButton';
 import { MoreButton } from '@/shared/ui/moreButton/moreButton';
 import { ShareButton } from '@/shared/ui/shareButton/shareButton';
 import { Skill } from '@/pages/skillPage/skillPage';
+import { ModalUI } from '@/shared/ui/modal/modalUi';
 
 interface SkillCardProps {
   skill: Skill;
@@ -20,6 +21,8 @@ const SkillCard: React.FC<SkillCardProps> = ({ skill }) => {
   // Уникальный ID для лайков
   const skillId = useMemo(() => `${skill.id}-${skill.title}`, [skill.id, skill.title]);
   const imageAltText = skill.title;
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Мемоизация dropdown items
   const dropdownItems = useMemo(
@@ -41,6 +44,11 @@ const SkillCard: React.FC<SkillCardProps> = ({ skill }) => {
     ],
     [],
   );
+
+  // Обработчик кнопки "Предложить обмен"
+  const handleExchangeProposal = useCallback(() => {
+    setIsModalOpen(true);
+  }, []);
 
   // Состояние галереи
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -77,99 +85,110 @@ const SkillCard: React.FC<SkillCardProps> = ({ skill }) => {
   const canNavigate = allImages.length > 1;
 
   return (
-    <article className={styles.skillCard} aria-label={`Карточка навыка: ${skill.title}`}>
-      <div className={styles.action}>
-        <LikeButton itemId={skillId} className={styles.actionButton} ariaLabel="Поставить лайк" />
-        <ShareButton
-          title={skill.title}
-          text={`Посмотри этот навык: ${skill.title} в категории ${skill.category}`}
-          url={window.location.href}
-          className={styles.actionButton}
-          aria-label="Поделиться"
-        />
-        <Dropdown
-          trigger={<MoreButton className={styles.actionButton} ariaLabel="Еще" />}
-          items={dropdownItems}
-          position="bottom-right"
-        />
-      </div>
-      <div className={styles.skillDetails}>
-        <div className={styles.skillContent}>
-          <h1 className={styles.title}>{skill.title}</h1>
-          <p className={styles.category}>{skill.category}</p>
-          <p className={styles.description}>{skill.description}</p>
-          <button type="button" className={styles.button}>
-            Предложить обмен
-          </button>
+    <>
+      <article className={styles.skillCard} aria-label={`Карточка навыка: ${skill.title}`}>
+        <div className={styles.action}>
+          <LikeButton itemId={skillId} className={styles.actionButton} ariaLabel="Поставить лайк" />
+          <ShareButton
+            title={skill.title}
+            text={`Посмотри этот навык: ${skill.title} в категории ${skill.category}`}
+            url={window.location.href}
+            className={styles.actionButton}
+            aria-label="Поделиться"
+          />
+          <Dropdown
+            trigger={<MoreButton className={styles.actionButton} ariaLabel="Еще" />}
+            items={dropdownItems}
+            position="bottom-right"
+          />
         </div>
-        <div className={styles.skillImage}>
-          <div className={styles.imageSlider} role="group" aria-label="Слайдер изображений">
-            <button
-              type="button"
-              className={styles.prevArrow}
-              aria-label="Предыдущее изображение"
-              onClick={goToPrevImage}
-              disabled={!canNavigate}
-            >
-              <img
-                className={styles.imageArrow}
-                src="../src/app/assets/static/images/icons/arrow-chevron-left.svg"
-                alt=""
-                aria-hidden="true"
-              />
-            </button>
-            <img
-              className={styles.image}
-              src={currentMainImage}
-              alt={`${imageAltText} - изображение ${currentImageIndex + 1}`}
-            />
-            <button
-              type="button"
-              className={styles.nextArrow}
-              aria-label="Следующее изображение"
-              onClick={goToNextImage}
-              disabled={!canNavigate}
-            >
-              <img
-                className={styles.imageArrow}
-                src="../src/app/assets/static/images/icons/arrow-chevron-right.svg"
-                alt=""
-                aria-hidden="true"
-              />
+        <div className={styles.skillDetails}>
+          <div className={styles.skillContent}>
+            <h1 className={styles.title}>{skill.title}</h1>
+            <p className={styles.category}>{skill.category}</p>
+            <p className={styles.description}>{skill.description}</p>
+            <button type="button" className={styles.button} onClick={handleExchangeProposal}>
+              Предложить обмен
             </button>
           </div>
-          <div className={styles.preview}>
-            {previewImages.slice(0, 2).map((previewImg, index) => (
+          <div className={styles.skillImage}>
+            <div className={styles.imageSlider} role="group" aria-label="Слайдер изображений">
+              <button
+                type="button"
+                className={styles.prevArrow}
+                aria-label="Предыдущее изображение"
+                onClick={goToPrevImage}
+                disabled={!canNavigate}
+              >
+                <img
+                  className={styles.imageArrow}
+                  src="../src/app/assets/static/images/icons/arrow-chevron-left.svg"
+                  alt=""
+                  aria-hidden="true"
+                />
+              </button>
               <img
-                key={index}
-                className={styles.imagePreview}
-                src={previewImg}
-                alt={`Превью ${index + 1}: ${imageAltText}`}
-                onClick={() => {
-                  const imageIndex = allImages.findIndex(img => img === previewImg);
-                  setImageIndex(imageIndex);
-                }}
+                className={styles.image}
+                src={currentMainImage}
+                alt={`${imageAltText} - изображение ${currentImageIndex + 1}`}
               />
-            ))}
-            <div className={styles.imagePreviewOverlay}>
-              <img
-                className={styles.imagePreview}
-                src={previewImages[2] || previewImages[0]}
-                alt={`Превью с оверлеем: ${imageAltText}`}
-                onClick={() => {
-                  const targetImage = previewImages[2] || previewImages[0];
-                  const imageIndex = allImages.findIndex(img => img === targetImage);
-                  setImageIndex(imageIndex);
-                }}
-              />
-              <span className={styles.overlayText} aria-label="Еще изображения">
-                +{Math.max(0, previewImages.length - 3)}
-              </span>
+              <button
+                type="button"
+                className={styles.nextArrow}
+                aria-label="Следующее изображение"
+                onClick={goToNextImage}
+                disabled={!canNavigate}
+              >
+                <img
+                  className={styles.imageArrow}
+                  src="../src/app/assets/static/images/icons/arrow-chevron-right.svg"
+                  alt=""
+                  aria-hidden="true"
+                />
+              </button>
+            </div>
+            <div className={styles.preview}>
+              {previewImages.slice(0, 2).map((previewImg, index) => (
+                <img
+                  key={index}
+                  className={styles.imagePreview}
+                  src={previewImg}
+                  alt={`Превью ${index + 1}: ${imageAltText}`}
+                  onClick={() => {
+                    const imageIndex = allImages.findIndex(img => img === previewImg);
+                    setImageIndex(imageIndex);
+                  }}
+                />
+              ))}
+              <div className={styles.imagePreviewOverlay}>
+                <img
+                  className={styles.imagePreview}
+                  src={previewImages[2] || previewImages[0]}
+                  alt={`Превью с оверлеем: ${imageAltText}`}
+                  onClick={() => {
+                    const targetImage = previewImages[2] || previewImages[0];
+                    const imageIndex = allImages.findIndex(img => img === targetImage);
+                    setImageIndex(imageIndex);
+                  }}
+                />
+                <span className={styles.overlayText} aria-label="Еще изображения">
+                  +{Math.max(0, previewImages.length - 3)}
+                </span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </article>
+      </article>
+
+      {isModalOpen && (
+        <ModalUI
+          type="confirmation"
+          title="Ваше предложение создано"
+          description="Теперь вы можете предложить обмен"
+          onClose={() => setIsModalOpen(false)}
+        />
+      )}
+    </>
   );
 };
 
