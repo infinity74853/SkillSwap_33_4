@@ -3,6 +3,7 @@ import './styles/index.css';
 import { Suspense, useEffect } from 'react';
 import { ProtectedRoute } from '@/shared/ui/protectedRoute/protectedRoute';
 import SkillPage from '@/pages/skillPage/skillPage';
+import { SuccessModal } from '@/features/auth/successModal/SuccessModal';
 import { useDispatch } from './providers/store/store';
 import { initializeLikes } from '@/services/slices/likeSlice';
 // import { ErrorPage } from '@/pages/ErrorPage/ErrorPage';
@@ -21,7 +22,7 @@ function App() {
     <Suspense fallback={<></> /*Loader, когда будет готов*/}>
       <Routes>
         {/* <Route path="/" element={<TextTestComponent />} /> */}
-        <Route path="/" element={<SkillPage />} />
+        <Route path="/" element={<SuccessModal />} />
         {/* <Route path="/*" element={<ErrorPage type="404"></ErrorPage>} /> */}
         <Route path="/" element={<></> /*Каталог карточек, когда будет готов */} />
         <Route
