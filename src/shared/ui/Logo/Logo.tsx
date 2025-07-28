@@ -4,7 +4,6 @@ export const Logo = () => {
   return (
     <div className={styles.logoContainer}>
       <div className={styles.logoIcon}>
-        {/* Вставьте SVG сюда */}
         <svg
           width="20"
           height="20"

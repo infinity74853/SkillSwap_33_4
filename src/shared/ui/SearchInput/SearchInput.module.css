@@ -1,21 +1,43 @@
+/* stylelint-disable property-no-vendor-prefix */
 .searchContainer {
   position: relative;
-  min-width: 470px;
-  padding: 1px;
-  margin-right: 25px;
+  width: 100%;
+  max-width: 346px;
+  padding-right: 120px;
+  display: flex;
+  justify-content: flex-start;
 }
 
 .searchIcon {
   position: absolute;
-  left: 6px;
-  top: 55%;
+  left: 12px;
+  top: 50%;
   transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  background-color: #69735d; /* Цвет иконки */
+  mask: url('@/app/assets/static/icons/search.svg') no-repeat center;
+  -webkit-mask: url('@/app/assets/static/icons/search.svg') no-repeat center;
+  pointer-events: none;
 }
 
 .input {
   width: 100%;
-  padding: 15px 10px 15px 30px;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
+  min-width: 460px;
+  padding: 12px 12px 12px 40px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
   font-size: 16px;
+  outline: none;
+}
+
+.input:focus {
+  border-color: #4caf50;
+}
+
+/* Мобильная версия (<= 768px) */
+@media (max-width: 768px) {
+  .input {
+    min-width: 300px;
+  }
 }
