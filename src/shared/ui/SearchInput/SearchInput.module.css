@@ -15,9 +15,9 @@
   transform: translateY(-50%);
   width: 20px;
   height: 20px;
-  background-color: #69735d; /* Цвет иконки */
-  mask: url('@/app/assets/static/icons/search.svg') no-repeat center;
-  -webkit-mask: url('@/app/assets/static/icons/search.svg') no-repeat center;
+  background-color: #000; /* Цвет иконки */
+  mask: url('@/app/assets/static/images/icons/search.svg') no-repeat center;
+  -webkit-mask: url('@/app/assets/static/images/icons/search.svg') no-repeat center;
   pointer-events: none;
 }
 

@@ -94,8 +94,8 @@
   height: 8px;
   padding-left: 16px;
   background-color: #253017; /* Цвет иконки */
-  mask: url('../../app/assets/static/icons/chevron-down.svg') no-repeat center;
-  -webkit-mask: url('../../app/assets/static/icons/chevron-down.svg') no-repeat center;
+  mask: url('../../app/assets/static/images/icons/chevron-down.svg') no-repeat center;
+  -webkit-mask: url('../../app/assets/static/images/icons/chevron-down.svg') no-repeat center;
 }
 
 /* Стили для темы */
@@ -105,14 +105,14 @@
 }
 
 .moonIcon {
-  mask: url('../../app/assets/static/icons/moon.svg') no-repeat center;
-  -webkit-mask: url('../../app/assets/static/icons/moon.svg') no-repeat center;
+  mask: url('../../app/assets/static/images/icons/moon.svg') no-repeat center;
+  -webkit-mask: url('../../app/assets/static/images/icons/moon.svg') no-repeat center;
   background-color: #253017; /* Цвет иконки */
 }
 
 .sunIcon {
-  mask: url('../../app/assets/static/icons/sun.svg') no-repeat center;
-  -webkit-mask: url('../../app/assets/static/icons/sun.svg') no-repeat center;
+  mask: url('../../app/assets/static/images/icons/sun.svg') no-repeat center;
+  -webkit-mask: url('../../app/assets/static/images/icons/sun.svg') no-repeat center;
   background-color: #ffb300; /* Цвет иконки */
 }
 
