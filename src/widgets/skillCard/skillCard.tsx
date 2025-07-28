@@ -6,6 +6,7 @@ import { MoreButton } from '@/shared/ui/moreButton/moreButton';
 import { ShareButton } from '@/shared/ui/shareButton/shareButton';
 import { Skill } from '@/pages/skillPage/skillPage';
 import { ModalUI } from '@/shared/ui/modal/modalUi';
+import { CopyLinkDropdownItem } from '@/features/copyLink';
 
 interface SkillCardProps {
   skill: Skill;
@@ -19,7 +20,7 @@ const SkillCard: React.FC<SkillCardProps> = ({ skill }) => {
   );
 
   // Уникальный ID для лайков
-  const skillId = useMemo(() => `${skill.id}-${skill.title}`, [skill.id, skill.title]);
+  const skillId = useMemo(() => skill.id, [skill.id]);
   const imageAltText = skill.title;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -27,20 +28,11 @@ const SkillCard: React.FC<SkillCardProps> = ({ skill }) => {
   // Мемоизация dropdown items
   const dropdownItems = useMemo(
     () => [
-      {
-        id: 'copy-link',
-        label: 'Копировать ссылку',
-        icon: (
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
-            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
-          </svg>
-        ),
-        onClick: () => {
-          navigator.clipboard.writeText(window.location.href);
-          alert('Ссылка скопирована в буфер обмена');
-        },
-      },
+      CopyLinkDropdownItem({
+        url: window.location.href,
+        onSuccess: () => alert('Ссылка скопирована в буфер обмена'),
+        onError: () => alert('Не удалось скопировать ссылку'),
+      }),
     ],
     [],
   );
