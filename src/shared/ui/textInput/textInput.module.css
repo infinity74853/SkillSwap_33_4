@@ -1,0 +1,41 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-height: 48px;
+  gap: 4px;
+}
+
+.label {
+  letter-spacing: 2%;
+}
+
+.input {
+  border: 1px #69735d solid;
+  border-radius: 16px;
+  line-height: 24px;
+  letter-spacing: 2%;
+  padding: 12px 20px;
+}
+
+.inputError {
+  border-color: var(--color-error);
+}
+
+.input:focus-visible {
+  outline: none;
+}
+
+.inputWithIcon {
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 24px 24px;
+}
+
+.error {
+  color: var(--color-error);
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 2%;
+  text-transform: capitalize;
+}
