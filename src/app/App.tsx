@@ -1,14 +1,22 @@
 import { Route, Routes, useLocation } from 'react-router-dom';
 import './styles/index.css';
-import { Suspense } from 'react';
+import { Suspense, useEffect } from 'react';
 import { ProtectedRoute } from '@/shared/ui/protectedRoute/protectedRoute';
 import SkillPage from '@/pages/skillPage/skillPage';
+import { useDispatch } from './providers/store/store';
+import { initializeLikes } from '@/services/slices/likeSlice';
 // import { ErrorPage } from '@/pages/ErrorPage/ErrorPage';
 
 function App() {
   /* const navigate = useNavigate(); на будущее для модалок */
   const location = useLocation();
   const backgroundLocation = location.state?.background;
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(initializeLikes());
+  }, [dispatch]);
+
   return (
     <Suspense fallback={<></> /*Loader, когда будет готов*/}>
       <Routes>
