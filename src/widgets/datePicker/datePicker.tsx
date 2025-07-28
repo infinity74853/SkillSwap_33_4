@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import styles from './datePicker.module.css';
-import { DayPicker, Matcher } from 'react-day-picker';
+import { DayPicker, Matcher, OnSelectHandler } from 'react-day-picker';
 import { ru } from 'react-day-picker/locale';
 import 'dayjs/locale/ru';
 import 'react-day-picker/style.css';
@@ -8,8 +8,8 @@ import Chevron from '@/app/assets/static/images/icons/chevron-down.svg';
 import { Button } from '@/shared/ui/button/button';
 
 type CustomDatePickerProps = {
-  selected: Date;
-  onSelect: () => void;
+  selected: Date | undefined;
+  onSelect: OnSelectHandler<Date | undefined>;
   className?: string;
   endMonth?: Date;
   disabled?: Matcher;
