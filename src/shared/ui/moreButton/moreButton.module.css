@@ -1,0 +1,3 @@
+.moreButton {
+  mask: url('@/app/assets/static/images/icons/more-square.svg') no-repeat center;
+}
