@@ -1,3 +1,8 @@
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { MainLayout } from '@/widgets/Layout/MainLayout';
+import TextTestComponent from '@/widgets/TestComponent/TestComponent';
+import Catalog from '@/widgets/catalog/catalog';
+import './styles/index.css';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import './styles/index.css';
 import { Suspense, useEffect } from 'react';
@@ -6,7 +11,6 @@ import SkillPage from '@/pages/skillPage/skillPage';
 import { SuccessModal } from '@/features/auth/successModal/SuccessModal';
 import { useDispatch } from './providers/store/store';
 import { initializeLikes } from '@/services/slices/likeSlice';
-// import { ErrorPage } from '@/pages/ErrorPage/ErrorPage';
 
 function App() {
   /* const navigate = useNavigate(); на будущее для модалок */
@@ -21,6 +25,19 @@ function App() {
   return (
     <Suspense fallback={<></> /*Loader, когда будет готов*/}>
       <Routes>
+        <Route element={<MainLayout />}>
+          <Route
+            path="/"
+            element={
+              <>
+                <TextTestComponent />
+                <Catalog isAuthenticated={false} />
+              </>
+            }
+          />
+        </Route>
+      </Routes>
+    </BrowserRouter>
         {/* <Route path="/" element={<TextTestComponent />} /> */}
         <Route path="/" element={<SuccessModal />} />
         {/* <Route path="/*" element={<ErrorPage type="404"></ErrorPage>} /> */}
