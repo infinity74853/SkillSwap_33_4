@@ -16,7 +16,18 @@ const meta: Meta = {
     },
     isSimpleList: {
       control: 'boolean',
-      description: 'Простой список без подкатегорий',
+      description: 'Простой список без подкатегорий (требует массив строк в categories)',
+    },
+    // Добавить новые пропсы
+    selectedSubcategories: {
+      control: { type: 'object' },
+      description: 'Выбранные подкатегории (обязателен при isSimpleList=false)',
+      if: { arg: 'isSimpleList', neq: true },
+    },
+    onSubcategoryChange: {
+      action: 'subcategoryChanged',
+      description: 'Обработчик изменения подкатегорий (обязателен при isSimpleList=false)',
+      if: { arg: 'isSimpleList', neq: true },
     },
   },
   parameters: {
@@ -26,6 +37,16 @@ const meta: Meta = {
         component: `
 ### CheckboxDropdownSection
 Компонент представляет собой выпадающую секцию с чекбоксами для выбора категорий и подкатегорий.
+
+Компонент для выбора категорий с:
+- Поддержкой простых списков (массив строк) и многоуровневых структур (объект)
+- Кастомными текстами кнопок через TOGGLE_TEXTS
+- Валидацией пропсов (требует onSubcategoryChange для многоуровневых списков)
+
+**Новые особенности:**
+- При isSimpleList=true принимает массив строк в categories
+- При isSimpleList=false требует передачи onSubcategoryChange
+- Использует TOGGLE_TEXTS[title] для кастомных текстов кнопок
 
 **Составные части:**
 - \`CategoryItem\` - отдельный элемент категории/подкатегории с чекбоксом
@@ -93,16 +114,19 @@ const skillsCategories = {
 // Простой список (без подкатегорий)
 export const SimpleList: Story = {
   render: args => {
-    const [selected, setSelected] = useState<string[]>([]);
-    return (
-      <CheckboxDropdownSection
-        {...args}
-        categories={cities}
-        selectedCategories={selected}
-        onCategoryChange={setSelected}
-        isSimpleList
-      />
-    );
+    const StoryComponent = () => {
+      const [selected, setSelected] = useState<string[]>([]);
+      return (
+        <CheckboxDropdownSection
+          {...args}
+          categories={cities}
+          selectedCategories={selected}
+          onCategoryChange={setSelected}
+          isSimpleList
+        />
+      );
+    };
+    return <StoryComponent />;
   },
   args: {
     title: 'Город',
@@ -113,19 +137,22 @@ export const SimpleList: Story = {
 // Многоуровневый список с подкатегориями
 export const MultiLevel: Story = {
   render: args => {
-    const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-    const [selectedSubcategories, setSelectedSubcategories] = useState<string[]>([]);
+    const StoryComponent = () => {
+      const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+      const [selectedSubcategories, setSelectedSubcategories] = useState<string[]>([]);
 
-    return (
-      <CheckboxDropdownSection
-        {...args}
-        categories={skillsCategories}
-        selectedCategories={selectedCategories}
-        selectedSubcategories={selectedSubcategories}
-        onCategoryChange={setSelectedCategories}
-        onSubcategoryChange={setSelectedSubcategories}
-      />
-    );
+      return (
+        <CheckboxDropdownSection
+          {...args}
+          categories={skillsCategories}
+          selectedCategories={selectedCategories}
+          selectedSubcategories={selectedSubcategories}
+          onCategoryChange={setSelectedCategories}
+          onSubcategoryChange={setSelectedSubcategories}
+        />
+      );
+    };
+    return <StoryComponent />;
   },
   args: {
     title: 'Навыки',
@@ -136,22 +163,25 @@ export const MultiLevel: Story = {
 // Пример с предвыбранными значениями
 export const WithPreselectedValues: Story = {
   render: args => {
-    const [selectedCategories, setSelectedCategories] = useState<string[]>(['Программирование']);
-    const [selectedSubcategories, setSelectedSubcategories] = useState<string[]>([
-      'JavaScript',
-      'TypeScript',
-    ]);
+    const StoryComponent = () => {
+      const [selectedCategories, setSelectedCategories] = useState<string[]>(['Программирование']);
+      const [selectedSubcategories, setSelectedSubcategories] = useState<string[]>([
+        'JavaScript',
+        'TypeScript',
+      ]);
 
-    return (
-      <CheckboxDropdownSection
-        {...args}
-        categories={skillsCategories}
-        selectedCategories={selectedCategories}
-        selectedSubcategories={selectedSubcategories}
-        onCategoryChange={setSelectedCategories}
-        onSubcategoryChange={setSelectedSubcategories}
-      />
-    );
+      return (
+        <CheckboxDropdownSection
+          {...args}
+          categories={skillsCategories}
+          selectedCategories={selectedCategories}
+          selectedSubcategories={selectedSubcategories}
+          onCategoryChange={setSelectedCategories}
+          onSubcategoryChange={setSelectedSubcategories}
+        />
+      );
+    };
+    return <StoryComponent />;
   },
   args: {
     title: 'Навыки',
@@ -162,12 +192,15 @@ export const WithPreselectedValues: Story = {
 // Примеры для CategoryItem
 export const CategoryItemExample: StoryObj = {
   render: () => {
-    const [checked, setChecked] = useState(false);
-    return (
-      <div style={{ maxWidth: '300px' }}>
-        <CategoryItem category="Пример категории" checked={checked} onChange={setChecked} />
-      </div>
-    );
+    const StoryComponent = () => {
+      const [checked, setChecked] = useState(false);
+      return (
+        <div style={{ maxWidth: '300px' }}>
+          <CategoryItem category="Пример категории" checked={checked} onChange={setChecked} />
+        </div>
+      );
+    };
+    return <StoryComponent />;
   },
   parameters: {
     docs: {
@@ -182,16 +215,19 @@ export const CategoryItemExample: StoryObj = {
 // Пример с кастомными настройками отображения
 export const CustomDisplaySettings: Story = {
   render: args => {
-    const [selected, setSelected] = useState<string[]>([]);
-    return (
-      <CheckboxDropdownSection
-        {...args}
-        categories={cities}
-        selectedCategories={selected}
-        onCategoryChange={setSelected}
-        isSimpleList
-      />
-    );
+    const StoryComponent = () => {
+      const [selected, setSelected] = useState<string[]>([]);
+      return (
+        <CheckboxDropdownSection
+          {...args}
+          categories={cities}
+          selectedCategories={selected}
+          onCategoryChange={setSelected}
+          isSimpleList
+        />
+      );
+    };
+    return <StoryComponent />;
   },
   args: {
     title: 'Custom Title',
@@ -210,18 +246,21 @@ export const CustomDisplaySettings: Story = {
 // Пример с большим количеством элементов
 export const WithManyItems: Story = {
   render: args => {
-    const [selected, setSelected] = useState<string[]>([]);
-    const manyItems = Array.from({ length: 50 }, (_, i) => `Элемент ${i + 1}`);
+    const StoryComponent = () => {
+      const [selected, setSelected] = useState<string[]>([]);
+      const manyItems = Array.from({ length: 50 }, (_, i) => `Элемент ${i + 1}`);
 
-    return (
-      <CheckboxDropdownSection
-        {...args}
-        categories={manyItems}
-        selectedCategories={selected}
-        onCategoryChange={setSelected}
-        isSimpleList
-      />
-    );
+      return (
+        <CheckboxDropdownSection
+          {...args}
+          categories={manyItems}
+          selectedCategories={selected}
+          onCategoryChange={setSelected}
+          isSimpleList
+        />
+      );
+    };
+    return <StoryComponent />;
   },
   args: {
     title: 'Много элементов',
@@ -231,48 +270,54 @@ export const WithManyItems: Story = {
 
 export const CategoryItemWithChevron: StoryObj = {
   render: () => {
-    const [checked, setChecked] = useState(false);
-    const [expanded, setExpanded] = useState(false);
+    const StoryComponent = () => {
+      const [checked, setChecked] = useState(false);
+      const [expanded, setExpanded] = useState(false);
 
-    return (
-      <div style={{ maxWidth: '300px' }}>
-        <CategoryItem
-          category="Категория с подкатегориями"
-          checked={checked}
-          onChange={setChecked}
-          withChevron
-          onChevronClick={() => setExpanded(!expanded)}
-          customCheckboxMask={CheckboxMask.REMOVE}
-        />
-        {expanded && (
-          <div style={{ marginLeft: '20px', marginTop: '8px' }}>
-            <CategoryItem category="Подкатегория 1" checked={false} onChange={() => {}} />
-            <CategoryItem category="Подкатегория 2" checked={true} onChange={() => {}} />
-          </div>
-        )}
-      </div>
-    );
+      return (
+        <div style={{ maxWidth: '300px' }}>
+          <CategoryItem
+            category="Категория с подкатегориями"
+            checked={checked}
+            onChange={setChecked}
+            withChevron
+            onChevronClick={() => setExpanded(!expanded)}
+            customCheckboxMask={CheckboxMask.REMOVE}
+          />
+          {expanded && (
+            <div style={{ marginLeft: '20px', marginTop: '8px' }}>
+              <CategoryItem category="Подкатегория 1" checked={false} onChange={() => {}} />
+              <CategoryItem category="Подкатегория 2" checked={true} onChange={() => {}} />
+            </div>
+          )}
+        </div>
+      );
+    };
+    return <StoryComponent />;
   },
 };
 
 // Пример для MultiLevelSection
 export const MultiLevelSectionExample: StoryObj = {
   render: () => {
-    const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-    const [selectedSubcategories, setSelectedSubcategories] = useState<string[]>([]);
+    const StoryComponent = () => {
+      const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+      const [selectedSubcategories, setSelectedSubcategories] = useState<string[]>([]);
 
-    return (
-      <div style={{ maxWidth: '300px' }}>
-        <MultiLevelSection
-          visibleCategories={Object.keys(skillsCategories)}
-          categories={skillsCategories}
-          selectedCategories={selectedCategories}
-          selectedSubcategories={selectedSubcategories}
-          onCategoryChange={setSelectedCategories}
-          onSubcategoryChange={setSelectedSubcategories}
-        />
-      </div>
-    );
+      return (
+        <div style={{ maxWidth: '300px' }}>
+          <MultiLevelSection
+            visibleCategories={Object.keys(skillsCategories)}
+            categories={skillsCategories}
+            selectedCategories={selectedCategories}
+            selectedSubcategories={selectedSubcategories}
+            onCategoryChange={setSelectedCategories}
+            onSubcategoryChange={setSelectedSubcategories}
+          />
+        </div>
+      );
+    };
+    return <StoryComponent />;
   },
   parameters: {
     docs: {
