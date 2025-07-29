@@ -1,0 +1,42 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.page {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  padding: 0 36px;
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 40px 0 0;
+  padding: 0;
+  width: 100%;
+}
+
+.logo {
+  width: 159px;
+  height: 40px;
+  background: url('../../app/assets/static/images/logos/logo.svg') no-repeat center;
+}
+
+.close {
+  width: 24px;
+  height: 24px;
+  transform: rotate(45deg);
+  background: url('../../app/assets/static/images/icons/add.svg') no-repeat center;
+}
+
+.buttonContainer {
+  width: 147px;
+}

@@ -3,6 +3,7 @@ import './styles/index.css';
 import { Suspense } from 'react';
 import { ProtectedRoute } from '@/shared/ui/protectedRoute/protectedRoute';
 import SkillPage from '@/pages/skillPage/skillPage';
+import { RegistrationForms } from '@/features/RegistrationForms/registrationForms';
 // import { ErrorPage } from '@/pages/ErrorPage/ErrorPage';
 
 function App() {
@@ -13,7 +14,7 @@ function App() {
     <Suspense fallback={<></> /*Loader, когда будет готов*/}>
       <Routes>
         {/* <Route path="/" element={<TextTestComponent />} /> */}
-        <Route path="/" element={<SkillPage />} />
+        <Route path="/" element={<RegistrationForms />} />
         {/* <Route path="/*" element={<ErrorPage type="404"></ErrorPage>} /> */}
         <Route path="/" element={<></> /*Каталог карточек, когда будет готов */} />
         <Route
