@@ -4,6 +4,15 @@ import { CheckboxDropdownSection } from '../checkboxDropdownSection/checkboxDrop
 import { experienceOptions, genderOptions } from './constants';
 import { SkillsCategories, City } from './types';
 import styles from './filtersPanel.module.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@/app/providers/store/store';
+import {
+  setMode,
+  setGender,
+  setCities,
+  setSkills,
+  resetFilters,
+} from '@/services/slices/filtersSlice';
 
 interface FiltersPanelProps {
   skillsCategories: SkillsCategories;
@@ -11,30 +20,40 @@ interface FiltersPanelProps {
 }
 
 export const FiltersPanel = ({ skillsCategories, cities }: FiltersPanelProps) => {
-  const [experienceFilter, setExperienceFilter] = useState<string>('all');
-  const [genderFilter, setGenderFilter] = useState<string>('any');
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [selectedSubcategories, setSelectedSubcategories] = useState<string[]>([]);
-  const [selectedCities, setSelectedCities] = useState<string[]>([]);
+
+  const dispatch = useDispatch();
+  const { mode, gender, city, skill } = useSelector((state: RootState) => state.filters);
 
   // Вычисляем количество активных фильтров
   const activeFiltersCount = useMemo(() => {
     let count = 0;
 
-    if (experienceFilter !== 'all') count++;
-    if (genderFilter !== 'any') count++;
-    count += selectedSubcategories.length;
-    count += selectedCities.length;
+    if (mode !== 'all') count++;
+    if (gender !== 'any') count++;
+    count += skill.length;
+    count += city.length;
 
     return count;
-  }, [experienceFilter, genderFilter, selectedSubcategories, selectedCities]);
+  }, [mode, gender, skill, city]);
 
-  const resetFilters = () => {
-    setExperienceFilter('all');
-    setGenderFilter('any');
-    setSelectedCategories([]);
-    setSelectedSubcategories([]);
-    setSelectedCities([]);
+  const handleReset = () => {
+    dispatch(resetFilters());
+  };
+
+  // Типизированные обработчики
+  const handleModeChange = (value: string) => {
+    const validValue = experienceOptions.find(opt => opt.value === value)?.value;
+    if (validValue) {
+      dispatch(setMode(validValue));
+    }
+  };
+
+  const handleGenderChange = (value: string) => {
+    const validValue = genderOptions.find(opt => opt.value === value)?.value;
+    if (validValue) {
+      dispatch(setGender(validValue));
+    }
   };
 
   return (
@@ -44,7 +63,7 @@ export const FiltersPanel = ({ skillsCategories, cities }: FiltersPanelProps) =>
           Фильтры {activeFiltersCount > 0 && `(${activeFiltersCount})`}
         </h2>
         {activeFiltersCount > 0 && (
-          <button onClick={resetFilters} className={styles.resetButton} type="button">
+          <button onClick={handleReset} className={styles.resetButton} type="button">
             Сбросить
           </button>
         )}
@@ -53,31 +72,31 @@ export const FiltersPanel = ({ skillsCategories, cities }: FiltersPanelProps) =>
         <RadioGroupSection
           title=""
           options={experienceOptions}
-          selectedValue={experienceFilter}
-          onChange={setExperienceFilter}
+          selectedValue={mode}
+          onChange={handleModeChange}
         />
 
         <CheckboxDropdownSection
           title="Навыки"
           categories={skillsCategories}
           selectedCategories={selectedCategories}
-          selectedSubcategories={selectedSubcategories}
+          selectedSubcategories={skill}
           onCategoryChange={setSelectedCategories}
-          onSubcategoryChange={setSelectedSubcategories}
+          onSubcategoryChange={skills => dispatch(setSkills(skills))}
         />
 
         <RadioGroupSection
           title="Пол автора"
           options={genderOptions}
-          selectedValue={genderFilter}
-          onChange={setGenderFilter}
+          selectedValue={gender}
+          onChange={handleGenderChange}
         />
 
         <CheckboxDropdownSection
           title="Город"
           categories={cities}
-          selectedCategories={selectedCities}
-          onCategoryChange={setSelectedCities}
+          selectedCategories={city}
+          onCategoryChange={cities => dispatch(setCities(cities))}
           isSimpleList={true}
         />
       </div>

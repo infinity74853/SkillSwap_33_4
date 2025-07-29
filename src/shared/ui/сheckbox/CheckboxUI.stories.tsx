@@ -1,4 +1,3 @@
-// CheckboxUI.stories.tsx
 import React from 'react';
 import { Meta, StoryObj } from '@storybook/react';
 import { CheckboxUI } from './checkbox';
@@ -26,6 +25,26 @@ const meta: Meta<typeof CheckboxUI> = {
       action: 'changed',
       description: 'Обработчик изменения состояния',
     },
+    onLabelClick: {
+      action: 'labelClicked',
+      description: 'Обработчик клика по label',
+    },
+    ariaLabel: {
+      control: 'text',
+      description: 'ARIA-метка для доступности',
+    },
+    ariaLabelledby: {
+      control: 'text',
+      description: 'ARIA-связь с элементом описания',
+    },
+    role: {
+      control: 'text',
+      description: 'Роль элемента для доступности',
+    },
+  },
+  args: {
+    onChange: () => {},
+    onLabelClick: () => {},
   },
 };
 
@@ -47,7 +66,7 @@ export const Checked: Story = {
     id: 'checkbox-checked',
     label: 'Checked Checkbox',
     checked: true,
-    customCheckboxMask: 'done',
+    customCheckboxMask: 'empty',
   },
 };
 
@@ -71,6 +90,15 @@ export const RemoveStyle: Story = {
   name: 'Remove Style',
 };
 
+export const Disabled: Story = {
+  args: {
+    id: 'checkbox-disabled',
+    label: 'Disabled Checkbox',
+    checked: false,
+    disabled: true,
+  },
+};
+
 export const ReadOnly: Story = {
   args: {
     id: 'checkbox-readonly',
@@ -78,6 +106,16 @@ export const ReadOnly: Story = {
     checked: true,
     readOnly: true,
   },
+};
+
+export const WithAriaLabel: Story = {
+  args: {
+    id: 'checkbox-aria',
+    label: 'Checkbox with ARIA',
+    checked: false,
+    ariaLabel: 'Custom ARIA label',
+  },
+  name: 'With ARIA Label',
 };
 
 export const InteractiveExample: Story = {
@@ -94,6 +132,7 @@ export const InteractiveExample: Story = {
           checked={checked}
           customCheckboxMask={selectedMask}
           onChange={() => setChecked(!checked)}
+          onLabelClick={e => console.log('Label clicked', e)}
         />
 
         <div style={{ marginTop: '16px', display: 'flex', gap: '8px' }}>

@@ -19,7 +19,7 @@ export const CheckboxDropdownSection: React.FC<CheckboxDropdownSectionProps> = (
   selectedCategories,
   selectedSubcategories = [],
   onCategoryChange,
-  onSubcategoryChange = () => {},
+  onSubcategoryChange,
   isSimpleList = false,
 }) => {
   const [expanded, setExpanded] = useState(false);
@@ -30,9 +30,19 @@ export const CheckboxDropdownSection: React.FC<CheckboxDropdownSectionProps> = (
   };
   const { expand, collapse, defaultVisibleItems } = config;
 
+  // Проверка на обязательность пропа при isSimpleList === false
+  if (!isSimpleList && !onSubcategoryChange) {
+    throw new Error(
+      'Проп onSubcategoryChange обязателен для многоуровневого списка (isSimpleList === false)',
+    );
+  }
+
   // Преобразуем данные к единому формату
-  const categoryKeys =
-    isSimpleList && Array.isArray(categories) ? categories : Object.keys(categories);
+  const normalizedCategories =
+    isSimpleList && Array.isArray(categories)
+      ? Object.fromEntries(categories.map(c => [c, []]))
+      : categories;
+  const categoryKeys = Object.keys(normalizedCategories);
 
   const visibleCategories = expanded ? categoryKeys : categoryKeys.slice(0, defaultVisibleItems);
 
@@ -42,19 +52,15 @@ export const CheckboxDropdownSection: React.FC<CheckboxDropdownSectionProps> = (
       <div className={styles.checkboxDropdown}>
         <MultiLevelSection
           visibleCategories={visibleCategories}
-          categories={
-            isSimpleList && Array.isArray(categories)
-              ? Object.fromEntries(categories.map(c => [c, []]))
-              : categories
-          }
+          categories={normalizedCategories}
           selectedCategories={selectedCategories}
           selectedSubcategories={selectedSubcategories}
           onCategoryChange={onCategoryChange}
-          onSubcategoryChange={onSubcategoryChange}
+          onSubcategoryChange={onSubcategoryChange as (subcategories: string[]) => void}
           isSimpleList={isSimpleList}
         />
 
-        {categoryKeys.length >= defaultVisibleItems && (
+        {defaultVisibleItems > 0 && categoryKeys.length > defaultVisibleItems && (
           <button
             className={styles.showMoreContainer}
             onClick={() => setExpanded(!expanded)}

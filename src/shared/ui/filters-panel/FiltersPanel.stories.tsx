@@ -1,21 +1,57 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { FiltersPanel } from './filtersPanel';
+import { Provider } from 'react-redux';
+import { configureStore } from '@reduxjs/toolkit';
+import filtersSlice from '@/services/slices/filtersSlice';
+
+// Используем типы из вашего слайса
+type FiltersState = {
+  mode: 'all' | 'want-to-learn' | 'can-teach';
+  gender: 'any' | 'male' | 'female';
+  city: string[];
+  skill: string[];
+};
 
 type SkillsCategories = Record<string, readonly string[]>;
 type City = Record<string, readonly string[]>;
+
+const createMockStore = (preloadedState?: Partial<FiltersState>) => {
+  return configureStore({
+    reducer: {
+      filters: filtersSlice,
+    },
+    preloadedState: {
+      filters: {
+        mode: 'all',
+        gender: 'any',
+        city: [],
+        skill: [],
+        ...preloadedState,
+      } as FiltersState,
+    },
+    middleware: getDefaultMiddleware => getDefaultMiddleware(),
+  });
+};
 
 const meta: Meta<typeof FiltersPanel> = {
   title: 'Components/FiltersPanel',
   component: FiltersPanel,
   tags: ['autodocs'],
+  decorators: [
+    Story => (
+      <Provider store={createMockStore({})}>
+        <Story />
+      </Provider>
+    ),
+  ],
   argTypes: {
     skillsCategories: {
       control: 'object',
-      description: 'Категории и подкатегории навыков',
+      description: 'Объект с категориями навыков',
     },
     cities: {
       control: 'object',
-      description: 'Объект с городами и районами',
+      description: 'Объект с городами',
     },
   },
 };
@@ -25,25 +61,13 @@ export default meta;
 type Story = StoryObj<typeof FiltersPanel>;
 
 const baseSkills: SkillsCategories = {
-  Программирование: ['JavaScript', 'TypeScript', 'Python', 'Java'],
-  Дизайн: ['UI/UX', 'Графический дизайн', '3D моделирование', 'Motion design'],
-  Маркетинг: ['SEO', 'Контент-маркетинг', 'SMM', 'Таргетированная реклама'],
-  Аналитика: ['SQL', 'Google Analytics', 'Tableau', 'Excel'],
-  Управление: ['Agile', 'Scrum', 'Управление проектами', 'Работа с командой'],
-  Тестирование: ['Автоматизированное тестирование', 'Ручное тестирование', 'Jest', 'Cypress'],
+  Программирование: ['JavaScript', 'TypeScript'],
+  Дизайн: ['UI/UX', 'Графический дизайн'],
 };
 
 const baseCities: City = {
   Москва: [],
   'Санкт-Петербург': [],
-  Новосибирск: [],
-  Екатеринбург: [],
-  Казань: [],
-  'Нижний Новгород': [],
-  Челябинск: [],
-  Самара: [],
-  Омск: [],
-  'Ростов-на-Дону': [],
 };
 
 export const Default: Story = {
@@ -51,27 +75,71 @@ export const Default: Story = {
     skillsCategories: baseSkills,
     cities: baseCities,
   },
-  parameters: {
-    docs: {
-      description: {
-        story:
-          'Стандартное состояние фильтров с базовым набором навыков и городов. Показывает компонент в его обычном рабочем состоянии.',
-      },
-    },
-  },
 };
 
-export const Empty: Story = {
+export const WantToLearnMode: Story = {
   args: {
-    skillsCategories: {},
-    cities: {},
+    skillsCategories: baseSkills,
+    cities: baseCities,
   },
-  parameters: {
-    docs: {
-      description: {
-        story:
-          'Состояние компонента без данных. Используется для проверки поведения при отсутствии навыков и городов, а также работы скелетона загрузки.',
-      },
-    },
+  decorators: [
+    Story => (
+      <Provider store={createMockStore({ mode: 'want-to-learn' })}>
+        <Story />
+      </Provider>
+    ),
+  ],
+};
+
+export const CanTeachMode: Story = {
+  args: {
+    skillsCategories: baseSkills,
+    cities: baseCities,
   },
+  decorators: [
+    Story => (
+      <Provider store={createMockStore({ mode: 'can-teach' })}>
+        <Story />
+      </Provider>
+    ),
+  ],
+};
+
+export const WithSkillsSelected: Story = {
+  args: {
+    skillsCategories: baseSkills,
+    cities: baseCities,
+  },
+  decorators: [
+    Story => (
+      <Provider
+        store={createMockStore({
+          skill: ['JavaScript', 'UI/UX'],
+        })}
+      >
+        <Story />
+      </Provider>
+    ),
+  ],
+};
+
+export const WithAllFilters: Story = {
+  args: {
+    skillsCategories: baseSkills,
+    cities: baseCities,
+  },
+  decorators: [
+    Story => (
+      <Provider
+        store={createMockStore({
+          mode: 'can-teach',
+          gender: 'female',
+          city: ['Москва'],
+          skill: ['TypeScript'],
+        })}
+      >
+        <Story />
+      </Provider>
+    ),
+  ],
 };
