@@ -19,6 +19,13 @@ export const CategoryItem: React.FC<CategoryItemProps> = ({
   onChevronClick,
   customCheckboxMask = 'empty',
 }) => {
+  const handleLabelClick = (e: React.MouseEvent) => {
+    if (withChevron) {
+      e.preventDefault();
+      onChevronClick?.();
+    }
+  };
+
   return (
     <div className={`${!withChevron ? styles.simpleContainer : styles.categoryHeader}`}>
       <CheckboxUI
@@ -28,15 +35,13 @@ export const CategoryItem: React.FC<CategoryItemProps> = ({
         label={category}
         customCheckboxMask={customCheckboxMask}
         onChange={() => onChange?.(!checked)}
+        onLabelClick={handleLabelClick}
       />
 
       {withChevron && (
         <button
           className={styles.categoryChevron}
-          onClick={e => {
-            e.preventDefault();
-            onChevronClick?.();
-          }}
+          onClick={handleLabelClick}
           aria-label={checked ? 'Свернуть подкатегории' : 'Развернуть подкатегории'}
           type="button"
         />

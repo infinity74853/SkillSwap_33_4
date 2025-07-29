@@ -16,6 +16,7 @@ interface CheckboxUiProps {
 
   // Обработчики
   onChange: () => void;
+  onLabelClick?: (e: React.MouseEvent) => void;
 
   // ARIA-атрибуты
   ariaLabel?: string;
@@ -32,6 +33,7 @@ export const CheckboxUI: React.FC<CheckboxUiProps> = ({
   label,
   customCheckboxMask = 'empty',
   onChange,
+  onLabelClick,
   ariaLabel,
   ariaLabelledby,
   role = 'checkbox',
@@ -45,22 +47,17 @@ export const CheckboxUI: React.FC<CheckboxUiProps> = ({
         checked={checked}
         disabled={disabled}
         readOnly={readOnly}
-        onChange={() => {}} // Пустой обработчик для контролируемого input
+        onClick={onChange}
         className={styles.hiddenCheckbox}
         aria-label={ariaLabel || label}
         aria-labelledby={ariaLabelledby}
         role={role}
       />
-      <label
-        htmlFor={id}
-        className={`${styles.customCheckbox} ${styles[customCheckboxMask]}`}
-        onClick={e => {
-          e.preventDefault();
-          onChange?.();
-        }}
-      >
+      <label htmlFor={id} className={`${styles.customCheckbox} ${styles[customCheckboxMask]}`}>
         <span className={styles.checkmark} />
-        <span className={styles.labelText}>{label}</span>
+        <span className={styles.labelText} onClick={onLabelClick}>
+          {label}
+        </span>
       </label>
     </div>
   );

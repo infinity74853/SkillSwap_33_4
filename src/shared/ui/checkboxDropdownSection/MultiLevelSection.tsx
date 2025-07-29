@@ -48,7 +48,7 @@ export const MultiLevelSection: React.FC<MultiLevelSectionProps> = ({
         }
       }
     },
-    [categories, selectedSubcategories, isSimpleList],
+    [categories, selectedCategories, selectedSubcategories, isSimpleList],
   );
 
   const toggleCategory = useCallback(

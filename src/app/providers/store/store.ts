@@ -4,8 +4,11 @@ import {
   useDispatch as dispatchHook,
   useSelector as selectorHook,
 } from 'react-redux';
+import filtersReducer from '@/services/slices/filtersSlice';
 
-export const rootReducer = combineReducers({});
+export const rootReducer = combineReducers({
+  filters: filtersReducer,
+});
 
 export const store = configureStore({
   reducer: rootReducer,
