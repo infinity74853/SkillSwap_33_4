@@ -5,7 +5,15 @@ import {
   useSelector as selectorHook,
 } from 'react-redux';
 import stepsSlice from '../slices/stepSlice';
+import filtersReducer from '@/services/slices/filtersSlice';
+import likeReducer from '@/services/slices/likeSlice';
 
+export const rootReducer = combineReducers({
+  filters: filtersReducer,
+});
+export const rootReducer = combineReducers({
+  likes: likeReducer,
+});
 export const rootReducer = combineSlices({
   [stepsSlice.name]: stepsSlice.reducer,
 });

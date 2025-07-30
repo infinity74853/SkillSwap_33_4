@@ -41,18 +41,6 @@
   outline-offset: 2px;
 }
 
-.likeButton {
-  mask: url('@/app/assets/static/images/icons/like.svg') no-repeat center;
-}
-
-.shareButton {
-  mask: url('@/app/assets/static/images/icons/share.svg') no-repeat center;
-}
-
-.moreButton {
-  mask: url('@/app/assets/static/images/icons/more-square.svg') no-repeat center;
-}
-
 .skillDetails {
   display: flex;
   flex-direction: row;
