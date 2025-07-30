@@ -32,13 +32,13 @@ export const Header = () => {
             <Logo />
           </Link>
           <nav className={styles.allSkills}>
-            <Link to="/about" className={styles.link}>
+            <Link to="/about" className={styles.linkAbout}>
               О проекте
             </Link>
-            <Link to="/all_skills" className={styles.link}>
+            <Link to="/all_skills" className={styles.linkSkills}>
               Все навыки
-              <span className={styles.chevronIcon} />
             </Link>
+            <div className={styles.chevronIcon}> </div>
           </nav>
         </div>
         <SearchInput placeholder="Искать навык" />

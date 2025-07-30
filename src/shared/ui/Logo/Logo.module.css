@@ -3,9 +3,9 @@
 .logoContainer {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   max-width: 200px;
-  padding: 6px;
+  padding: 10px;
 }
 
 .logoWrapper {

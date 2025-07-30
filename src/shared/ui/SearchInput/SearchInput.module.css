@@ -2,15 +2,14 @@
 .searchContainer {
   position: relative;
   width: 100%;
-  max-width: 346px;
-  padding-right: 120px;
+  max-width: 515px;
   display: flex;
-  justify-content: flex-start;
+  padding-left: 6px;
 }
 
 .searchIcon {
   position: absolute;
-  left: 12px;
+  left: 15px;
   top: 50%;
   transform: translateY(-50%);
   width: 20px;
@@ -23,7 +22,6 @@
 
 .input {
   width: 100%;
-  min-width: 460px;
   padding: 12px 12px 12px 40px;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
