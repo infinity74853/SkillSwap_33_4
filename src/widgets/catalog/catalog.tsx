@@ -5,6 +5,7 @@ import { profilesData } from './profilesData';
 import styles from './catalog.module.css';
 import { UserSection } from '../userSection/userSection';
 import { useSelector } from '@/app/providers/store/store';
+import { selectCatalogItems } from '@/services/selectors/catalogSelectors';
 
 type CategorySection = {
   title: string;
@@ -22,7 +23,7 @@ const Catalog: React.FC<{ isAuthenticated: boolean }> = ({ isAuthenticated }) =>
   const [hasMore, setHasMore] = useState(true);
 
   // Получаем профили из хранилища
-  const profiles = useSelector(state => state.profiles.profiles);
+  const profiles = useSelector(selectCatalogItems);
   const [recommendedItems, setRecommendedItems] = useState<Profile[]>([]);
 
   // Определяем количество карточек для загрузки (≥20)
