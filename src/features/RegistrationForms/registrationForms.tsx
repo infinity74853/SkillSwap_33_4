@@ -23,7 +23,7 @@ export const RegistrationForms = () => {
   return (
     <div className={styles.page}>
       <div className={styles.header}>
-        <div className={styles.logo}></div>
+        <div className={styles.logo} onClick={onClose}></div>
         <div className={styles.buttonContainer}>
           <Button type="tertiary" onClick={onClose}>
             Закрыть <div className={styles.close}></div>
