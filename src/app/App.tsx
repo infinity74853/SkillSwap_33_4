@@ -4,6 +4,8 @@ import { MainLayout } from '@/widgets/Layout/MainLayout';
 import TextTestComponent from '@/widgets/TestComponent/TestComponent';
 import Catalog from '@/widgets/catalog/catalog';
 import { ProtectedRoute } from '@/shared/ui/protectedRoute/protectedRoute';
+import { RegistrationForms } from '@/features/registrationForms/registrationForms';
+// import { ErrorPage } from '@/pages/ErrorPage/ErrorPage';
 import SkillPage from '@/pages/skillPage/skillPage';
 import { useDispatch } from './providers/store/store';
 import { initializeLikes } from '@/services/slices/likeSlice';
@@ -22,6 +24,45 @@ function App() {
   return (
     <Suspense fallback={<></> /*Loader, когда будет готов*/}>
       <Routes>
+        {/* <Route path="/" element={<TextTestComponent />} /> */}
+        <Route path="/" element={<RegistrationForms />} />
+        {/* <Route path="/*" element={<ErrorPage type="404"></ErrorPage>} /> */}
+        <Route path="/" element={<></> /*Каталог карточек, когда будет готов */} />
+        <Route
+          path="/login"
+          element={
+            <ProtectedRoute onlyUnAuth>
+              <>{/* Страница логина, когда будет готова */}</>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            <ProtectedRoute onlyUnAuth>
+              <>{/* Страница регистрации, когда будет готова */}</>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile/details"
+          element={
+            <ProtectedRoute>
+              <>{/* Страница подробной информации в профиле, когда будет готова */}</>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile/favorites"
+          element={
+            <ProtectedRoute>
+              <>{/* Страница избранных карточек в профиле, когда будет готова */}</>
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+      {backgroundLocation && (
+        <Routes /* Руты для модалок */>
         <Route element={<MainLayout />}>
           <Route
             path="/"
