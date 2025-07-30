@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
-import { RadioGroupSection } from '../radioGroupSection/radioGroupSection';
-import { CheckboxDropdownSection } from '../checkboxDropdownSection/checkboxDropdownSection';
+import { RadioGroupSection } from '@/shared/ui/radioGroupSection/radioGroupSection';
+import { CheckboxDropdownSection } from '@/shared/ui//checkboxDropdownSection/checkboxDropdownSection';
 import { experienceOptions, genderOptions } from './constants';
 import { SkillsCategories, City } from './types';
 import styles from './filtersPanel.module.css';

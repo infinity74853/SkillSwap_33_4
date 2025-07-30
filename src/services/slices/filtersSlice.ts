@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction, Draft } from '@reduxjs/toolkit';
-import { ExperienceOption, GenderOption } from '@/shared/ui/filters-panel/types';
+import { ExperienceOption, GenderOption } from '@/widgets/filters-panel/types';
 
 interface FiltersState {
   mode: ExperienceOption['value'];
@@ -57,9 +57,10 @@ export const filtersSlice = createSlice({
             state.skill = state.skill.filter(s => s !== value);
           }
           break;
-        default:
+        default: {
           const _exhaustiveCheck: never = type;
           return _exhaustiveCheck;
+        }
       }
     },
     resetFilters: () => initialState,

@@ -1,4 +1,4 @@
-@import url('../../../app/styles/variables.css');
+@import url('../../app/styles/variables.css');
 
 .container {
   max-width: 284px;
@@ -36,7 +36,7 @@
   top: 0;
   width: 24px;
   height: 24px;
-  mask-image: url('../../../app/assets/static/images/icons/cross.svg');
+  mask-image: url('../../app/assets/static/images/icons/cross.svg');
   mask-repeat: no-repeat;
   background-color: currentColor;
 }

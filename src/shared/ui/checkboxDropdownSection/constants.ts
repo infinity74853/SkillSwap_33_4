@@ -10,6 +10,6 @@ export const TOGGLE_TEXTS: Record<
   Навыки: {
     expand: 'Все категории',
     collapse: 'Свернуть',
-    defaultVisibleItems: 6,
+    defaultVisibleItems: 5,
   },
 };

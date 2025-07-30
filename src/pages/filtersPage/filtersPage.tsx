@@ -1,14 +1,17 @@
 import React from 'react';
-import { FiltersPanel } from '@/shared/ui/filters-panel/filtersPanel';
+import { FiltersPanel } from '@/widgets/filters-panel/filtersPanel';
 import styles from './filtersPage.module.css';
-import { mockUsers } from './conctsnts';
+import { mockUsers } from './constants';
 import { skillsCategories } from '@/shared/lib/categories';
 import { cities } from '@/shared/lib/cities';
 import { UserSection } from '@/widgets/userSection/userSection';
 import SelectedFilters from '@/shared/ui/selectedFilters/selectedFilters';
 
 export const FiltersPage: React.FC = () => {
-  // Предположим, что у нас есть массив пользователей
+  function getUsers(): number {
+    // TODO: Предположим, что у нас есть массив пользователей, которые получены после фильтра
+    return 9999999;
+  }
 
   return (
     <div className={styles.filtersPage}>
@@ -22,7 +25,7 @@ export const FiltersPage: React.FC = () => {
           title="Подходящие предложения:"
           users={mockUsers}
           isFiltered={true}
-          count={0}
+          count={getUsers()}
         />
       </div>
     </div>

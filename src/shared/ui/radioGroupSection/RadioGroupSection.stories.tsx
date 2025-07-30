@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Meta, StoryObj } from '@storybook/react';
 import { RadioGroupSection } from './radioGroupSection';
 
@@ -41,7 +41,7 @@ export const Basic: Story = {
     ],
     selectedValue: 'option1',
   },
-  render: args => {
+  render: function StoryComponent(args) {
     const [value, setValue] = useState(args.selectedValue);
     return <RadioGroupSection {...args} selectedValue={value} onChange={setValue} />;
   },
@@ -56,7 +56,7 @@ export const WithoutTitle: Story = {
     ],
     selectedValue: 'light',
   },
-  render: args => {
+  render: function StoryComponent(args) {
     const [value, setValue] = useState(args.selectedValue);
     return <RadioGroupSection {...args} selectedValue={value} onChange={setValue} />;
   },
@@ -75,7 +75,7 @@ export const MultipleOptions: Story = {
     ],
     selectedValue: 'blue',
   },
-  render: args => {
+  render: function StoryComponent(args) {
     const [value, setValue] = useState(args.selectedValue);
     return <RadioGroupSection {...args} selectedValue={value} onChange={setValue} />;
   },
@@ -92,7 +92,7 @@ export const HorizontalLayout: Story = {
     ],
     selectedValue: 'center',
   },
-  render: args => {
+  render: function StoryComponent(args) {
     const [value, setValue] = useState(args.selectedValue);
     return (
       <div style={{ maxWidth: '600px' }}>
