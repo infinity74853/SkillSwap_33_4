@@ -1,19 +1,16 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
+import { Suspense, useEffect } from 'react';
 import { MainLayout } from '@/widgets/Layout/MainLayout';
 import TextTestComponent from '@/widgets/TestComponent/TestComponent';
 import Catalog from '@/widgets/catalog/catalog';
-import './styles/index.css';
-import { Route, Routes, useLocation } from 'react-router-dom';
-import './styles/index.css';
-import { Suspense, useEffect } from 'react';
 import { ProtectedRoute } from '@/shared/ui/protectedRoute/protectedRoute';
 import SkillPage from '@/pages/skillPage/skillPage';
-import { SuccessModal } from '@/features/auth/successModal/SuccessModal';
 import { useDispatch } from './providers/store/store';
 import { initializeLikes } from '@/services/slices/likeSlice';
+import './styles/index.css';
+import { SuccessModal } from '@/features/successModal/successModal';
 
 function App() {
-  /* const navigate = useNavigate(); на будущее для модалок */
   const location = useLocation();
   const backgroundLocation = location.state?.background;
   const dispatch = useDispatch();
@@ -35,74 +32,78 @@ function App() {
               </>
             }
           />
-        </Route>
-      </Routes>
-    </BrowserRouter>
-        {/* <Route path="/" element={<TextTestComponent />} /> */}
-        <Route path="/" element={<SuccessModal />} />
-        {/* <Route path="/*" element={<ErrorPage type="404"></ErrorPage>} /> */}
-        <Route path="/" element={<></> /*Каталог карточек, когда будет готов */} />
-        <Route
-          path="/login"
-          element={
-            <ProtectedRoute onlyUnAuth>
-              <>{/* Страница логина, когда будет готова */}</>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/register"
-          element={
-            <ProtectedRoute onlyUnAuth>
-              <>{/* Страница регистрации, когда будет готова */}</>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/profile/details"
-          element={
-            <ProtectedRoute>
-              <>{/* Страница подробной информации в профиле, когда будет готова */}</>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/profile/favorites"
-          element={
-            <ProtectedRoute>
-              <>{/* Страница избранных карточек в профиле, когда будет готова */}</>
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
-      {backgroundLocation && (
-        <Routes /* Руты для модалок */>
+
+          <Route path="/success" element={<SuccessModal />} />
+
           <Route
-            path="/register/preview"
+            path="/login"
             element={
               <ProtectedRoute onlyUnAuth>
-                <>{/* Модалка с превью своего предложения */}</>
+                <>{/* Страница логина, когда будет готова */}</>
               </ProtectedRoute>
             }
           />
+
           <Route
-            path="/register/success"
+            path="/register"
             element={
               <ProtectedRoute onlyUnAuth>
-                <>{/* Модалка с информацией об успешной регистрации */}</>
+                <>{/* Страница регистрации, когда будет готова */}</>
               </ProtectedRoute>
             }
           />
+
           <Route
-            path="/offer/:id/success"
+            path="/profile/details"
             element={
               <ProtectedRoute>
-                <></>
-              </ProtectedRoute> /* Модалка с уведомлением о созданном предложении обмена */
+                <>{/* Страница подробной информации в профиле */}</>
+              </ProtectedRoute>
             }
           />
-        </Routes>
-      )}
+
+          <Route
+            path="/profile/favorites"
+            element={
+              <ProtectedRoute>
+                <>{/* Страница избранных карточек */}</>
+              </ProtectedRoute>
+            }
+          />
+
+          <Route path="/skill/:id" element={<SkillPage />} />
+        </Route>
+
+        {/* Отдельные маршруты для модалок */}
+        {backgroundLocation && (
+          <Route>
+            <Route
+              path="/register/preview"
+              element={
+                <ProtectedRoute onlyUnAuth>
+                  <>{/* Модалка с превью своего предложения */}</>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/register/success"
+              element={
+                <ProtectedRoute onlyUnAuth>
+                  <>{/* Модалка об успешной регистрации */}</>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/offer/:id/success"
+              element={
+                <ProtectedRoute>
+                  <>{/* Модалка о созданном предложении обмена */}</>
+                </ProtectedRoute>
+              }
+            />
+          </Route>
+        )}
+      </Routes>
     </Suspense>
   );
 }
