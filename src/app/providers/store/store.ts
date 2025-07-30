@@ -5,9 +5,11 @@ import {
   useSelector as selectorHook,
 } from 'react-redux';
 import likeReducer from '@/services/slices/likeSlice';
+import catalogReducer from '@/services/slices/catalogSlice';
 
 export const rootReducer = combineReducers({
   likes: likeReducer,
+  profiles: catalogReducer,
 });
 
 export const store = configureStore({

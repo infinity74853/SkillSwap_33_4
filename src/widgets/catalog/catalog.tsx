@@ -1,10 +1,10 @@
 import React, { useState, useCallback } from 'react';
 import { CatalogUI, CatalogUIProps } from './ui/catalogUI';
-import { ProfileCategory } from '@/entities/profile/model/types';
+import { Profile, ProfileCategory } from '@/entities/profile/model/types';
 import { profilesData } from './profilesData';
-//import CatalogCategory from '../catalogCategory/fake/catalogCategory';
 import styles from './catalog.module.css';
 import { UserSection } from '../userSection/userSection';
+import { useSelector } from '@/app/providers/store/store';
 
 type CategorySection = {
   title: string;
@@ -13,12 +13,17 @@ type CategorySection = {
   onShowAll?: () => void;
 };
 
+// DELETE: Моковая логика, будет масштабный рефаторинг в следующей таске
+
 const Catalog: React.FC<{ isAuthenticated: boolean }> = ({ isAuthenticated }) => {
   const [viewMode, setViewMode] = useState<'default' | 'category'>('default');
   const [currentCategory, setCurrentCategory] = useState<ProfileCategory | null>(null);
-  const [recommendedItems, setRecommendedItems] = useState<typeof profilesData>([]);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+
+  // Получаем профили из хранилища
+  const profiles = useSelector(state => state.profiles.profiles);
+  const [recommendedItems, setRecommendedItems] = useState<Profile[]>([]);
 
   // Определяем количество карточек для загрузки (≥20)
   const getItemsPerLoad = () => {
@@ -29,17 +34,17 @@ const Catalog: React.FC<{ isAuthenticated: boolean }> = ({ isAuthenticated }) =>
 
   // Инициализация "Рекомендуем"
   React.useEffect(() => {
-    const initialItems = profilesData
+    const initialItems = profiles
       .filter(p => p.category === 'recommended')
       .slice(0, getItemsPerLoad());
     setRecommendedItems(initialItems);
-    const allRecommendedCount = profilesData.filter(p => p.category === 'recommended').length;
+    const allRecommendedCount = profiles.filter(p => p.category === 'recommended').length;
     setHasMore(initialItems.length < allRecommendedCount);
-  }, []);
+  }, [profiles]);
 
   // Фильтрация
   const getProfilesByCategory = (category: ProfileCategory) => {
-    return profilesData.filter(profile => profile.category === category);
+    return profiles.filter(profile => profile.category === category);
   };
 
   // Заголовки
@@ -70,7 +75,7 @@ const Catalog: React.FC<{ isAuthenticated: boolean }> = ({ isAuthenticated }) =>
 
     setLoading(true);
     setTimeout(() => {
-      const allRecommended = profilesData.filter(p => p.category === 'recommended');
+      const allRecommended = profiles.filter(p => p.category === 'recommended');
       const currentLength = recommendedItems.length;
       const nextItems = allRecommended.slice(currentLength, currentLength + getItemsPerLoad());
 
@@ -82,7 +87,7 @@ const Catalog: React.FC<{ isAuthenticated: boolean }> = ({ isAuthenticated }) =>
       }
       setLoading(false);
     }, 1000);
-  }, [recommendedItems.length, loading, hasMore]);
+  }, [recommendedItems.length, loading, hasMore, profiles]);
 
   // Подготовка данных
   const getUIProps = (): Omit<CatalogUIProps, 'sections'> & { sections: CategorySection[] } => {
