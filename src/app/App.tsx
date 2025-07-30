@@ -2,8 +2,7 @@ import { Route, Routes, useLocation } from 'react-router-dom';
 import './styles/index.css';
 import { Suspense } from 'react';
 import { ProtectedRoute } from '@/shared/ui/protectedRoute/protectedRoute';
-import SkillPage from '@/pages/skillPage/skillPage';
-import { RegistrationForms } from '@/features/RegistrationForms/registrationForms';
+import { RegistrationForms } from '@/features/registrationForms/registrationForms';
 // import { ErrorPage } from '@/pages/ErrorPage/ErrorPage';
 
 function App() {

@@ -1,9 +1,3 @@
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
 .container {
   display: flex;
   position: relative;
@@ -13,6 +7,7 @@
   height: auto;
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
 .step {
@@ -22,6 +17,7 @@
   border-radius: 8px;
   transition: background-color 0.5s ease;
   margin: 0;
+  box-sizing: border-box;
 }
 
 .active {
