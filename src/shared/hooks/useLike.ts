@@ -1,6 +1,6 @@
 import { toggleLike } from '@/services/slices/likeSlice';
 import { selectIsLiked, selectLikesLoading } from '@/services/selectors/likeSelectors';
-import { useDispatch, useSelector } from '@/app/providers/store/store';
+import { useDispatch, useSelector } from '@/services/store/store';
 
 interface UseLikeProps {
   itemId: string;

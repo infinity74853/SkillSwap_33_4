@@ -5,9 +5,9 @@ import TextTestComponent from '@/widgets/TestComponent/TestComponent';
 import Catalog from '@/widgets/catalog/catalog';
 import { ProtectedRoute } from '@/shared/ui/protectedRoute/protectedRoute';
 import { RegistrationForms } from '@/features/registrationForms/registrationForms';
-// import { ErrorPage } from '@/pages/ErrorPage/ErrorPage';
+import { ErrorPage } from '@/pages/ErrorPage/ErrorPage';
 import SkillPage from '@/pages/skillPage/skillPage';
-import { useDispatch } from './providers/store/store';
+import { useDispatch } from '../services/store/store';
 import { initializeLikes } from '@/services/slices/likeSlice';
 import './styles/index.css';
 import { SuccessModal } from '@/features/successModal/successModal';
@@ -23,11 +23,51 @@ function App() {
 
   return (
     <Suspense fallback={<></> /*Loader, когда будет готов*/}>
-      <Routes>
-        {/* <Route path="/" element={<TextTestComponent />} /> */}
-        <Route path="/" element={<RegistrationForms />} />
-        {/* <Route path="/*" element={<ErrorPage type="404"></ErrorPage>} /> */}
-        <Route path="/" element={<></> /*Каталог карточек, когда будет готов */} />
+      {/* 
+        Основной блок <Routes> для отображения страниц.
+        Мы передаем ему `location={backgroundLocation || location}`.
+        Это "замораживает" фоновую страницу, когда модальное окно активно.
+      */}
+      <Routes location={backgroundLocation || location}>
+        {/*
+          Маршруты, которые используют основной Layout.
+          Все вложенные Route будут рендериться внутри <MainLayout />
+        */}
+        <Route path="/" element={<MainLayout />}>
+          {/* index-маршрут для корневого пути "/" */}
+          <Route
+            index
+            element={
+              <>
+                <TextTestComponent />
+                <Catalog isAuthenticated={false} />
+              </>
+            }
+          />
+
+          <Route
+            path="/profile/details"
+            element={
+              <ProtectedRoute>
+                <>{/* Страница подробной информации в профиле, когда будет готова */}</>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile/favorites"
+            element={
+              <ProtectedRoute>
+                <>{/* Страница избранных карточек в профиле, когда будет готова */}</>
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/skill/:id" element={<SkillPage />} />
+        </Route>
+
+        {/* 
+          Маршруты, которые НЕ используют MainLayout (например, страницы входа и регистрации).
+          Они находятся на том же уровне, что и <Route path="/" element={<MainLayout />}>.
+        */}
         <Route
           path="/login"
           element={
@@ -40,111 +80,49 @@ function App() {
           path="/register"
           element={
             <ProtectedRoute onlyUnAuth>
-              <>{/* Страница регистрации, когда будет готова */}</>
+              {/* Я поместил сюда RegistrationForms, так как это логичное место для страницы регистрации */}
+              <RegistrationForms />
             </ProtectedRoute>
           }
         />
-        <Route
-          path="/profile/details"
-          element={
-            <ProtectedRoute>
-              <>{/* Страница подробной информации в профиле, когда будет готова */}</>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/profile/favorites"
-          element={
-            <ProtectedRoute>
-              <>{/* Страница избранных карточек в профиле, когда будет готова */}</>
-            </ProtectedRoute>
-          }
-        />
+        <Route path="/*" element={<ErrorPage type="404"></ErrorPage>} />
       </Routes>
+
+      {/* 
+        Этот блок отвечает за отображение МОДАЛЬНЫХ ОКОН.
+        Он рендерится только если в `location.state` есть `background`.
+        Это позволяет показывать модальное окно поверх основной страницы.
+      */}
       {backgroundLocation && (
-        <Routes /* Руты для модалок */>
-        <Route element={<MainLayout />}>
-          <Route
-            path="/"
-            element={
-              <>
-                <TextTestComponent />
-                <Catalog isAuthenticated={false} />
-              </>
-            }
-          />
-
+        <Routes>
+          {/* Руты для модалок */}
           <Route path="/success" element={<SuccessModal />} />
-
           <Route
-            path="/login"
+            path="/register/preview"
             element={
               <ProtectedRoute onlyUnAuth>
-                <>{/* Страница логина, когда будет готова */}</>
+                <>{/* Модалка с превью своего предложения */}</>
               </ProtectedRoute>
             }
           />
-
           <Route
-            path="/register"
+            path="/register/success"
             element={
               <ProtectedRoute onlyUnAuth>
-                <>{/* Страница регистрации, когда будет готова */}</>
+                <>{/* Модалка об успешной регистрации */}</>
               </ProtectedRoute>
             }
           />
-
           <Route
-            path="/profile/details"
+            path="/offer/:id/success"
             element={
               <ProtectedRoute>
-                <>{/* Страница подробной информации в профиле */}</>
+                <>{/* Модалка о созданном предложении обмена */}</>
               </ProtectedRoute>
             }
           />
-
-          <Route
-            path="/profile/favorites"
-            element={
-              <ProtectedRoute>
-                <>{/* Страница избранных карточек */}</>
-              </ProtectedRoute>
-            }
-          />
-
-          <Route path="/skill/:id" element={<SkillPage />} />
-        </Route>
-
-        {/* Отдельные маршруты для модалок */}
-        {backgroundLocation && (
-          <Route>
-            <Route
-              path="/register/preview"
-              element={
-                <ProtectedRoute onlyUnAuth>
-                  <>{/* Модалка с превью своего предложения */}</>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/register/success"
-              element={
-                <ProtectedRoute onlyUnAuth>
-                  <>{/* Модалка об успешной регистрации */}</>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/offer/:id/success"
-              element={
-                <ProtectedRoute>
-                  <>{/* Модалка о созданном предложении обмена */}</>
-                </ProtectedRoute>
-              }
-            />
-          </Route>
-        )}
-      </Routes>
+        </Routes>
+      )}
     </Suspense>
   );
 }

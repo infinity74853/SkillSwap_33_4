@@ -5,7 +5,7 @@ import {
   useSelector as selectorHook,
 } from 'react-redux';
 
-import stepsSlice from '../slices/stepSlice';
+import stepsSlice from '@/services/slices/stepSlice';
 import filtersReducer from '@/services/slices/filtersSlice';
 import likeReducer from '@/services/slices/likeSlice';
 

@@ -1,8 +1,8 @@
 import { PAGE_TEXTS } from '@/features/authForm/ui/authForm';
 import { AuthFormUI } from '@/features/authForm/ui/authFormUI';
 import { useState } from 'react';
-import { useDispatch } from '@/app/providers/store/store';
-import { stepActions } from '@/app/providers/slices/stepSlice';
+import { useDispatch } from '@/services/store/store';
+import { stepActions } from '@/services/slices/stepSlice';
 
 export const AuthFormContainer = ({ isFirstStage = true }) => {
   const [showPassword, setShowPassword] = useState(false);

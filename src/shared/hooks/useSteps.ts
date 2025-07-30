@@ -1,5 +1,5 @@
-import { stepActions } from '@/app/providers/slices/stepSlice';
-import { useDispatch } from '@/app/providers/store/store';
+import { stepActions } from '@/services/slices/stepSlice';
+import { useDispatch } from '@/services/store/store';
 import { useEffect } from 'react';
 
 export const useSteps = (stepCount: number) => {

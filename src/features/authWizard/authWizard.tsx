@@ -1,9 +1,9 @@
 import { Children, ReactElement } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import styles from './authWizard.module.css';
-import { stepSelectors } from '@/app/providers/slices/stepSlice';
+import { stepSelectors } from '@/services/slices/stepSlice';
 import { StepIndicator } from '@/shared/ui/stepIndicator/stepIndicator';
-import { useSelector } from '@/app/providers/store/store';
+import { useSelector } from '@/services/store/store';
 
 interface AuthWizardProps {
   children: ReactElement[];
