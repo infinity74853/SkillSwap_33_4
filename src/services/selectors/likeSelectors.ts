@@ -1,5 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit';
-import { RootState } from '@/app/providers/store/store';
+import { RootState } from '@/services/store/store';
 
 export const selectLikedItems = (state: RootState) => state.likes.likedItems;
 export const selectLikesLoading = (state: RootState) => state.likes.loading;
