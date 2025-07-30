@@ -4,8 +4,12 @@ import {
   useDispatch as dispatchHook,
   useSelector as selectorHook,
 } from 'react-redux';
+import filtersReducer from '@/services/slices/filtersSlice';
 import likeReducer from '@/services/slices/likeSlice';
 
+export const rootReducer = combineReducers({
+  filters: filtersReducer,
+});
 export const rootReducer = combineReducers({
   likes: likeReducer,
 });
