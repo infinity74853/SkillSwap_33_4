@@ -1,13 +1,13 @@
 import React from 'react';
 import styles from '../catalog.module.css';
-import { Profile } from '@/entities/profile/model/types';
 import { UserSection } from '@/widgets/userSection/userSection';
+import { User } from '@/entities/user/model/types';
 //import CatalogCategory from '@/widgets/catalogCategory/fake/catalogCategory';
 
 // Типы можно оставить как есть или упростить, если компонент всегда получает все пропсы
 interface CategorySection {
   title: string;
-  profiles: Profile[];
+  profiles: User[];
   showAllButton?: boolean;
   onShowAll?: () => void;
 }

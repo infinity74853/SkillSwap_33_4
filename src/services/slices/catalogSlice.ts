@@ -1,23 +1,24 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { Profile } from '@/entities/profile/model/types';
-import { profilesData } from '@/widgets/catalog/profilesData';
+import { usersData } from '@/widgets/catalog/usersData';
+import { User } from '@/entities/user/model/types';
 
 // Ключ для localStorage
 const LS_KEY = 'catalog_profiles';
 
 interface ProfileState {
-  profiles: Profile[];
+  users: User[];
   loading: boolean;
   error: string | null;
 }
 
 const initialState: ProfileState = {
-  profiles: [],
+  users: [],
   loading: false,
   error: null,
 };
 
-const getCachedProfiles = (): Profile[] | null => {
+const getCachedMokUsers = (): Profile[] | null => {
   try {
     const savedData = localStorage.getItem(LS_KEY);
     return savedData ? JSON.parse(savedData) : null;
@@ -31,15 +32,15 @@ const getCachedProfiles = (): Profile[] | null => {
 export const fetchCatalog = createAsyncThunk('profiles/fetch', async (_, { rejectWithValue }) => {
   try {
     // 1. Проверяем кэш
-    const cachedProfiles = getCachedProfiles();
-    if (cachedProfiles) {
-      return cachedProfiles;
+    const cachedUsers = getCachedMokUsers();
+    if (cachedUsers) {
+      return cachedUsers;
     }
 
     // 2. Заглушка под реальный API-запрос
 
     // 3. Если нет кэша и API, возвращаем моки
-    return profilesData;
+    return usersData;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     return rejectWithValue('Ошибка загрузки профилей');
@@ -57,7 +58,7 @@ const catalogSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchCatalog.fulfilled, (state, action) => {
-        state.profiles = action.payload;
+        state.users = action.payload;
         state.loading = false;
         // Сохраняем в кэш при успешной загрузке
         localStorage.setItem(LS_KEY, JSON.stringify(action.payload));

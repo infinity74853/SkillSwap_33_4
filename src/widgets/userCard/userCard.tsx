@@ -1,9 +1,12 @@
 import { Skill } from '@/shared/ui/skill/skill.tsx';
 import styles from './userCard.module.css';
 import { Button } from '@/shared/ui/button/button';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { calculateAge } from '@/shared/lib/helpers/data';
 import { User } from '@/entities/user/model/types';
+import { useDispatch, useSelector } from '@/app/providers/store/store';
+import { selectIsLiked } from '@/services/selectors/likeSelectors';
+import { initializeLikes, toggleLike } from '@/services/slices/likeSlice';
 
 export const UserCard: React.FC<User> = ({
   image,
@@ -14,17 +17,21 @@ export const UserCard: React.FC<User> = ({
   _id,
   birthdayDate,
 }) => {
-  const myLikes = ['001', '002', '003']; // Заглушка лайков зарегистрированного пользователя
-
-  const like = myLikes.some(like => like === _id);
-  const [isLiked, setIsliked] = useState(like);
+  const dispatch = useDispatch();
   const [isExchange, setExchange] = useState(false);
   const learnSkill = wantsToLearn.slice(0, 2);
   const moreSkills = wantsToLearn.length - learnSkill.length;
 
+  // Получаем состояние лайка из Redux
+  const isLiked = useSelector(state => selectIsLiked(state, _id));
+
+  // Инициализируем лайки при монтировании
+  useEffect(() => {
+    dispatch(initializeLikes());
+  }, [dispatch]);
+
   const handleLikeClick = () => {
-    setIsliked(!isLiked);
-    //Куда то будет отправляться лайк
+    dispatch(toggleLike(_id)); // Отправляем действие в Redux
   };
 
   const openProfile = () => {

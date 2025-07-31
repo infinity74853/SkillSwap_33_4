@@ -1,66 +1,75 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { CatalogUI, CatalogUIProps } from './ui/catalogUI';
-import { Profile, ProfileCategory } from '@/entities/profile/model/types';
-import { profilesData } from './profilesData';
-import styles from './catalog.module.css';
-import { UserSection } from '../userSection/userSection';
 import { useSelector } from '@/app/providers/store/store';
 import { selectCatalogItems } from '@/services/selectors/catalogSelectors';
+import { User } from '@/entities/user/model/types';
+import { UserSection } from '../userSection/userSection';
+import styles from './catalog.module.css';
 
 type CategorySection = {
   title: string;
-  profiles: typeof profilesData;
+  profiles: User[]; // Заменили Profile на User
   showAllButton?: boolean;
   onShowAll?: () => void;
 };
 
-// DELETE: Моковая логика, будет масштабный рефаторинг в следующей таске
-
 const Catalog: React.FC<{ isAuthenticated: boolean }> = ({ isAuthenticated }) => {
   const [viewMode, setViewMode] = useState<'default' | 'category'>('default');
-  const [currentCategory, setCurrentCategory] = useState<ProfileCategory | null>(null);
+  const [currentCategory, setCurrentCategory] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+  const allUsers = useSelector(selectCatalogItems) as User[];
+  const [displayedUsers, setDisplayedUsers] = useState<User[]>([]);
 
-  // Получаем профили из хранилища
-  const profiles = useSelector(selectCatalogItems);
-  const [recommendedItems, setRecommendedItems] = useState<Profile[]>([]);
-
-  // Определяем количество карточек для загрузки (≥20)
+  // Количество карточек для загрузки
   const getItemsPerLoad = () => {
     const width = window.innerWidth;
     const columns = width < 768 ? 1 : width < 1024 ? 2 : 3;
     return Math.ceil(20 / columns) * columns;
   };
 
-  // Инициализация "Рекомендуем"
-  React.useEffect(() => {
-    const initialItems = profiles
-      .filter(p => p.category === 'recommended')
-      .slice(0, getItemsPerLoad());
-    setRecommendedItems(initialItems);
-    const allRecommendedCount = profiles.filter(p => p.category === 'recommended').length;
-    setHasMore(initialItems.length < allRecommendedCount);
-  }, [profiles]);
+  // Инициализация "Рекомендуем" (все пользователи)
+  useEffect(() => {
+    const initialItems = allUsers.slice(0, getItemsPerLoad());
+    setDisplayedUsers(initialItems);
+    setHasMore(initialItems.length < allUsers.length);
+  }, [allUsers]);
 
-  // Фильтрация
-  const getProfilesByCategory = (category: ProfileCategory) => {
-    return profiles.filter(profile => profile.category === category);
-  };
+  // Подгрузка "Рекомендуем"
+  const handleLoadMoreRecommended = useCallback(() => {
+    if (loading || !hasMore) return;
 
-  // Заголовки
-  const getCategoryTitle = (category: ProfileCategory): string => {
-    const titles: Record<ProfileCategory, string> = {
+    setLoading(true);
+    setTimeout(() => {
+      const nextItems = allUsers.slice(
+        displayedUsers.length,
+        displayedUsers.length + getItemsPerLoad(),
+      );
+
+      if (nextItems.length === 0) {
+        setHasMore(false);
+      } else {
+        setDisplayedUsers(prev => [...prev, ...nextItems]);
+        setHasMore(displayedUsers.length + nextItems.length < allUsers.length);
+      }
+      setLoading(false);
+    }, 1000);
+  }, [displayedUsers.length, loading, hasMore, allUsers]);
+
+  // Заголовки категорий
+  const getCategoryTitle = (category: string): string => {
+    const titles: Record<string, string> = {
       match: 'Точное соответствие',
       popular: 'Популярное',
       new: 'Новое',
       ideas: 'Новые Идеи',
       recommended: 'Рекомендуем',
     };
-    return titles[category];
+    return titles[category] || category;
   };
 
-  const handleShowAll = (category: ProfileCategory) => {
+  // Обработчики навигации (оставляем без изменений)
+  const handleShowAll = (category: string) => {
     setViewMode('category');
     setCurrentCategory(category);
   };
@@ -70,27 +79,7 @@ const Catalog: React.FC<{ isAuthenticated: boolean }> = ({ isAuthenticated }) =>
     setCurrentCategory(null);
   };
 
-  // Подгрузка "Рекомендуем"
-  const handleLoadMoreRecommended = useCallback(() => {
-    if (loading || !hasMore) return;
-
-    setLoading(true);
-    setTimeout(() => {
-      const allRecommended = profiles.filter(p => p.category === 'recommended');
-      const currentLength = recommendedItems.length;
-      const nextItems = allRecommended.slice(currentLength, currentLength + getItemsPerLoad());
-
-      if (nextItems.length === 0) {
-        setHasMore(false);
-      } else {
-        setRecommendedItems(prev => [...prev, ...nextItems]);
-        setHasMore(currentLength + nextItems.length < allRecommended.length);
-      }
-      setLoading(false);
-    }, 1000);
-  }, [recommendedItems.length, loading, hasMore, profiles]);
-
-  // Подготовка данных
+  // Подготовка данных для UI
   const getUIProps = (): Omit<CatalogUIProps, 'sections'> & { sections: CategorySection[] } => {
     if (viewMode === 'category') {
       throw new Error('UI props not available in category mode');
@@ -99,22 +88,23 @@ const Catalog: React.FC<{ isAuthenticated: boolean }> = ({ isAuthenticated }) =>
     const firstCategoryType = isAuthenticated ? 'match' : 'popular';
     const secondCategoryType = isAuthenticated ? 'ideas' : 'new';
 
+    // Временное решение: для первых двух категорий берем пустые массивы
     const sections: CategorySection[] = [
       {
         title: getCategoryTitle(firstCategoryType),
-        profiles: getProfilesByCategory(firstCategoryType).slice(0, 3),
+        profiles: [], // Пока пусто - будет заполняться при реализации алгоритма
         showAllButton: true,
         onShowAll: () => handleShowAll(firstCategoryType),
       },
       {
         title: getCategoryTitle(secondCategoryType),
-        profiles: getProfilesByCategory(secondCategoryType).slice(0, 3),
+        profiles: [], // Пока пусто
         showAllButton: true,
         onShowAll: () => handleShowAll(secondCategoryType),
       },
       {
         title: 'Рекомендуем',
-        profiles: recommendedItems,
+        profiles: displayedUsers,
         showAllButton: false,
       },
     ];
@@ -127,7 +117,7 @@ const Catalog: React.FC<{ isAuthenticated: boolean }> = ({ isAuthenticated }) =>
     };
   };
 
-  // Режим: одна категория
+  // Режим просмотра категории (временно показываем всех пользователей)
   if (viewMode === 'category' && currentCategory) {
     return (
       <div className={styles.catalog}>
@@ -136,15 +126,14 @@ const Catalog: React.FC<{ isAuthenticated: boolean }> = ({ isAuthenticated }) =>
         </button>
         <UserSection
           title={getCategoryTitle(currentCategory)}
-          users={getProfilesByCategory(currentCategory)}
+          users={allUsers} // Временно показываем всех
         />
       </div>
     );
   }
 
-  // Режим: все категории
-  const uiProps = getUIProps();
-  return <CatalogUI {...uiProps} />;
+  // Основной режим
+  return <CatalogUI {...getUIProps()} />;
 };
 
 export default Catalog;
