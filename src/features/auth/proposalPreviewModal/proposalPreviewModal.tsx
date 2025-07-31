@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { ModalUI } from '@/shared/ui/modal/modalUi';
 import SkillCard from '@/widgets/skillCard/skillCard';
 import { Skill } from '@/pages/skillPage/skillPage';
@@ -8,15 +7,17 @@ interface ProposalPreviewModalProps {
   isOpen: boolean;
   onClose: () => void;
   skill: Skill;
+  onEdit: () => void;
+  onSuccess: () => void;
 }
 
 export const ProposalPreviewModal: React.FC<ProposalPreviewModalProps> = ({
   isOpen,
   onClose,
   skill,
+  onEdit,
+  onSuccess,
 }) => {
-  const [isEditing, setIsEditing] = useState(false);
-
   if (!isOpen) return null;
 
   return (
@@ -24,6 +25,7 @@ export const ProposalPreviewModal: React.FC<ProposalPreviewModalProps> = ({
       className={styles.modal}
       type="info"
       title="Ваше предложение"
+      description="Пожалуйста, проверьте и подтвердите правильность данных"
       onClose={onClose}
       // Передаём весь контент — карточку + кнопки — через children
       children={
@@ -37,12 +39,21 @@ export const ProposalPreviewModal: React.FC<ProposalPreviewModalProps> = ({
               <div className={styles.buttonContainer}>
                 <button
                   type="button"
-                  className={styles.secondaryButton}
-                  onClick={() => setIsEditing(!isEditing)}
+                  className={`${styles.secondaryButton} ${styles.button}`}
+                  onClick={onEdit}
                 >
-                  {isEditing ? 'Отмена' : 'Редактировать'}
+                  Редактировать
+                  <img
+                    src="src/app/assets/static/images/icons/edit.svg"
+                    alt=""
+                    className={styles.iconEdit}
+                  />
                 </button>
-                <button type="button" className={styles.primaryButton} onClick={onClose}>
+                <button
+                  type="button"
+                  className={`${styles.primaryButton} ${styles.button}`}
+                  onClick={onSuccess}
+                >
                   Готово
                 </button>
               </div>

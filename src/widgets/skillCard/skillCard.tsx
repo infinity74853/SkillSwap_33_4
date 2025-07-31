@@ -138,7 +138,6 @@ const SkillCard: React.FC<SkillCardProps> = ({
                   className={styles.prevArrow}
                   aria-label="Предыдущее изображение"
                   onClick={goToPrevImage}
-                  // disabled={!canNavigate}
                 >
                   <img
                     className={styles.imageArrow}

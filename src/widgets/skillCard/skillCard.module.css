@@ -96,7 +96,7 @@
 
 .button:hover,
 .button:focus {
-  background-color: var(--button-primary-hover, #9bc26a);
+  background-color: var(--button-primary-hover-color, #deebc5);
 }
 
 .button:focus {

@@ -5,6 +5,7 @@ import { RootState, useDispatch, useSelector } from '@/services/store/store';
 import { stepActions } from '@/services/slices/stepSlice';
 import { Skill } from '@/pages/skillPage/skillPage';
 import { ProposalPreviewModal } from '@/features/auth/proposalPreviewModal/proposalPreviewModal';
+import { SuccessModal } from '@/features/successModal/successModal';
 
 export const AuthFormContainer = ({ isFirstStage = true }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -17,12 +18,12 @@ export const AuthFormContainer = ({ isFirstStage = true }) => {
   });
 
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [isSuccessOpen, setIsSuccessOpen] = useState(false);
   const [previewSkill, setPreviewSkill] = useState<Skill | null>(null);
 
   const dispatch = useDispatch();
 
-  // const currentStep = useSelector((state: RootState) => state.step.currentStep);
-  const currentStep = 3;
+  const currentStep = useSelector((state: RootState) => state.step.currentStep);
 
   const textContent = !isFirstStage ? PAGE_TEXTS.firstStage : PAGE_TEXTS.registration;
 
@@ -30,7 +31,7 @@ export const AuthFormContainer = ({ isFirstStage = true }) => {
     e.preventDefault();
 
     if (validateForm()) {
-      if (currentStep === 3) {
+      if (currentStep === 2) {
         const skill: Skill = {
           id: '1',
           title: 'Игра на барабанах',
@@ -107,6 +108,16 @@ export const AuthFormContainer = ({ isFirstStage = true }) => {
     }
   };
 
+  const handleEdit = () => {
+    setIsPreviewOpen(false);
+    dispatch(stepActions.goToStep(2));
+  };
+
+  const handleSuccess = () => {
+    setIsPreviewOpen(false);
+    setIsSuccessOpen(true);
+  };
+
   return (
     <>
       <AuthFormUI
@@ -128,8 +139,13 @@ export const AuthFormContainer = ({ isFirstStage = true }) => {
           isOpen={isPreviewOpen}
           onClose={() => setIsPreviewOpen(false)}
           skill={previewSkill}
+          onEdit={handleEdit}
+          onSuccess={handleSuccess}
         />
       )}
+
+      {/* Модальное окно успешного создания предложения */}
+      {isSuccessOpen && <SuccessModal />}
     </>
   );
 };
