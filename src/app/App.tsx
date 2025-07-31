@@ -5,35 +5,47 @@ import Catalog from '@/widgets/catalog/catalog';
 import './styles/index.css';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import { Suspense, useEffect } from 'react';
+import { MainLayout } from '@/widgets/Layout/MainLayout';
 import { ProtectedRoute } from '@/shared/ui/protectedRoute/protectedRoute';
-import { SuccessModal } from 'features/successModal/successModal';
-import { useDispatch } from './providers/store/store';
+import store, { useDispatch } from '@/services/store/store';
 import { initializeLikes } from '@/services/slices/likeSlice';
+import { SuccessModal } from '@/features/successModal/successModal';
+import { RegistrationForms } from '@/features/registrationForms/registrationForms';
+import { ErrorPage } from '@/pages/ErrorPage/ErrorPage';
+import SkillPage from '@/pages/skillPage/skillPage';
+import { CatalogPage } from '@/pages/catalogPage/catalogPage';
+import './styles/index.css';
+import { fetchCatalog } from '@/services/slices/catalogSlice';
 
 function App() {
-  /* const navigate = useNavigate(); на будущее для модалок */
   const location = useLocation();
-  const backgroundLocation = location.state?.background;
+  const backgroundLocation = location.state && location.state.background;
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(initializeLikes());
   }, [dispatch]);
 
+  store.dispatch(fetchCatalog());
+
   return (
-    <Suspense fallback={<></>}>
+    <Suspense fallback={<></> /*Loader, когда будет готов*/}>
       <Routes>
         <Route element={<MainLayout />}>
           <Route
-            path="/"
+            path="/profile/favorites"
             element={
-              <>
-                <TextTestComponent />
-                <Catalog isAuthenticated={false} />
-              </>
+              <ProtectedRoute>
+                <>{/* Страница избранных карточек в профиле, когда будет готова */}</>
+              </ProtectedRoute>
             }
           />
+          <Route path="/skill/:id" element={<SkillPage />} />
+          <Route path="*" element={<ErrorPage type="404"></ErrorPage>} />
         </Route>
+      </Routes>
+    </BrowserRouter>
+        {/* <Route path="/" element={<TextTestComponent />} /> */}
         <Route path="/" element={<SuccessModal />} />
         {/* <Route path="/*" element={<ErrorPage type="404"></ErrorPage>} /> */}
         <Route path="/" element={<></> /*Каталог карточек, когда будет готов */} />
@@ -53,10 +65,13 @@ function App() {
             </ProtectedRoute>
           }
         />
-        {/* Страница редактирования личных данных пользователя (без авторизации) */}
         <Route
           path="/profile/details"
-          element={<ProfileDetailsPage />}
+          element={
+            <ProtectedRoute>
+              <>{/* Страница подробной информации в профиле, когда будет готова */}</>
+            </ProtectedRoute>
+          }
         />
         <Route
           path="/profile/favorites"
@@ -67,8 +82,14 @@ function App() {
           }
         />
       </Routes>
+
+      {/* 
+        Этот блок отвечает за отображение МОДАЛЬНЫХ ОКОН.
+        Он рендерится только если в `location.state` есть `background`.
+        Это позволяет показывать модальное окно поверх основной страницы.
+      */}
       {backgroundLocation && (
-        <Routes>
+        <Routes /* Руты для модалок */>
           <Route
             path="/register/preview"
             element={
@@ -81,7 +102,7 @@ function App() {
             path="/register/success"
             element={
               <ProtectedRoute onlyUnAuth>
-                <>{/* Модалка с информацией об успешной регистрации */}</>
+                <>{/* Модалка об успешной регистрации */}</>
               </ProtectedRoute>
             }
           />
@@ -90,7 +111,7 @@ function App() {
             element={
               <ProtectedRoute>
                 <></>
-              </ProtectedRoute>
+              </ProtectedRoute> /* Модалка с уведомлением о созданном предложении обмена */
             }
           />
         </Routes>

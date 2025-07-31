@@ -3,7 +3,7 @@ import { Logo } from '@/shared/ui/Logo/Logo';
 import { SearchInput } from '@/shared/ui/SearchInput/SearchInput';
 import { UserPanel } from '@/features/auth/UserPanel/UserPanel';
 import styles from './Header.module.css';
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 export const Header = () => {
   const [currentTheme, setCurrentTheme] = useState<'light' | 'dark'>('light');
@@ -32,13 +32,13 @@ export const Header = () => {
             <Logo />
           </Link>
           <nav className={styles.allSkills}>
-            <Link to="/about" className={styles.link}>
+            <Link to="/about" className={styles.linkAbout}>
               О проекте
             </Link>
-            <Link to="/all_skills" className={styles.link}>
+            <Link to="/all_skills" className={styles.linkSkills}>
               Все навыки
-              <span className={styles.chevronIcon} />
             </Link>
+            <div className={styles.chevronIcon}> </div>
           </nav>
         </div>
         <SearchInput placeholder="Искать навык" />
