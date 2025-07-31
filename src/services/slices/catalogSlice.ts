@@ -5,19 +5,19 @@ import { User } from '@/entities/user/model/types';
 // Ключ для localStorage
 const LS_KEY = 'catalog_profiles';
 
-interface ProfileState {
+interface CatalogState {
   users: User[];
   loading: boolean;
   error: string | null;
 }
 
-const initialState: ProfileState = {
+const initialState: CatalogState = {
   users: [],
   loading: false,
   error: null,
 };
 
-const getCachedMokUsers = (): User[] | null => {
+const getCachedUsers = (): User[] | null => {
   try {
     const savedData = localStorage.getItem(LS_KEY);
     return savedData ? JSON.parse(savedData) : null;
@@ -28,18 +28,10 @@ const getCachedMokUsers = (): User[] | null => {
 };
 
 // Async Thunk - единственный источник правды для данных
-export const fetchCatalog = createAsyncThunk('profiles/fetch', async (_, { rejectWithValue }) => {
+export const fetchCatalog = createAsyncThunk('catalog/fetch', async (_, { rejectWithValue }) => {
   try {
-    // 1. Проверяем кэш
-    const cachedUsers = getCachedMokUsers();
-    if (cachedUsers) {
-      return cachedUsers;
-    }
-
-    // 2. Заглушка под реальный API-запрос
-
-    // 3. Если нет кэша и API, возвращаем моки
-    return usersData;
+    const cachedUsers = getCachedUsers();
+    return cachedUsers || usersData;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     return rejectWithValue('Ошибка загрузки профилей');
@@ -59,7 +51,6 @@ const catalogSlice = createSlice({
       .addCase(fetchCatalog.fulfilled, (state, action) => {
         state.users = action.payload;
         state.loading = false;
-        // Сохраняем в кэш при успешной загрузке
         localStorage.setItem(LS_KEY, JSON.stringify(action.payload));
       })
       .addCase(fetchCatalog.rejected, (state, action) => {

@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, useMemo } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { CatalogUI } from './ui/catalogUI';
 import { useSelector } from '@/app/providers/store/store';
 import { selectCatalogItems } from '@/services/selectors/catalogSelectors';
@@ -20,13 +20,13 @@ const Catalog: React.FC<{ isAuthenticated: boolean; isFiltered: boolean }> = ({
   isAuthenticated,
   isFiltered,
 }) => {
+  const [currentCategory, setCurrentCategory] = useState<ProfileCategory | null>(null);
+  const allUsers = useSelector(selectCatalogItems) as User[];
+  const likedItems = useSelector(selectLikedItems);
+
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [displayedUsers, setDisplayedUsers] = useState<User[]>([]);
-  const [currentCategory, setCurrentCategory] = useState<ProfileCategory | null>(null);
-
-  const allUsers = useSelector(selectCatalogItems) as User[];
-  const likedItems = useSelector(selectLikedItems);
 
   // Категоризация пользователей
   const categorizedUsers = useMemo(() => {
@@ -58,13 +58,6 @@ const Catalog: React.FC<{ isAuthenticated: boolean; isFiltered: boolean }> = ({
       return allUsers; // В режиме фильтра используем весь селектор
     }
     return currentCategory ? categorizedUsers[currentCategory] : displayedUsers;
-  };
-
-  // Заголовок для текущего режима
-  const getCurrentTitle = () => {
-    if (isFiltered) return 'Подходящие предложения';
-    if (currentCategory) return getCategoryTitle(currentCategory);
-    return 'Рекомендуем';
   };
 
   // Количество карточек для загрузки
@@ -99,6 +92,13 @@ const Catalog: React.FC<{ isAuthenticated: boolean; isFiltered: boolean }> = ({
       setLoading(false);
     }, 500);
   }, [loading, hasMore, displayedUsers.length, categorizedUsers.recommended]);
+
+  // Заголовок для текущего режима
+  const getCurrentTitle = () => {
+    if (isFiltered) return 'Подходящие предложения';
+    if (currentCategory) return getCategoryTitle(currentCategory);
+    return 'Рекомендуем';
+  };
 
   // Заголовки категорий
   const getCategoryTitle = (category: string): string => {
