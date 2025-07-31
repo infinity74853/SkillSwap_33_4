@@ -1,3 +1,4 @@
+import { registrationReducer } from '@/services/slices/registrationSlice';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import {
   TypedUseSelectorHook,
@@ -5,7 +6,9 @@ import {
   useSelector as selectorHook,
 } from 'react-redux';
 
-export const rootReducer = combineReducers({});
+export const rootReducer = combineReducers({
+  register: registrationReducer,
+});
 
 export const store = configureStore({
   reducer: rootReducer,
