@@ -5,7 +5,7 @@ import {
   useSelector as selectorHook,
 } from 'react-redux';
 import likeReducer from '@/services/slices/likeSlice';
-import catalogReducer, { fetchCatalog } from '@/services/slices/catalogSlice';
+import catalogReducer from '@/services/slices/catalogSlice';
 
 export const rootReducer = combineReducers({
   likes: likeReducer,
@@ -16,8 +16,6 @@ export const store = configureStore({
   reducer: rootReducer,
   devTools: import.meta.env.MODE !== 'production',
 });
-
-store.dispatch(fetchCatalog());
 
 export type RootState = ReturnType<typeof rootReducer>;
 

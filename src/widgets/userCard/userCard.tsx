@@ -1,12 +1,12 @@
 import { Skill } from '@/shared/ui/skill/skill.tsx';
 import styles from './userCard.module.css';
 import { Button } from '@/shared/ui/button/button';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { calculateAge } from '@/shared/lib/helpers/data';
 import { User } from '@/entities/user/model/types';
 import { useDispatch, useSelector } from '@/app/providers/store/store';
 import { selectIsLiked } from '@/services/selectors/likeSelectors';
-import { initializeLikes, toggleLike } from '@/services/slices/likeSlice';
+import { toggleLike } from '@/services/slices/likeSlice';
 
 export const UserCard: React.FC<User> = ({
   image,
@@ -24,11 +24,6 @@ export const UserCard: React.FC<User> = ({
 
   // Получаем состояние лайка из Redux
   const isLiked = useSelector(state => selectIsLiked(state, _id));
-
-  // Инициализируем лайки при монтировании
-  useEffect(() => {
-    dispatch(initializeLikes());
-  }, [dispatch]);
 
   const handleLikeClick = () => {
     dispatch(toggleLike(_id)); // Отправляем действие в Redux

@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { CatalogUI } from './ui/catalogUI';
 import { useSelector } from '@/app/providers/store/store';
-import { selectCatalogItems } from '@/services/selectors/catalogSelectors';
+import { selectCatalogItems, selectCatalogLoading } from '@/services/selectors/catalogSelectors';
 import { User } from '@/entities/user/model/types';
 import { UserSection } from '../userSection/userSection';
 import styles from './catalog.module.css';
@@ -24,7 +24,8 @@ const Catalog: React.FC<{ isAuthenticated: boolean; isFiltered: boolean }> = ({
   const allUsers = useSelector(selectCatalogItems) as User[];
   const likedItems = useSelector(selectLikedItems);
 
-  const [loading, setLoading] = useState(false);
+  //const [loading, setLoading] = useState(false);
+  const loading = useSelector(selectCatalogLoading);
   const [hasMore, setHasMore] = useState(true);
   const [displayedUsers, setDisplayedUsers] = useState<User[]>([]);
 
@@ -80,7 +81,7 @@ const Catalog: React.FC<{ isAuthenticated: boolean; isFiltered: boolean }> = ({
   const handleLoadMore = useCallback(() => {
     if (loading || !hasMore) return;
 
-    setLoading(true);
+    //setLoading(true);
     setTimeout(() => {
       const nextItems = categorizedUsers.recommended.slice(
         displayedUsers.length,
@@ -89,7 +90,7 @@ const Catalog: React.FC<{ isAuthenticated: boolean; isFiltered: boolean }> = ({
 
       setDisplayedUsers(prev => [...prev, ...nextItems]);
       setHasMore(displayedUsers.length + nextItems.length < categorizedUsers.recommended.length);
-      setLoading(false);
+      //setLoading(false);
     }, 500);
   }, [loading, hasMore, displayedUsers.length, categorizedUsers.recommended]);
 

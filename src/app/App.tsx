@@ -2,10 +2,11 @@ import { Route, Routes, useLocation } from 'react-router-dom';
 import './styles/index.css';
 import { Suspense, useEffect } from 'react';
 import { ProtectedRoute } from '@/shared/ui/protectedRoute/protectedRoute';
-import { useDispatch } from './providers/store/store';
+import store, { useDispatch } from './providers/store/store';
 import { initializeLikes } from '@/services/slices/likeSlice';
 import { SuccessModal } from '@/features/successModal/successModal';
 import Catalog from '@/widgets/catalog/catalog';
+import { fetchCatalog } from '@/services/slices/catalogSlice';
 // import { ErrorPage } from '@/pages/ErrorPage/ErrorPage';
 
 function App() {
@@ -17,6 +18,8 @@ function App() {
   useEffect(() => {
     dispatch(initializeLikes());
   }, [dispatch]);
+
+  store.dispatch(fetchCatalog());
 
   return (
     <Suspense fallback={<></> /*Loader, когда будет готов*/}>
