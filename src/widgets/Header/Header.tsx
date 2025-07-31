@@ -3,7 +3,7 @@ import { Logo } from '@/shared/ui/Logo/Logo';
 import { SearchInput } from '@/shared/ui/SearchInput/SearchInput';
 import { UserPanel } from '@/features/auth/UserPanel/UserPanel';
 import styles from './Header.module.css';
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 export const Header = () => {
   const [currentTheme, setCurrentTheme] = useState<'light' | 'dark'>('light');

@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { CatalogUI } from './catalogUI';
 import { fn } from '@storybook/test';
-import { Profile } from '@/entities/profile/model/types';
 import { generateProfiles } from '@/shared/mocks/mockUsersData';
+import { User } from '@/entities/user/model/types';
 
 const meta = {
   title: 'Components/Catalog/CatalogUI',
@@ -22,19 +22,19 @@ export const Default: Story = {
     sections: [
       {
         title: 'Популярное',
-        profiles: generateProfiles(3, 'popular') as Profile[],
+        users: generateProfiles(3) as User[],
         showAllButton: true,
         onShowAll: fn(),
       },
       {
         title: 'Новое',
-        profiles: generateProfiles(3, 'new') as Profile[],
+        users: generateProfiles(3) as User[],
         showAllButton: true,
         onShowAll: fn(),
       },
       {
         title: 'Рекомендуем',
-        profiles: generateProfiles(4, 'recommended') as Profile[],
+        users: generateProfiles(4) as User[],
         showAllButton: true,
         onShowAll: fn(),
       },
@@ -64,19 +64,19 @@ export const WithManyItems: Story = {
     sections: [
       {
         title: 'Популярное',
-        profiles: generateProfiles(6, 'popular') as Profile[],
+        users: generateProfiles(6) as User[],
         showAllButton: true,
         onShowAll: fn(),
       },
       {
         title: 'Новое',
-        profiles: generateProfiles(5, 'new') as Profile[],
+        users: generateProfiles(5) as User[],
         showAllButton: true,
         onShowAll: fn(),
       },
       {
         title: 'Рекомендуем',
-        profiles: generateProfiles(7, 'recommended') as Profile[],
+        users: generateProfiles(7) as User[],
         showAllButton: true,
         onShowAll: fn(),
       },
