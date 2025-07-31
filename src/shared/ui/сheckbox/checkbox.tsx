@@ -2,7 +2,7 @@ import React, { ChangeEvent } from 'react';
 import styles from './checkbox.module.css';
 import { CustomCheckboxMask } from './type';
 
-interface CheckboxUiProps {
+export interface CheckboxUiProps {
   // Базовые пропсы input
   id: string;
   checked: boolean;
