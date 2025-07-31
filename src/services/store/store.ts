@@ -14,7 +14,7 @@ export const rootReducer = combineSlices({
   [stepsSlice.name]: stepsSlice.reducer,
   filters: filtersReducer,
   likes: likeReducer,
-  profiles: catalogReducer,
+  catalog: catalogReducer,
 });
 
 const store = configureStore({

@@ -15,7 +15,7 @@ export const CatalogPage: React.FC = () => {
 
       <div className={styles.filtersGrid}>
         <SelectedFilters />
-        <Catalog isAuthenticated={true} isFiltered={false} />
+        <Catalog isAuthenticated={false} isFiltered={false} />
       </div>
     </div>
   );

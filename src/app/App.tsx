@@ -2,14 +2,15 @@ import { Route, Routes, useLocation } from 'react-router-dom';
 import { Suspense, useEffect } from 'react';
 import { MainLayout } from '@/widgets/Layout/MainLayout';
 import { ProtectedRoute } from '@/shared/ui/protectedRoute/protectedRoute';
-import { useDispatch } from '@/services/store/store';
+import store, { useDispatch } from '@/services/store/store';
 import { initializeLikes } from '@/services/slices/likeSlice';
 import { SuccessModal } from '@/features/successModal/successModal';
-import { RegistrationForms } from '@/features/registrationForms/registrationForms';
+import { RegistrationForms } from '@/features/RegistrationForms/registrationForms';
 import { ErrorPage } from '@/pages/ErrorPage/ErrorPage';
 import SkillPage from '@/pages/skillPage/skillPage';
 import { CatalogPage } from '@/pages/catalogPage/catalogPage';
 import './styles/index.css';
+import { fetchCatalog } from '@/services/slices/catalogSlice';
 
 function App() {
   const location = useLocation();
@@ -19,6 +20,8 @@ function App() {
   useEffect(() => {
     dispatch(initializeLikes());
   }, [dispatch]);
+
+  store.dispatch(fetchCatalog());
 
   return (
     <Suspense fallback={<></> /*Loader, когда будет готов*/}>
