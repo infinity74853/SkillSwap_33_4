@@ -1,6 +1,8 @@
 import { PAGE_TEXTS } from '@/features/authForm/ui/authForm';
 import { AuthFormUI } from '@/features/authForm/ui/authFormUI';
 import { useState } from 'react';
+import { useDispatch } from '@/services/store/store';
+import { stepActions } from '@/services/slices/stepSlice';
 
 export const AuthFormContainer = ({ isFirstStage = true }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -11,14 +13,16 @@ export const AuthFormContainer = ({ isFirstStage = true }) => {
     password: '',
     form: '',
   });
+  const dispatch = useDispatch();
 
-  const textContent = isFirstStage ? PAGE_TEXTS.firstStage : PAGE_TEXTS.registration;
+  const textContent = !isFirstStage ? PAGE_TEXTS.firstStage : PAGE_TEXTS.registration;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     if (validateForm()) {
       // Логика отправки формы
+      dispatch(stepActions.nextStep());
       console.log('Форма отправлена', { email, password });
     }
   };
@@ -75,7 +79,7 @@ export const AuthFormContainer = ({ isFirstStage = true }) => {
 
   return (
     <AuthFormUI
-      isFirstStage={isFirstStage}
+      isFirstStage={!isFirstStage}
       textContent={textContent}
       showPassword={showPassword}
       email={email}

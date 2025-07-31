@@ -1,0 +1,174 @@
+/* stylelint-disable declaration-block-no-redundant-longhand-properties */
+/* stylelint-disable property-no-vendor-prefix */
+.header {
+  position: sticky;
+  top: 0;
+  background: #f9faf7;
+  z-index: 100;
+  height: 104px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #e3e3e3;
+  overflow-x: hidden;
+}
+
+.container {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 6px;
+  display: flex;
+  box-sizing: border-box;
+  justify-content: space-evenly;
+}
+
+.leftSection {
+  display: flex;
+  align-items: center;
+  flex-shrink: 1;
+  min-width: 0;
+  overflow: hidden;
+  gap: 10px;
+}
+
+.allSkills {
+  display: flex;
+  align-items: center;
+  flex-shrink: 1;
+  overflow: hidden;
+}
+
+.logoLink {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  flex-shrink: 0;
+  background-color: transparent !important;
+}
+
+.rightSection {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  flex-shrink: 0;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 8px 32px 8px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+}
+
+.themeToggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: color 0.2s;
+  flex-shrink: 0;
+}
+
+.linkAbout {
+  align-items: center;
+  white-space: nowrap;
+  padding: 12px;
+}
+
+.linkSkills {
+  padding: 12px;
+}
+
+.link:hover {
+  background-color: #deebc5;
+  border-radius: 12px;
+}
+
+/* Стиль для иконки "шеврон" */
+.chevronIcon {
+  display: inline-block;
+  width: 16px;
+  height: 8px;
+  background-color: #253017; /* Цвет иконки */
+  mask: url('../../app/assets/static/images/icons/chevron-down.svg') no-repeat center;
+  -webkit-mask: url('../../app/assets/static/images/icons/chevron-down.svg') no-repeat center;
+}
+
+/* Стили для темы */
+.themeIcon {
+  width: 20px;
+  height: 20px;
+}
+
+.moonIcon {
+  mask: url('../../app/assets/static/images/icons/moon.svg') no-repeat center;
+  -webkit-mask: url('../../app/assets/static/images/icons/moon.svg') no-repeat center;
+  background-color: #253017; /* Цвет иконки */
+}
+
+.sunIcon {
+  mask: url('../../app/assets/static/images/icons/sun.svg') no-repeat center;
+  -webkit-mask: url('../../app/assets/static/images/icons/sun.svg') no-repeat center;
+  background-color: #ffb300; /* Цвет иконки */
+}
+
+/* Мобильная версия (<= 768px) */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+    padding: 0 15px;
+    overflow: hidden;
+  }
+
+  .leftSection {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .rightSection {
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    padding: 10px 0;
+    border-top: 1px solid #e3e3e3;
+  }
+
+  .allSkills {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .link {
+    width: 100%;
+    padding: 8px 0;
+  }
+
+  .themeToggle {
+    align-self: flex-end;
+    margin-bottom: 10px;
+  }
+
+  /* Убираем лишние отступы */
+  .header {
+    height: auto;
+    padding: 10px 0;
+  }
+}
+
+/* Для очень маленьких экранов */
+@media (max-width: 480px) {
+  .container {
+    gap: 10px;
+  }
+
+  .rightSection {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+}

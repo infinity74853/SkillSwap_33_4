@@ -54,6 +54,7 @@ a {
 
 a:hover {
   text-decoration: underline;
+  background-color: var(--button-primary-hover-color);
 }
 
 caption {
