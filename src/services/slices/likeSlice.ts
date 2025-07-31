@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import type { RootState } from '@/app/providers/store/store';
+import type { RootState } from '@/services/store/store';
 
 interface LikeState {
   likedItems: Record<string, boolean>;

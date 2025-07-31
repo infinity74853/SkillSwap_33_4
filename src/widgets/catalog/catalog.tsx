@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { CatalogUI } from './ui/catalogUI';
-import { useSelector } from '@/app/providers/store/store';
+import { useSelector } from '@/services/store/store';
 import { selectCatalogItems, selectCatalogLoading } from '@/services/selectors/catalogSelectors';
 import { User } from '@/entities/user/model/types';
 import { UserSection } from '../userSection/userSection';

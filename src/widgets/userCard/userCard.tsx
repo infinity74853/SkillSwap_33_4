@@ -4,7 +4,7 @@ import { Button } from '@/shared/ui/button/button';
 import { useState } from 'react';
 import { calculateAge } from '@/shared/lib/helpers/data';
 import { User } from '@/entities/user/model/types';
-import { useDispatch, useSelector } from '@/app/providers/store/store';
+import { useDispatch, useSelector } from '@/services/store/store';
 import { selectIsLiked } from '@/services/selectors/likeSelectors';
 import { toggleLike } from '@/services/slices/likeSlice';
 

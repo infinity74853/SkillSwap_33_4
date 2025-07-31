@@ -1,27 +1,31 @@
-import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { combineSlices, configureStore } from '@reduxjs/toolkit';
 import {
   TypedUseSelectorHook,
   useDispatch as dispatchHook,
   useSelector as selectorHook,
 } from 'react-redux';
+
+import stepsSlice from '@/services/slices/stepSlice';
+import filtersReducer from '@/services/slices/filtersSlice';
 import likeReducer from '@/services/slices/likeSlice';
 import catalogReducer from '@/services/slices/catalogSlice';
 
-export const rootReducer = combineReducers({
+export const rootReducer = combineSlices({
+  [stepsSlice.name]: stepsSlice.reducer,
+  filters: filtersReducer,
   likes: likeReducer,
-  catalog: catalogReducer,
+  profiles: catalogReducer,
 });
 
-export const store = configureStore({
+const store = configureStore({
   reducer: rootReducer,
   devTools: import.meta.env.MODE !== 'production',
 });
 
-export type RootState = ReturnType<typeof rootReducer>;
-
+export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 
-export const useDispatch: () => AppDispatch = () => dispatchHook();
+export const useDispatch: () => AppDispatch = dispatchHook;
 export const useSelector: TypedUseSelectorHook<RootState> = selectorHook;
 
 export default store;
