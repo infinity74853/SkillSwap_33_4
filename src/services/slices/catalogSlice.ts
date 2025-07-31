@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { Profile } from '@/entities/profile/model/types';
-import { usersData } from '@/widgets/catalog/usersData';
+import { usersData } from '@/shared/mocks/usersData';
 import { User } from '@/entities/user/model/types';
 
 // Ключ для localStorage
@@ -18,7 +17,7 @@ const initialState: ProfileState = {
   error: null,
 };
 
-const getCachedMokUsers = (): Profile[] | null => {
+const getCachedMokUsers = (): User[] | null => {
   try {
     const savedData = localStorage.getItem(LS_KEY);
     return savedData ? JSON.parse(savedData) : null;

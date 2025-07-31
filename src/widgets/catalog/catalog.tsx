@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
-import { CatalogUI, CatalogUIProps } from './ui/catalogUI';
+import { CatalogUI } from './ui/catalogUI';
 import { useSelector } from '@/app/providers/store/store';
 import { selectCatalogItems } from '@/services/selectors/catalogSelectors';
 import { User } from '@/entities/user/model/types';
@@ -9,7 +9,7 @@ import { selectLikedItems } from '@/services/selectors/likeSelectors';
 
 type CategorySection = {
   title: string;
-  users: User[]; // Заменили Profile на User
+  users: User[];
   showAllButton?: boolean;
   onShowAll?: () => void;
 };
@@ -20,14 +20,13 @@ const Catalog: React.FC<{ isAuthenticated: boolean; isFiltered: boolean }> = ({
   isAuthenticated,
   isFiltered,
 }) => {
-  const [viewMode, setViewMode] = useState<'default' | 'category'>('default');
-  const [currentCategory, setCurrentCategory] = useState<ProfileCategory | null>(null);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+  const [displayedUsers, setDisplayedUsers] = useState<User[]>([]);
+  const [currentCategory, setCurrentCategory] = useState<ProfileCategory | null>(null);
 
   const allUsers = useSelector(selectCatalogItems) as User[];
   const likedItems = useSelector(selectLikedItems);
-  const [displayedUsers, setDisplayedUsers] = useState<User[]>([]);
 
   // Категоризация пользователей
   const categorizedUsers = useMemo(() => {
@@ -53,6 +52,21 @@ const Catalog: React.FC<{ isAuthenticated: boolean; isFiltered: boolean }> = ({
     };
   }, [allUsers, likedItems]);
 
+  // Получаем текущий набор пользователей для отображения
+  const getCurrentUsers = () => {
+    if (isFiltered) {
+      return allUsers; // В режиме фильтра используем весь селектор
+    }
+    return currentCategory ? categorizedUsers[currentCategory] : displayedUsers;
+  };
+
+  // Заголовок для текущего режима
+  const getCurrentTitle = () => {
+    if (isFiltered) return 'Подходящие предложения';
+    if (currentCategory) return getCategoryTitle(currentCategory);
+    return 'Рекомендуем';
+  };
+
   // Количество карточек для загрузки
   const getItemsPerLoad = () => {
     const width = window.innerWidth;
@@ -62,31 +76,29 @@ const Catalog: React.FC<{ isAuthenticated: boolean; isFiltered: boolean }> = ({
 
   // Инициализация "Рекомендуем" (все пользователи)
   useEffect(() => {
-    const initialItems = allUsers.slice(0, getItemsPerLoad());
-    setDisplayedUsers(initialItems);
-    setHasMore(initialItems.length < allUsers.length);
-  }, [allUsers]);
+    if (!isFiltered && !currentCategory) {
+      const initialItems = categorizedUsers.recommended.slice(0, getItemsPerLoad());
+      setDisplayedUsers(initialItems);
+      setHasMore(initialItems.length < categorizedUsers.recommended.length);
+    }
+  }, [isFiltered, currentCategory, categorizedUsers.recommended]);
 
   // Подгрузка "Рекомендуем"
-  const handleLoadMoreRecommended = useCallback(() => {
+  const handleLoadMore = useCallback(() => {
     if (loading || !hasMore) return;
 
     setLoading(true);
     setTimeout(() => {
-      const nextItems = allUsers.slice(
+      const nextItems = categorizedUsers.recommended.slice(
         displayedUsers.length,
         displayedUsers.length + getItemsPerLoad(),
       );
 
-      if (nextItems.length === 0) {
-        setHasMore(false);
-      } else {
-        setDisplayedUsers(prev => [...prev, ...nextItems]);
-        setHasMore(displayedUsers.length + nextItems.length < allUsers.length);
-      }
+      setDisplayedUsers(prev => [...prev, ...nextItems]);
+      setHasMore(displayedUsers.length + nextItems.length < categorizedUsers.recommended.length);
       setLoading(false);
-    }, 1000);
-  }, [displayedUsers.length, loading, hasMore, allUsers]);
+    }, 500);
+  }, [loading, hasMore, displayedUsers.length, categorizedUsers.recommended]);
 
   // Заголовки категорий
   const getCategoryTitle = (category: string): string => {
@@ -97,30 +109,23 @@ const Catalog: React.FC<{ isAuthenticated: boolean; isFiltered: boolean }> = ({
       ideas: 'Новые Идеи',
       recommended: 'Рекомендуем',
     };
-    return titles[category] || category;
+    return titles[category];
   };
 
   // Обработчики навигации (оставляем без изменений)
   const handleShowAll = (category: ProfileCategory) => {
-    setViewMode('category');
     setCurrentCategory(category);
   };
 
   const handleBack = () => {
-    setViewMode('default');
     setCurrentCategory(null);
   };
 
-  // Подготовка данных для UI
-  const getUIProps = (): Omit<CatalogUIProps, 'sections'> & { sections: CategorySection[] } => {
-    if (viewMode === 'category') {
-      throw new Error('UI props not available in category mode');
-    }
-
+  // Подготовка данных для UI в обычном режиме
+  const getDefaultUIProps = () => {
     const firstCategoryType = isAuthenticated ? 'match' : 'popular';
     const secondCategoryType = isAuthenticated ? 'ideas' : 'new';
 
-    // Временное решение: для первых двух категорий берем пустые массивы
     const sections: CategorySection[] = [
       {
         title: getCategoryTitle(firstCategoryType),
@@ -143,30 +148,33 @@ const Catalog: React.FC<{ isAuthenticated: boolean; isFiltered: boolean }> = ({
 
     return {
       sections,
-      onLoadMoreRecommended: handleLoadMoreRecommended,
+      onLoadMoreRecommended: handleLoadMore,
       hasMoreRecommended: hasMore,
       isLoadingRecommended: loading,
     };
   };
 
-  // Режим просмотра категории
-  if (viewMode === 'category' && currentCategory) {
+  // Режим просмотра секции
+  if (isFiltered || currentCategory) {
     return (
       <div className={styles.catalog}>
-        <button onClick={handleBack} className={styles.backButton}>
-          ← Назад к категориям
-        </button>
+        {!isFiltered && (
+          <button onClick={handleBack} className={styles.backButton}>
+            ← Назад к категориям
+          </button>
+        )}
         <UserSection
-          title={getCategoryTitle(currentCategory)}
-          users={categorizedUsers[currentCategory] || []}
-          isFiltered={isFiltered}
+          title={getCurrentTitle()}
+          users={getCurrentUsers()}
+          isFiltered={isFiltered || !!currentCategory}
+          count={getCurrentUsers().length}
         />
       </div>
     );
   }
 
   // Основной режим
-  return <CatalogUI {...getUIProps()} />;
+  return <CatalogUI {...getDefaultUIProps()} />;
 };
 
 export default Catalog;

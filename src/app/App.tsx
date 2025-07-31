@@ -86,6 +86,8 @@ function App() {
           />
         </Routes>
       )}
+      {/* Тестовый роут для каталога карточек, используем isAuthenticated для имитации авторизации,
+      используем isFiltered для имитации включенного фильтра */}
       <Catalog isAuthenticated={false} isFiltered={false} />
     </Suspense>
   );

@@ -41,6 +41,7 @@ export const CatalogUI: React.FC<CatalogUIProps> = ({
           key={section.title}
           title={section.title}
           users={section.users}
+          showAllButton={section.showAllButton}
           onShowAll={section.onShowAll}
           // Пропсы для бесконечной прокрутки передаем только нужной категории
           isRecommended={isRecommended}
