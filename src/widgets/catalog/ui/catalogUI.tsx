@@ -1,13 +1,13 @@
 import React from 'react';
 import styles from '../catalog.module.css';
-import { Profile } from '@/entities/profile/model/types';
 import { UserSection } from '@/widgets/userSection/userSection';
+import { User } from '@/entities/user/model/types';
 //import CatalogCategory from '@/widgets/catalogCategory/fake/catalogCategory';
 
 // Типы можно оставить как есть или упростить, если компонент всегда получает все пропсы
 interface CategorySection {
   title: string;
-  profiles: Profile[];
+  users: User[];
   showAllButton?: boolean;
   onShowAll?: () => void;
 }
@@ -40,7 +40,8 @@ export const CatalogUI: React.FC<CatalogUIProps> = ({
         <UserSection
           key={section.title}
           title={section.title}
-          users={section.profiles}
+          users={section.users}
+          showAllButton={section.showAllButton}
           onShowAll={section.onShowAll}
           // Пропсы для бесконечной прокрутки передаем только нужной категории
           isRecommended={isRecommended}

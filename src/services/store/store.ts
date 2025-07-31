@@ -8,11 +8,13 @@ import {
 import stepsSlice from '@/services/slices/stepSlice';
 import filtersReducer from '@/services/slices/filtersSlice';
 import likeReducer from '@/services/slices/likeSlice';
+import catalogReducer from '@/services/slices/catalogSlice';
 
 export const rootReducer = combineSlices({
   [stepsSlice.name]: stepsSlice.reducer,
   filters: filtersReducer,
   likes: likeReducer,
+  profiles: catalogReducer,
 });
 
 const store = configureStore({
@@ -21,7 +23,6 @@ const store = configureStore({
 });
 
 export type RootState = ReturnType<typeof store.getState>;
-
 export type AppDispatch = typeof store.dispatch;
 
 export const useDispatch: () => AppDispatch = dispatchHook;

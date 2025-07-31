@@ -2,15 +2,14 @@ import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { Suspense, useEffect } from 'react';
 import { MainLayout } from '@/widgets/Layout/MainLayout';
 import { ProtectedRoute } from '@/shared/ui/protectedRoute/protectedRoute';
+import { useDispatch } from './providers/store/store';
+import { initializeLikes } from '@/services/slices/likeSlice';
+import { SuccessModal } from '@/features/successModal/successModal';
 import { RegistrationForms } from '@/features/RegistrationForms/registrationForms';
 import { ErrorPage } from '@/pages/ErrorPage/ErrorPage';
 import SkillPage from '@/pages/skillPage/skillPage';
-import { useDispatch } from '../services/store/store';
-import { initializeLikes } from '@/services/slices/likeSlice';
-import './styles/index.css';
-import { SuccessModal } from '@/features/successModal/successModal';
 import { CatalogPage } from '@/pages/catalogPage/catalogPage';
-import { Modal } from '@/features/modal/modal';
+import './styles/index.css';
 
 function App() {
   const location = useLocation();
