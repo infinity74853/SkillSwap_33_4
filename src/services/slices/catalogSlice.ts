@@ -3,18 +3,7 @@ import { Profile } from '@/entities/profile/model/types';
 import { profilesData } from '@/widgets/catalog/profilesData';
 
 // Ключ для localStorage
-const LS_KEY = 'skillsphere_profiles';
-
-// Загружаем наши профили (моки → localStorage → Redux)
-const loadInitialProfiles = (): Profile[] => {
-  try {
-    const savedData = localStorage.getItem(LS_KEY);
-    return savedData ? JSON.parse(savedData) : profilesData;
-  } catch (e) {
-    console.error('Ошибка загрузки профилей:', e);
-    return profilesData;
-  }
-};
+const LS_KEY = 'catalog_profiles';
 
 interface ProfileState {
   profiles: Profile[];
@@ -23,15 +12,33 @@ interface ProfileState {
 }
 
 const initialState: ProfileState = {
-  profiles: loadInitialProfiles(),
+  profiles: [],
   loading: false,
   error: null,
 };
 
-// EDIT: Async Thunk для потенциального API-запроса
-export const fetchProfiles = createAsyncThunk('profiles/fetch', async (_, { rejectWithValue }) => {
+const getCachedProfiles = (): Profile[] | null => {
   try {
-    // Заглушка под реальный API-запрос
+    const savedData = localStorage.getItem(LS_KEY);
+    return savedData ? JSON.parse(savedData) : null;
+  } catch (e) {
+    console.error('Ошибка чтения кэша профилей:', e);
+    return null;
+  }
+};
+
+// Async Thunk - единственный источник правды для данных
+export const fetchCatalog = createAsyncThunk('profiles/fetch', async (_, { rejectWithValue }) => {
+  try {
+    // 1. Проверяем кэш
+    const cachedProfiles = getCachedProfiles();
+    if (cachedProfiles) {
+      return cachedProfiles;
+    }
+
+    // 2. Заглушка под реальный API-запрос
+
+    // 3. Если нет кэша и API, возвращаем моки
     return profilesData;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
@@ -39,26 +46,27 @@ export const fetchProfiles = createAsyncThunk('profiles/fetch', async (_, { reje
   }
 });
 
-const profileSlice = createSlice({
-  name: 'profiles',
+const catalogSlice = createSlice({
+  name: 'catalog',
   initialState,
-  reducers: {}, // Конетент каталога пока статичен
+  reducers: {},
   extraReducers: builder => {
     builder
-      .addCase(fetchProfiles.pending, state => {
+      .addCase(fetchCatalog.pending, state => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchProfiles.fulfilled, (state, action) => {
+      .addCase(fetchCatalog.fulfilled, (state, action) => {
         state.profiles = action.payload;
         state.loading = false;
+        // Сохраняем в кэш при успешной загрузке
         localStorage.setItem(LS_KEY, JSON.stringify(action.payload));
       })
-      .addCase(fetchProfiles.rejected, (state, action) => {
+      .addCase(fetchCatalog.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });
   },
 });
 
-export default profileSlice.reducer;
+export default catalogSlice.reducer;
