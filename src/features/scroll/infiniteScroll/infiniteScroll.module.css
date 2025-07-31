@@ -33,6 +33,7 @@
 
 .itemWrapper {
   width: 100%;
+  display: flex;
 }
 
 .loader {
