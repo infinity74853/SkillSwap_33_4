@@ -5,7 +5,7 @@ import { ProtectedRoute } from '@/shared/ui/protectedRoute/protectedRoute';
 import store, { useDispatch } from '@/services/store/store';
 import { initializeLikes } from '@/services/slices/likeSlice';
 import { SuccessModal } from '@/features/successModal/successModal';
-import { RegistrationForms } from '@/features/RegistrationForms/registrationForms';
+import { RegistrationForms } from '@/features/registrationForms/registrationForms';
 import { ErrorPage } from '@/pages/ErrorPage/ErrorPage';
 import SkillPage from '@/pages/skillPage/skillPage';
 import { CatalogPage } from '@/pages/catalogPage/catalogPage';
