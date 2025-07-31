@@ -1,4 +1,4 @@
-import { ExperienceOption, GenderOption } from './types';
+import { ExperienceOption, GenderOption } from '@/widgets/filters-panel/types';
 
 export const experienceOptions: ExperienceOption[] = [
   { value: 'all', label: 'Все' },

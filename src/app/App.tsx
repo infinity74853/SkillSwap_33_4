@@ -1,11 +1,11 @@
-import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import { Suspense, useEffect } from 'react';
 import { MainLayout } from '@/widgets/Layout/MainLayout';
 import { ProtectedRoute } from '@/shared/ui/protectedRoute/protectedRoute';
-import { useDispatch } from './providers/store/store';
+import { useDispatch } from '@/services/store/store';
 import { initializeLikes } from '@/services/slices/likeSlice';
 import { SuccessModal } from '@/features/successModal/successModal';
-import { RegistrationForms } from '@/features/RegistrationForms/registrationForms';
+import { RegistrationForms } from '@/features/registrationForms/registrationForms';
 import { ErrorPage } from '@/pages/ErrorPage/ErrorPage';
 import SkillPage from '@/pages/skillPage/skillPage';
 import { CatalogPage } from '@/pages/catalogPage/catalogPage';
@@ -14,7 +14,6 @@ import './styles/index.css';
 function App() {
   const location = useLocation();
   const backgroundLocation = location.state && location.state.background;
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   useEffect(() => {
