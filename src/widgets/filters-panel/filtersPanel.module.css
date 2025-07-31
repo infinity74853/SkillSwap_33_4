@@ -1,8 +1,8 @@
 @import url('../../app/styles/variables.css');
 
 .container {
-  max-width: 284px;
-  height: 100%;
+  /* width: 100%; */
+  height: max-content;
   margin: 0 auto;
   padding: 20px;
   border-radius: 12px;

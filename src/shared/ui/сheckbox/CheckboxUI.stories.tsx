@@ -1,6 +1,6 @@
 import React from 'react';
 import { Meta, StoryObj } from '@storybook/react';
-import { CheckboxUI } from './checkbox';
+import { CheckboxUI, CheckboxUiProps } from './checkbox';
 import { CustomCheckboxMask } from './type';
 
 const meta: Meta<typeof CheckboxUI> = {
@@ -119,33 +119,34 @@ export const WithAriaLabel: Story = {
 };
 
 export const InteractiveExample: Story = {
-  render: args => {
-    const [checked, setChecked] = React.useState(false);
-    const [selectedMask, setSelectedMask] = React.useState<CustomCheckboxMask>('empty');
-
-    return (
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-        <CheckboxUI
-          {...args}
-          id="checkbox-interactive"
-          label="Interactive Checkbox"
-          checked={checked}
-          customCheckboxMask={selectedMask}
-          onChange={() => setChecked(!checked)}
-          onLabelClick={e => console.log('Label clicked', e)}
-        />
-
-        <div style={{ marginTop: '16px', display: 'flex', gap: '8px' }}>
-          <button onClick={() => setSelectedMask('empty')}>Empty Style</button>
-          <button onClick={() => setSelectedMask('done')}>Done Style</button>
-          <button onClick={() => setSelectedMask('remove')}>Remove Style</button>
-        </div>
-
-        <div style={{ marginTop: '8px' }}>
-          Current state: {checked ? 'Checked' : 'Unchecked'} | Style: {selectedMask}
-        </div>
-      </div>
-    );
-  },
+  render: args => <InteractiveCheckboxComponent {...args} />,
   name: 'Interactive Example',
+};
+
+const InteractiveCheckboxComponent = (args: CheckboxUiProps) => {
+  const [checked, setChecked] = React.useState(false);
+  const [selectedMask, setSelectedMask] = React.useState<CustomCheckboxMask>('empty');
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <CheckboxUI
+        {...args}
+        id="checkbox-interactive"
+        label="Interactive Checkbox"
+        checked={checked}
+        customCheckboxMask={selectedMask}
+        onChange={() => setChecked(!checked)}
+        onLabelClick={e => console.log('Label clicked', e)}
+      />
+
+      <div style={{ marginTop: '16px', display: 'flex', gap: '8px' }}>
+        <button onClick={() => setSelectedMask('empty')}>Empty Style</button>
+        <button onClick={() => setSelectedMask('done')}>Done Style</button>
+        <button onClick={() => setSelectedMask('remove')}>Remove Style</button>
+      </div>
+
+      <div style={{ marginTop: '8px' }}>
+        Current state: {checked ? 'Checked' : 'Unchecked'} | Style: {selectedMask}
+      </div>
+    </div>
+  );
 };
