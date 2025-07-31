@@ -8,14 +8,10 @@ import stepsSlice from '../slices/stepSlice';
 import filtersReducer from '@/services/slices/filtersSlice';
 import likeReducer from '@/services/slices/likeSlice';
 
-export const rootReducer = combineReducers({
-  filters: filtersReducer,
-});
-export const rootReducer = combineReducers({
-  likes: likeReducer,
-});
 export const rootReducer = combineSlices({
-  [stepsSlice.name]: stepsSlice.reducer,
+  step: stepsSlice.reducer,
+  filters: filtersReducer,
+  likes: likeReducer,
 });
 
 const store = configureStore({

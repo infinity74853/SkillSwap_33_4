@@ -57,8 +57,9 @@
 /* Стили копирайта */
 .copyright {
   color: #9ca3af;
-  font-size: 14px;
-  margin-top: 24px;
+  font-size: 12px;
+  margin-top: 20px;
+  padding-left: 14px;
 }
 
 /* Стили ссылок */
