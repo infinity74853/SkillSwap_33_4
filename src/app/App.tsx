@@ -1,20 +1,21 @@
-import { Route, Routes, useLocation } from 'react-router-dom';
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { Suspense, useEffect } from 'react';
 import { MainLayout } from '@/widgets/Layout/MainLayout';
-import TextTestComponent from '@/widgets/TestComponent/TestComponent';
-import Catalog from '@/widgets/catalog/catalog';
 import { ProtectedRoute } from '@/shared/ui/protectedRoute/protectedRoute';
-import { RegistrationForms } from '@/features/registrationForms/registrationForms';
+import { RegistrationForms } from '@/features/RegistrationForms/registrationForms';
 import { ErrorPage } from '@/pages/ErrorPage/ErrorPage';
 import SkillPage from '@/pages/skillPage/skillPage';
 import { useDispatch } from '../services/store/store';
 import { initializeLikes } from '@/services/slices/likeSlice';
 import './styles/index.css';
 import { SuccessModal } from '@/features/successModal/successModal';
+import { CatalogPage } from '@/pages/catalogPage/catalogPage';
+import { Modal } from '@/features/modal/modal';
 
 function App() {
   const location = useLocation();
-  const backgroundLocation = location.state?.background;
+  const backgroundLocation = location.state && location.state.background;
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -35,15 +36,7 @@ function App() {
         */}
         <Route path="/" element={<MainLayout />}>
           {/* index-маршрут для корневого пути "/" */}
-          <Route
-            index
-            element={
-              <>
-                <TextTestComponent />
-                <Catalog isAuthenticated={false} />
-              </>
-            }
-          />
+          <Route index element={<CatalogPage />} />
 
           <Route
             path="/profile/details"
@@ -62,6 +55,7 @@ function App() {
             }
           />
           <Route path="/skill/:id" element={<SkillPage />} />
+          <Route path="*" element={<ErrorPage type="404"></ErrorPage>} />
         </Route>
 
         {/* 
@@ -85,7 +79,6 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route path="/*" element={<ErrorPage type="404"></ErrorPage>} />
       </Routes>
 
       {/* 
