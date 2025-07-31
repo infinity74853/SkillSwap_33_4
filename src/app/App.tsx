@@ -86,7 +86,7 @@ function App() {
           />
         </Routes>
       )}
-      <Catalog isAuthenticated={false} />
+      <Catalog isAuthenticated={false} isFiltered={false} />
     </Suspense>
   );
 }

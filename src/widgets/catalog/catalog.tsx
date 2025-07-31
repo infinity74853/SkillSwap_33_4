@@ -1,25 +1,57 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { CatalogUI, CatalogUIProps } from './ui/catalogUI';
 import { useSelector } from '@/app/providers/store/store';
 import { selectCatalogItems } from '@/services/selectors/catalogSelectors';
 import { User } from '@/entities/user/model/types';
 import { UserSection } from '../userSection/userSection';
 import styles from './catalog.module.css';
+import { selectLikedItems } from '@/services/selectors/likeSelectors';
 
 type CategorySection = {
   title: string;
-  profiles: User[]; // Заменили Profile на User
+  users: User[]; // Заменили Profile на User
   showAllButton?: boolean;
   onShowAll?: () => void;
 };
 
-const Catalog: React.FC<{ isAuthenticated: boolean }> = ({ isAuthenticated }) => {
+export type ProfileCategory = 'popular' | 'new' | 'ideas' | 'recommended' | 'match';
+
+const Catalog: React.FC<{ isAuthenticated: boolean; isFiltered: boolean }> = ({
+  isAuthenticated,
+  isFiltered,
+}) => {
   const [viewMode, setViewMode] = useState<'default' | 'category'>('default');
-  const [currentCategory, setCurrentCategory] = useState<string | null>(null);
+  const [currentCategory, setCurrentCategory] = useState<ProfileCategory | null>(null);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+
   const allUsers = useSelector(selectCatalogItems) as User[];
+  const likedItems = useSelector(selectLikedItems);
   const [displayedUsers, setDisplayedUsers] = useState<User[]>([]);
+
+  // Категоризация пользователей
+  const categorizedUsers = useMemo(() => {
+    return {
+      // Для "Точное соответствие" (заглушка)
+      match: [] as User[],
+
+      // "Популярное" - пользователи с лайками
+      popular: allUsers.filter(user => likedItems[user._id]),
+
+      // "Новое" - 9 самых новых по дате создания
+      new: [...allUsers]
+        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+        .slice(0, 9),
+
+      // "Новые идеи" - аналогично "Новое"
+      ideas: [...allUsers]
+        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+        .slice(0, 9),
+
+      // "Рекомендуем" - все пользователи
+      recommended: allUsers,
+    };
+  }, [allUsers, likedItems]);
 
   // Количество карточек для загрузки
   const getItemsPerLoad = () => {
@@ -69,7 +101,7 @@ const Catalog: React.FC<{ isAuthenticated: boolean }> = ({ isAuthenticated }) =>
   };
 
   // Обработчики навигации (оставляем без изменений)
-  const handleShowAll = (category: string) => {
+  const handleShowAll = (category: ProfileCategory) => {
     setViewMode('category');
     setCurrentCategory(category);
   };
@@ -92,19 +124,19 @@ const Catalog: React.FC<{ isAuthenticated: boolean }> = ({ isAuthenticated }) =>
     const sections: CategorySection[] = [
       {
         title: getCategoryTitle(firstCategoryType),
-        profiles: [], // Пока пусто - будет заполняться при реализации алгоритма
+        users: categorizedUsers[firstCategoryType].slice(0, 3),
         showAllButton: true,
         onShowAll: () => handleShowAll(firstCategoryType),
       },
       {
         title: getCategoryTitle(secondCategoryType),
-        profiles: [], // Пока пусто
+        users: categorizedUsers[secondCategoryType].slice(0, 3),
         showAllButton: true,
         onShowAll: () => handleShowAll(secondCategoryType),
       },
       {
         title: 'Рекомендуем',
-        profiles: displayedUsers,
+        users: displayedUsers,
         showAllButton: false,
       },
     ];
@@ -117,7 +149,7 @@ const Catalog: React.FC<{ isAuthenticated: boolean }> = ({ isAuthenticated }) =>
     };
   };
 
-  // Режим просмотра категории (временно показываем всех пользователей)
+  // Режим просмотра категории
   if (viewMode === 'category' && currentCategory) {
     return (
       <div className={styles.catalog}>
@@ -126,7 +158,8 @@ const Catalog: React.FC<{ isAuthenticated: boolean }> = ({ isAuthenticated }) =>
         </button>
         <UserSection
           title={getCategoryTitle(currentCategory)}
-          users={allUsers} // Временно показываем всех
+          users={categorizedUsers[currentCategory] || []}
+          isFiltered={isFiltered}
         />
       </div>
     );

@@ -7,7 +7,7 @@ import { User } from '@/entities/user/model/types';
 // Типы можно оставить как есть или упростить, если компонент всегда получает все пропсы
 interface CategorySection {
   title: string;
-  profiles: User[];
+  users: User[];
   showAllButton?: boolean;
   onShowAll?: () => void;
 }
@@ -40,7 +40,7 @@ export const CatalogUI: React.FC<CatalogUIProps> = ({
         <UserSection
           key={section.title}
           title={section.title}
-          users={section.profiles}
+          users={section.users}
           onShowAll={section.onShowAll}
           // Пропсы для бесконечной прокрутки передаем только нужной категории
           isRecommended={isRecommended}
