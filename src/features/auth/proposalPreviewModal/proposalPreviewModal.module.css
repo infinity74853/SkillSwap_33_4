@@ -1,0 +1,41 @@
+.modal {
+  padding: 44px 60px 72px;
+}
+
+.skillCard {
+  padding: 0;
+  max-width: 904px;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: space-between;
+}
+
+.secondaryButton {
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 8px 16px;
+  color: #333;
+  font-size: 14px;
+  background: #f0f0f0;
+  cursor: pointer;
+}
+
+.secondaryButton:hover {
+  background: #e0e0e0;
+}
+
+.primaryButton {
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  color: white;
+  font-size: 14px;
+  background: #007bff;
+  cursor: pointer;
+}
+
+.primaryButton:hover {
+  background: #0056b3;
+}
