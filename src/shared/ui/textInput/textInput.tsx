@@ -39,7 +39,6 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
     ref,
   ) => {
     const isTextarea = type === 'textarea';
-
     return (
       <div className={`${styles.container} ${className}`}>
         <label className={styles.label} htmlFor={id}>

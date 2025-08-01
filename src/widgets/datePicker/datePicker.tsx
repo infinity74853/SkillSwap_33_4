@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef } from 'react';
+import { FC, useRef } from 'react';
 import styles from './datePicker.module.css';
 import { DayPicker, Matcher, OnSelectHandler } from 'react-day-picker';
 import { ru } from 'react-day-picker/locale';

@@ -18,7 +18,6 @@ export const DragAndDrop: React.FC<DragAndDropUploaderProps> = ({
   onChange,
   error,
   onBlur,
-  value,
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
