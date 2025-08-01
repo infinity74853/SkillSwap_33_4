@@ -53,8 +53,6 @@ export const AuthFormContainer = ({ isFirstStage = true }) => {
         // Логика отправки формы
         dispatch(stepActions.nextStep());
       }
-
-      console.log('Форма отправлена', { email, password });
     }
   };
 

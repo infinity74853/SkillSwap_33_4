@@ -1,7 +1,8 @@
+import editIcon from '@/app/assets/static/images/icons/edit.svg';
+import styles from './proposalPreviewModal.module.css';
 import { ModalUI } from '@/shared/ui/modal/modalUi';
 import SkillCard from '@/widgets/skillCard/skillCard';
 import { Skill } from '@/pages/skillPage/skillPage';
-import styles from './proposalPreviewModal.module.css';
 
 interface ProposalPreviewModalProps {
   isOpen: boolean;
@@ -43,11 +44,7 @@ export const ProposalPreviewModal: React.FC<ProposalPreviewModalProps> = ({
                   onClick={onEdit}
                 >
                   Редактировать
-                  <img
-                    src="src/app/assets/static/images/icons/edit.svg"
-                    alt=""
-                    className={styles.iconEdit}
-                  />
+                  <img src={editIcon} alt="" className={styles.iconEdit} />
                 </button>
                 <button
                   type="button"
