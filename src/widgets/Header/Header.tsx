@@ -6,10 +6,17 @@ import { GuestPanel } from '@/features/auth/ui/GuestPanel/GuestPanel';
 import { useAuth } from '@/features/auth/context/AuthContext';
 import styles from './Header.module.css';
 import { useState, useEffect } from 'react';
+import { useDispatch } from '@/services/store/store';
+import { setSearchQuery } from '@/services/slices/catalogSlice';
 
 export const Header = () => {
   const [currentTheme, setCurrentTheme] = useState<'light' | 'dark'>('light');
   const { isAuthenticated } = useAuth();
+  const dispatch = useDispatch();
+
+   const handleSearch = (query: string) => {
+    dispatch(setSearchQuery(query));
+  };
 
   const toggleTheme = () => {
     const newTheme = currentTheme === 'light' ? 'dark' : 'light';
@@ -44,7 +51,7 @@ export const Header = () => {
             <div className={styles.chevronIcon}> </div>
           </nav>
         </div>
-        <SearchInput placeholder="Искать навык" />
+        <SearchInput placeholder="Искать навык" onSearch={handleSearch}/>
         <div className={styles.rightSection}>
           <button className={styles.themeToggle} onClick={toggleTheme}>
             <span
