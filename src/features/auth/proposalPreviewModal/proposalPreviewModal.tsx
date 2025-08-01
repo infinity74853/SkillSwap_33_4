@@ -1,8 +1,8 @@
 import editIcon from '@/app/assets/static/images/icons/edit.svg';
 import styles from './proposalPreviewModal.module.css';
-import { ModalUI } from '@/shared/ui/modal/modalUi';
 import SkillCard from '@/widgets/skillCard/skillCard';
 import { Skill } from '@/pages/skillPage/skillPage';
+import { Modal } from '@/features/modal/modal';
 
 interface ProposalPreviewModalProps {
   isOpen: boolean;
@@ -22,7 +22,7 @@ export const ProposalPreviewModal: React.FC<ProposalPreviewModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <ModalUI
+    <Modal
       className={styles.modal}
       type="info"
       title="Ваше предложение"
