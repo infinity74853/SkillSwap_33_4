@@ -1,3 +1,4 @@
+/* stylelint-disable no-descending-specificity */
 /* stylelint-disable declaration-block-no-redundant-longhand-properties */
 /* stylelint-disable property-no-vendor-prefix */
 .header {
@@ -15,8 +16,9 @@
 .container {
   width: 100%;
   max-width: 1440px;
+  max-height: 66px;
   margin: 0 auto;
-  padding: 6px;
+  padding: 10px;
   display: flex;
   box-sizing: border-box;
   justify-content: space-evenly;
@@ -60,10 +62,20 @@
   border-radius: 12px;
 }
 
+.link:hover,
+.themeToggle:hover,
+.linkAbout:hover,
+.iconWrapper:hover,
+.linkSkills:hover {
+  background-color: #deebc5;
+  border-radius: 10px;
+}
+
 .themeToggle {
   background: none;
   border: none;
   cursor: pointer;
+  padding: 12px 6px;
   display: flex;
   align-items: center;
   transition: color 0.2s;
@@ -78,11 +90,6 @@
 
 .linkSkills {
   padding: 12px;
-}
-
-.link:hover {
-  background-color: #deebc5;
-  border-radius: 12px;
 }
 
 /* Стиль для иконки "шеврон" */
@@ -113,6 +120,16 @@
   background-color: #ffb300; /* Цвет иконки */
 }
 
+/* Добавляем новые стили для разных состояний */
+.header[data-auth='true'] .searchSection {
+  width: 715px;
+  margin-left: 40px;
+}
+
+.header[data-auth='false'] .searchSection {
+  width: 515px;
+}
+
 /* Мобильная версия (<= 768px) */
 @media (max-width: 768px) {
   .container {
@@ -131,7 +148,8 @@
   }
 
   .rightSection {
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: space-between;
     gap: 10px;
     width: 100%;
     padding: 10px 0;
@@ -148,11 +166,6 @@
     padding: 8px 0;
   }
 
-  .themeToggle {
-    align-self: flex-end;
-    margin-bottom: 10px;
-  }
-
   /* Убираем лишние отступы */
   .header {
     height: auto;
@@ -167,8 +180,6 @@
   }
 
   .rightSection {
-    flex-direction: row;
     flex-wrap: wrap;
-    justify-content: space-between;
   }
 }
