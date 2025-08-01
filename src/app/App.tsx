@@ -74,6 +74,7 @@ function App() {
           path="/register"
           element={
             <ProtectedRoute onlyUnAuth>
+              {/* Я поместил сюда RegistrationForms, так как это логичное место для страницы регистрации */}
               <RegistrationForms />
             </ProtectedRoute>
           }

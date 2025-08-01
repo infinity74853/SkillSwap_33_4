@@ -5,7 +5,7 @@ import { UserPanel } from '@/features/auth/ui/UserPanel/UserPanel';
 import { GuestPanel } from '@/features/auth/ui/GuestPanel/GuestPanel';
 import { useAuth } from '@/features/auth/context/AuthContext';
 import styles from './Header.module.css';
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 export const Header = () => {
   const [currentTheme, setCurrentTheme] = useState<'light' | 'dark'>('light');

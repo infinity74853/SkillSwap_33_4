@@ -22,7 +22,7 @@ export const UserSectionUI: React.FC<UserSectionUIProps> = ({
   buttonAction,
   users,
   onLoadMore,
-  loading = false,
+  loading,
   isRecommended = false,
   hasMore = false, // По умолчанию false — безопасно
 }) => {
