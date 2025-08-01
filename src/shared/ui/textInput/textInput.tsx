@@ -7,49 +7,69 @@ export type TextInputProps = {
   id: string;
   title: string;
   placeholder: string;
-  onInputClick?: () => void;
-  onInputBlur?: () => void;
+  onClick?: () => void;
+  onBlur?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (
+    event: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>,
+  ) => void;
+  onFocus?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   value?: string;
-  onChange: (value: string) => void;
-  error?: string;
-  type?: 'text' | 'email' | 'password' | 'tel' | 'number' | 'url';
+  error?: string | undefined;
+  type?: 'text' | 'email' | 'password' | 'tel' | 'number' | 'url' | 'date' | 'textarea';
+  inputClassName?: string;
+  hideError?: boolean; // задаем зависимость чтобы убрать ошибку, если инпут используется в компонентах с дропдауном
 };
 
 export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
   (
     {
       id,
-      title,
+      title = 'text',
       placeholder,
-      onInputClick,
-      value,
       className,
       icon,
-      onInputBlur,
-      onChange,
       error,
       type,
+      inputClassName,
+      onChange,
+      value,
+      hideError,
+      ...rest
     },
     ref,
   ) => {
+    const isTextarea = type === 'textarea';
+
     return (
       <div className={`${styles.container} ${className}`}>
         <label className={styles.label} htmlFor={id}>
           {title}
         </label>
-        <input
-          type={type}
-          className={`${styles.input} ${icon ? styles.inputWithIcon : ''} ${error ? styles.inputError : ''}`}
-          id={id}
-          placeholder={placeholder}
-          onClick={onInputClick}
-          value={value}
-          style={icon ? { backgroundImage: `url(${icon})` } : undefined}
-          onBlur={onInputBlur}
-          onChange={e => onChange(e.target.value)}
-          ref={ref}
-        />
-        {error && <span className={styles.error}>{error}</span>}
+        {isTextarea ? (
+          <textarea
+            {...(rest as React.TextareaHTMLAttributes<HTMLTextAreaElement>)}
+            value={value}
+            onChange={onChange}
+            className={`${styles.input} ${!hideError && error ? styles.inputError : ''} ${inputClassName}`}
+            id={id}
+            placeholder={placeholder}
+            ref={ref as React.Ref<HTMLTextAreaElement>}
+            rows={4}
+          />
+        ) : (
+          <input
+            {...rest}
+            value={value}
+            type={type}
+            onChange={onChange}
+            className={`${styles.input} ${icon ? styles.inputWithIcon : ''} ${!hideError && error ? styles.inputError : ''} ${inputClassName}`}
+            id={id}
+            placeholder={placeholder}
+            ref={ref as React.Ref<HTMLInputElement>}
+            style={icon ? { backgroundImage: `url(${icon})` } : undefined}
+          />
+        )}
+        {!hideError && error && <span className={styles.error}>{error}</span>}
       </div>
     );
   },
