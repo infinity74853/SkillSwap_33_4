@@ -1,17 +1,12 @@
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
 .container {
   display: flex;
   flex-direction: row;
   column-gap: 24px;
   width: 100%;
   height: 100%;
-  color: #253017;
+  color: var(--color-text);
   font-family: Roboto, Arial, sans-serif;
+  box-sizing: border-box;
 }
 
 .block {
@@ -71,7 +66,7 @@
   top: 50%;
   width: calc(50% - 20px);
   height: 1px;
-  background-color: #e4e8df;
+  background-color: var(--divider-bg);
 }
 
 .divider::before {
@@ -120,10 +115,11 @@
 
 .input {
   width: 100%;
-  border: 1px solid #69735d;
+  border: 1px solid var(--color-caption);
   border-radius: 12px;
   padding: 12px 20px;
   font-size: 16px;
+  box-sizing: border-box;
 }
 
 .passwordWrapper {
@@ -156,7 +152,7 @@
 
 .validationContent {
   margin: 4px 0 0;
-  color: #bf3920;
+  color: var(--color-error);
   font-size: 12px;
   line-height: 16px;
   animation: fade 0.3s ease;
@@ -183,7 +179,7 @@
 }
 
 .link {
-  color: #508826;
+  color: var(--color-text-link);
   font-size: 16px;
 }
 
@@ -218,5 +214,5 @@
 }
 
 .inputError {
-  border-color: #bf3920;
+  border-color: var(--color-error);
 }

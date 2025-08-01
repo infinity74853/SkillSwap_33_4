@@ -6,7 +6,6 @@ import {
 } from 'react-redux';
 
 import { registrationReducer } from '@/services/slices/registrationSlice';
-
 import stepsSlice from '@/services/slices/stepSlice';
 import filtersReducer from '@/services/slices/filtersSlice';
 import likeReducer from '@/services/slices/likeSlice';
@@ -14,14 +13,13 @@ import catalogReducer from '@/services/slices/catalogSlice';
 
 export const rootReducer = combineSlices({
   register: registrationReducer,
-
   [stepsSlice.name]: stepsSlice.reducer,
   filters: filtersReducer,
   likes: likeReducer,
   catalog: catalogReducer,
 });
 
-export const store = configureStore({
+const store = configureStore({
   reducer: rootReducer,
   devTools: import.meta.env.MODE !== 'production',
 });

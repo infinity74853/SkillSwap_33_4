@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import { UserSectionUI } from './ui/userSectionUI';
 import { User } from '@/entities/user/model/types';
 
@@ -6,6 +6,7 @@ interface UserSectionProps {
   title: string;
   users: User[];
   isFiltered?: boolean;
+  showAllButton?: boolean;
   count?: number;
   onShowAll?: () => void;
   onLoadMore?: () => void;
@@ -18,30 +19,49 @@ export const UserSection: React.FC<UserSectionProps> = ({
   title,
   users,
   isFiltered = false,
+  showAllButton = true,
   count = 0,
   onShowAll,
   onLoadMore,
   loading = false,
-  isRecommended = false,
   hasMore = false,
 }) => {
-  const displayTitle = isFiltered ? `Подходящие предложения: ${count}` : title;
-  const buttonText = isFiltered ? '↑↓ сначала новые' : 'Смотреть все';
-  const buttonAction = isFiltered ? onToggleSort : onShowAll;
+  const [sortNewFirst, setSortNewFirst] = useState(true);
 
-  function onToggleSort() {
-    // TODO: Пересобираем пользователей в другом порядке
-  }
+  const displayTitle = isFiltered ? `${title}: ${count}` : title;
+
+  const buttonText = isFiltered
+    ? sortNewFirst
+      ? '↑↓ сначала старые'
+      : '↑↓ сначала новые'
+    : 'Смотреть все';
+
+  const handleButtonClick = () => {
+    if (isFiltered) {
+      setSortNewFirst(!sortNewFirst);
+    } else if (onShowAll) {
+      onShowAll();
+    }
+  };
+
+  const sortedUsers = useMemo(() => {
+    if (!isFiltered) return users;
+    return [...users].sort((a, b) =>
+      sortNewFirst
+        ? new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        : new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+    );
+  }, [users, isFiltered, sortNewFirst]);
 
   return (
     <UserSectionUI
       displayTitle={displayTitle}
       buttonText={buttonText}
-      buttonAction={buttonAction}
-      users={users}
+      buttonAction={showAllButton ? handleButtonClick : undefined}
+      users={sortedUsers}
       onLoadMore={onLoadMore}
       loading={loading}
-      isRecommended={isRecommended}
+      isRecommended={!isFiltered}
       hasMore={hasMore}
     />
   );
