@@ -1,29 +1,20 @@
 import { useAuth } from '@/features/auth/context/AuthContext';
+import { useClickOutside } from '@/shared/hooks/useClickOutside';
 import styles from './UserPanel.module.css';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 
 export const UserPanel = () => {
   const { user, logout } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  const closeMenu = () => setIsMenuOpen(false);
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setIsMenuOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  useClickOutside(panelRef, closeMenu);
 
   return (
-    <div className={styles.userPanel} ref={menuRef}>
+    <div className={styles.userPanel} ref={panelRef}>
       <div className={styles.iconsContainer}>
         <div className={styles.iconWrapper}>
           <span className={styles.notificationIcon}></span>

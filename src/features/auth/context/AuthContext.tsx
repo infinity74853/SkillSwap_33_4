@@ -1,29 +1,16 @@
 import { createContext, useState, useContext, ReactNode } from 'react';
-
-interface User {
-  id: string; // Добавляем обязательное поле
-  name: string;
-  email: string;
-  avatar?: string;
-}
-
-interface AuthContextType {
-  isAuthenticated: boolean;
-  user: User | null;
-  login: (userData: User) => void;
-  logout: () => void;
-}
+import { AuthContextType, AuthState, User } from '../lib/types';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [authState, setAuthState] = useState(() => {
+  const [authState, setAuthState] = useState<AuthState>(() => {
     const savedAuth = localStorage.getItem('auth');
     return savedAuth ? JSON.parse(savedAuth) : { isAuthenticated: false, user: null };
   });
 
   const login = (userData: User) => {
-    const newState = {
+    const newState: AuthState = {
       isAuthenticated: true,
       user: {
         id: userData.id,
@@ -37,7 +24,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const logout = () => {
-    const newState = { isAuthenticated: false, user: null };
+    const newState: AuthState = { isAuthenticated: false, user: null };
     setAuthState(newState);
     localStorage.removeItem('auth');
   };
