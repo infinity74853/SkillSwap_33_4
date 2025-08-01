@@ -1,6 +1,10 @@
+import { MainLayout } from '@/widgets/Layout/MainLayout';
+import ProfileDetailsPage from '@/pages/profileDetails/ProfileDetailsPage';
+import TextTestComponent from '@/widgets/TestComponent/TestComponent';
+import Catalog from '@/widgets/catalog/catalog';
+import './styles/index.css';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import { Suspense, useEffect } from 'react';
-import { MainLayout } from '@/widgets/Layout/MainLayout';
 import { ProtectedRoute } from '@/shared/ui/protectedRoute/protectedRoute';
 import { useDispatch } from '@/services/store/store';
 import { initializeLikes } from '@/services/slices/likeSlice';
@@ -40,11 +44,7 @@ function App() {
 
           <Route
             path="/profile/details"
-            element={
-              <ProtectedRoute>
-                <>{/* Страница подробной информации в профиле, когда будет готова */}</>
-              </ProtectedRoute>
-            }
+            element={<ProfileDetailsPage />}
           />
           <Route
             path="/profile/favorites"
