@@ -5,11 +5,11 @@ import { ModalOverlayUI } from '../modal-overlay/modal-overlay';
 import { Button } from '../button/button';
 
 export const ModalUI: FC<TModalUIProps> = memo(
-  ({ type = 'info', title, description, image, onClose, children }) => (
+  ({ type = 'info', title, description, image, onClose, children, ...props }) => (
     <>
       <ModalOverlayUI onClick={onClose} />
 
-      <div className={styles.modal}>
+      <div className={`${styles.modal} ${props.className || ''}`}>
         {/* Показываем изображение только для типа confirmation */}
         {type === 'confirmation' && image && (
           <img src={image} alt="Status" className={styles.img} />

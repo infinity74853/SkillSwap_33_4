@@ -4,7 +4,7 @@
 }
 
 .trigger {
-  display: inline-block;
+  display: block;
   outline: none;
   cursor: pointer;
 }
