@@ -50,6 +50,37 @@
   height: 24px;
 }
 
+.sidebarIcon-request {
+  background-color: var(--text, #253017);
+  mask-image: url('@/app/assets/static/images/icons/request.svg');
+  mask-repeat: no-repeat;
+  mask-size: cover;
+}
+.sidebarIcon-message-text {
+  background-color: var(--text, #253017);
+  mask-image: url('@/app/assets/static/images/icons/message-text.svg');
+  mask-repeat: no-repeat;
+  mask-size: cover;
+}
+.sidebarIcon-like {
+  background-color: var(--text, #253017);
+  mask-image: url('@/app/assets/static/images/icons/like.svg');
+  mask-repeat: no-repeat;
+  mask-size: cover;
+}
+.sidebarIcon-idea {
+  background-color: var(--text, #253017);
+  mask-image: url('@/app/assets/static/images/icons/idea.svg');
+  mask-repeat: no-repeat;
+  mask-size: cover;
+}
+.sidebarIcon-user {
+  background-color: var(--text, #253017);
+  mask-image: url('@/app/assets/static/images/icons/user.svg');
+  mask-repeat: no-repeat;
+  mask-size: cover;
+}
+
 /* 4. Основная информация пользователя */
 .profileMain {
   min-inline-size: 900px;
@@ -70,7 +101,23 @@
   width: 244px;
   height: 244px;
   border-radius: 50%;
-  object-fit: cover;
+  background-color: #fff;
+  background-image: url('@/app/assets/static/images/authUserProfileImages/user.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+.iconEdit,
+.iconCalendar,
+.iconChevron,
+.profileGalleryEdit,
+.profileChevronIcon,
+.profileCalendarIcon,
+.profileAboutEditIcon {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  background-color: var(--text, #253017);
 }
 .profileEditPhotoBtn {
   position: absolute;
@@ -86,8 +133,25 @@
   padding: 16px;
 }
 .profileGalleryEdit {
-  width: 24px;
-  height: 24px;
+  mask-image: url('@/app/assets/static/images/icons/gallery-edit.svg');
+  mask-repeat: no-repeat;
+  mask-size: cover;
+}
+
+.iconEdit {
+  mask-image: url('@/app/assets/static/images/icons/edit.svg');
+  mask-repeat: no-repeat;
+  mask-size: cover;
+}
+.iconCalendar {
+  mask-image: url('@/app/assets/static/images/icons/calendar.svg');
+  mask-repeat: no-repeat;
+  mask-size: cover;
+}
+.iconChevron {
+  mask-image: url('@/app/assets/static/images/icons/chevron-down.svg');
+  mask-repeat: no-repeat;
+  mask-size: cover;
 }
 
 /* 5. Блок формы */
@@ -157,7 +221,6 @@
   align-items: center;
   justify-content: center;
 }
-
 
 /* 8. Email поле */
 .profileEmailInputWrapper {

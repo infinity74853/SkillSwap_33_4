@@ -1,17 +1,6 @@
 import { useState, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import styles from './ProfileDetailsPage.module.css';
-import { Header } from '@/widgets/Header/Header';
-import { Footer } from '@/widgets/Footer/Footer';
-import userPhoto from '@/app/assets/static/images/authUserProfileImages/user.jpg'; 
-import RequestIcon from '@/shared/ui/icons/RequestIcon';
-import MessageTextIcon from '@/shared/ui/icons/MessageTextIcon';
-import LikeIcon from '@/shared/ui/icons/LikeIcon';
-import IdeaIcon from '@/shared/ui/icons/IdeaIcon';
-import UserIcon from '@/shared/ui/icons/UserIcon';
-import CalendarIcon from '@/shared/ui/icons/CalendarIcon';
-import ChevronIcon from '@/shared/ui/icons/ChevronIcon';
-import EditIcon from '@/shared/ui/icons/EditIcon';
 
 const sidebarItems = [
   { icon: 'request', text: 'Заявки', route: '/profile/requests' },
@@ -33,7 +22,6 @@ export default function ProfileDetailsPage() {
 
   return (
     <div className={styles.profileWrapper}>
-      <Header />
       <div className={styles.profileContent}>
         <aside className={styles.profileSidebar}>
           <div className={styles.profileSidebarItems}>
@@ -44,19 +32,9 @@ export default function ProfileDetailsPage() {
                   key={item.text}
                   className={isActive ? styles.profileSidebarItemActive : styles.profileSidebarItem}
                 >
-                  <span className={styles.profileSidebarIcon}>
-                    {item.icon === 'request' ? (
-                      <RequestIcon width={24} height={24} />
-                    ) : item.icon === 'message-text' ? (
-                      <MessageTextIcon width={24} height={24} />
-                    ) : item.icon === 'like' ? (
-                      <LikeIcon width={24} height={24} />
-                    ) : item.icon === 'idea' ? (
-                      <IdeaIcon width={24} height={24} />
-                    ) : item.icon === 'user' ? (
-                      <UserIcon width={24} height={24} />
-                    ) : null}
-                  </span>
+                  <span className={
+                    `${styles.profileSidebarIcon} ${styles['sidebarIcon-' + item.icon]}`
+                  } />
                   {item.text}
                 </div>
               );
@@ -65,11 +43,9 @@ export default function ProfileDetailsPage() {
         </aside>
         <main className={styles.profileMain}>
           <div className={styles.profileAvatarBlock}>
-            <img src={userPhoto} alt="Аватар" className={styles.profileAvatar} />
+            <span className={styles.profileAvatar} />
             <button className={styles.profileEditPhotoBtn}>
-              <span className={styles.profileGalleryEdit}>
-                <EditIcon width={24} height={24} />
-              </span>
+              <span className={`${styles.profileGalleryEdit}`} />
             </button>
           </div>
           <div className={styles.profileInputBlock}>
@@ -81,9 +57,7 @@ export default function ProfileDetailsPage() {
                 onChange={e => setEmail(e.target.value)}
                 className={styles.profileEmailInput}
               />
-              <span className={styles.profileEditIcon}>
-                <EditIcon width={24} height={24} />
-              </span>
+              <span className={`${styles.profileEditIcon} ${styles.iconEdit}`} />
             </div>
           </div>
           <button className={styles.profileChangePasswordBtn}>
@@ -100,9 +74,7 @@ export default function ProfileDetailsPage() {
                     onChange={e => setName(e.target.value)}
                     className={styles.profileEmailInput}
                   />
-                  <span className={styles.profileEditIcon}>
-                    <EditIcon width={24} height={24} />
-                  </span>
+                  <span className={`${styles.profileEditIcon} ${styles.iconEdit}`} />
                 </div>
               </div>
               <div className={styles.profileInputRow}>
@@ -122,9 +94,7 @@ export default function ProfileDetailsPage() {
                       onChange={e => setBirthDate(e.target.value)}
                       className={styles.profileDateInput}
                     />
-                    <span className={styles.profileCalendarIcon}>
-                      <CalendarIcon width={24} height={24} />
-                    </span>
+                    <span className={`${styles.profileCalendarIcon} ${styles.iconCalendar}`} />
                   </div>
                 </div>
                 <div className={styles.profileInputBlock}>
@@ -136,9 +106,7 @@ export default function ProfileDetailsPage() {
                         <option value="male">Мужской</option>
                       </select>
                     </div>
-                    <span className={styles.profileChevronIcon}>
-                      <ChevronIcon width={24} height={24} />
-                    </span>
+                    <span className={`${styles.profileChevronIcon} ${styles.iconChevron}`} />
                   </div>
                 </div>
               </div>
@@ -153,9 +121,7 @@ export default function ProfileDetailsPage() {
                       <option value="Новосибирск">Новосибирск</option>
                     </select>
                   </div>
-                  <span className={styles.profileChevronIcon}>
-                    <ChevronIcon width={24} height={24} />
-                  </span>
+                  <span className={`${styles.profileChevronIcon} ${styles.iconChevron}`} />
                 </div>
               </div>
               <div className={styles.profileInputBlock}>
@@ -167,9 +133,7 @@ export default function ProfileDetailsPage() {
                     rows={5}
                     className={styles.profileAboutTextarea}
                   />
-                  <span className={styles.profileAboutEditIcon}>
-                    <EditIcon width={24} height={24} />
-                  </span>
+                  <span className={`${styles.profileAboutEditIcon} ${styles.iconEdit}`} />
                 </div>
               </div>
             </div>
@@ -179,7 +143,6 @@ export default function ProfileDetailsPage() {
           </form>
         </main>
       </div>
-      <Footer />
     </div>
   );
 }
