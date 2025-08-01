@@ -73,5 +73,6 @@ const exchangeSlice = createSlice({
   },
 });
 
-export const { addRequest, removeRequest, clearAllRequests } = exchangeSlice.actions;
+export const { addRequest, removeRequest, clearAllRequests, markAsRead, markAllAsRead } =
+  exchangeSlice.actions;
 export default exchangeSlice.reducer;
