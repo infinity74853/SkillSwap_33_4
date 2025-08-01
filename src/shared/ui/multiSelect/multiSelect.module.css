@@ -19,12 +19,17 @@
   height: 100%;
 }
 
+.wrapperOpenError {
+  border-color: red;
+  border-bottom: transparent;
+}
+
 .select {
   box-sizing: border-box;
   line-height: 24px;
   padding: 12px 20px;
   width: 100%;
-  background: url('../../../app/assets/static/images/icons/chevron-down.svg');
+  background: url('@/app/assets/static/images/icons/chevron-down.svg');
   background-repeat: no-repeat;
   background-position: right 12px center;
   background-size: 24px 24px;
@@ -38,6 +43,10 @@
   border-bottom-left-radius: 16px;
   border-bottom-right-radius: 16px;
   width: 100%;
+}
+
+.selectOpenError {
+  border-bottom: 1px red solid;
 }
 
 .selectHasPlaceholder {
@@ -79,7 +88,7 @@
   left: 12px;
   width: 24px;
   height: 24px;
-  background: url('../../../app/assets/static/images/icons/checkbox-empty.svg');
+  background: url('@/app/assets/static/images/icons/checkbox-empty.svg');
 }
 
 .li:hover {
@@ -92,7 +101,7 @@
   left: 12px;
   width: 24px;
   height: 24px;
-  background: url('../../../app/assets/static/images/icons/checkbox-done.svg');
+  background: url('@/app/assets/static/images/icons/checkbox-done.svg');
 }
 
 .selected {
@@ -105,7 +114,7 @@
   left: 12px;
   width: 24px;
   height: 24px;
-  background: url('../../../app/assets/static/images/icons/checkbox-remove.svg');
+  background: url('@/app/assets/static/images/icons/checkbox-remove.svg');
 }
 
 .error {
@@ -113,4 +122,17 @@
   font-size: 12px;
   line-height: 16px;
   letter-spacing: 2%;
+}
+
+.wrapperError {
+  border-color: var(--color-error);
+}
+
+.wrapperOpenError {
+  border-color: var(--color-error);
+  border-bottom: transparent;
+}
+
+.selectOpenError {
+  border-bottom: 1px solid var(--color-error);
 }

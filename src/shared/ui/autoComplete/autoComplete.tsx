@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, forwardRef } from 'react';
 import { TextInput, TextInputProps } from '../textInput/textInput.tsx';
 import styles from './Autocomplete.module.css';
+import { useClickOutside } from '@/shared/hooks/useClickOutside.ts';
 
 export type AutocompleteProps = Omit<TextInputProps, 'onChange'> & {
   suggestions: string[];
@@ -17,11 +18,7 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
     const [filteredSuggestions, setFilteredSuggestions] = useState<string[]>([]);
     const [selectedIndex, setSelectedIndex] = useState(-1);
     const containerRef = useRef<HTMLDivElement>(null);
-    const handleClickOutside = (event: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    };
+    useClickOutside(containerRef, () => setIsOpen(false));
 
     useEffect(() => {
       if (value) {
@@ -37,17 +34,12 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
       setSelectedIndex(-1);
     }, [value, suggestions]);
 
-    useEffect(() => {
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => document.removeEventListener('mousedown', handleClickOutside);
-    }, []);
-
     const handleInputChange = (newValue: string) => {
       onChange!(newValue);
     };
 
     const handleSelect = (suggestion: string) => {
-      onChange!(suggestion);
+      onChange?.(suggestion);
       onSelect?.(suggestion);
       setIsOpen(false);
       setSelectedIndex(-1);
@@ -86,7 +78,7 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
         ref={containerRef}
         className={`${styles.container} ${className} ${isOpen ? styles.containerOpen : ''}`}
       >
-        <div onKeyDown={handleKeyDown} className={styles.kek}>
+        <div onKeyDown={handleKeyDown}>
           <TextInput
             {...textInputProps}
             ref={ref}

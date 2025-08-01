@@ -1,5 +1,6 @@
+import { useClickOutside } from '@/shared/hooks/useClickOutside';
 import styles from './customSelect.module.css';
-import { forwardRef, useEffect, useRef, useState } from 'react';
+import { forwardRef, useRef, useState } from 'react';
 
 type CustomSelectProps = {
   options: { value: string; label: string }[];
@@ -29,21 +30,13 @@ export const CustomSelect = forwardRef<HTMLDivElement, CustomSelectProps>(
       setFocusedIndex(null);
       onBlur?.();
     };
-    const handleClickOutside = (event: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+    useClickOutside(containerRef, () => {
+      if (isOpen) {
         setIsOpen(false);
         setFocusedIndex(null);
         onBlur?.();
       }
-    };
-    useEffect(() => {
-      if (isOpen) {
-        document.addEventListener('mousedown', handleClickOutside);
-      }
-      return () => {
-        document.removeEventListener('mousedown', handleClickOutside);
-      };
-    }, [isOpen]);
+    });
 
     // Навигация клавишами
     const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -83,10 +76,23 @@ export const CustomSelect = forwardRef<HTMLDivElement, CustomSelectProps>(
         <label className={styles.label} htmlFor={id}>
           {title}
         </label>
-        <div className={`${styles.wrapper} ${isOpen ? styles.wrapperOpen : ''}`} ref={containerRef}>
+        <div
+          className={`
+            ${styles.wrapper} 
+            ${isOpen ? styles.wrapperOpen : ''} 
+            ${error ? styles.wrapperError : ''} 
+            ${isOpen && error ? styles.wrapperOpenError : ''}
+          `}
+          ref={containerRef}
+        >
           <div
             ref={ref}
-            className={`${styles.select} ${isOpen ? styles.selectOpen : ''} ${value ? '' : styles.selectHasPlaceholder}`}
+            className={`
+              ${styles.select} 
+              ${isOpen ? styles.selectOpen : ''} 
+              ${isOpen && error ? styles.selectOpenError : ''} 
+              ${!value ? styles.selectHasPlaceholder : ''}
+            `}
             onClick={() => {
               setIsOpen(prev => !prev);
               if (!isOpen) setFocusedIndex(0);

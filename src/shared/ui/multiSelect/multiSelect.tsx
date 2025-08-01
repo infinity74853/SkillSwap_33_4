@@ -1,5 +1,6 @@
-import { FC, useEffect, useRef, useState } from 'react';
+import { FC, useRef, useState } from 'react';
 import styles from './multiSelect.module.css';
+import { useClickOutside } from '@/shared/hooks/useClickOutside';
 type Option = { value: string; label: string };
 
 type MultiSelectProps = {
@@ -48,19 +49,13 @@ export const MultiSelect: FC<MultiSelectProps> = ({
     return selectedLabels.length === 1 ? selectedLabels[0] : `Выбрано: ${selectedLabels.length}`;
   };
 
-  const handleClickOutside = (event: MouseEvent) => {
-    if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+  useClickOutside(containerRef, () => {
+    if (isOpen) {
       setIsOpen(false);
       setFocusedIndex(null);
       onBlur?.();
     }
-  };
-  useEffect(() => {
-    if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [isOpen]);
+  });
 
   // навигация клавишами
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -102,19 +97,22 @@ export const MultiSelect: FC<MultiSelectProps> = ({
       </label>
       <div
         id={id}
-        className={`${styles.wrapper} ${isOpen ? styles.wrapperOpen : ''}`}
+        className={`${styles.wrapper} 
+          ${isOpen ? styles.wrapperOpen : ''} 
+          ${error ? styles.wrapperError : ''} 
+          ${isOpen && error ? styles.wrapperOpenError : ''}`}
         ref={containerRef}
       >
         <div
-          className={`${styles.select} ${isOpen ? styles.selectOpen : ''} ${value.length === 0 ? styles.selectHasPlaceholder : ''}`}
-          onClick={e => {
-            setIsOpen(prev => {
-              if (options.length > 0) {
-                return !prev;
-              }
-              return false;
-            });
-            setFocusedIndex(0);
+          className={`${styles.select} 
+            ${isOpen ? styles.selectOpen : ''} 
+            ${error && isOpen ? styles.selectOpenError : ''} 
+            ${value.length === 0 ? styles.selectHasPlaceholder : ''}`}
+          onClick={() => {
+            if (options.length > 0) {
+              setIsOpen(prev => !prev);
+              setFocusedIndex(0);
+            }
           }}
           onKeyDown={handleKeyDown}
           tabIndex={0}

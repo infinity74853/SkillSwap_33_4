@@ -27,7 +27,7 @@
 }
 
 .fixedHeight {
-  max-height: 76px;
+  max-height: 77px;
 }
 
 .logoContainer {
@@ -47,43 +47,4 @@
   grid-column: 1 / 3;
   width: 100%;
   height: 100%;
-}
-
-.aboutSection {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-  background-color: var(--color-card);
-  padding: 138px 60px;
-}
-
-.userIcon {
-  max-width: 300px;
-  max-height: 300px;
-}
-
-.infoBlock {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  max-width: 1136px;
-  max-height: 100%;
-}
-
-.infoBlockHeader {
-  font-family: Jost;
-  font-weight: 500;
-  font-style: Medium;
-  font-size: 24px;
-  line-height: 28px;
-  text-align: center;
-  vertical-align: middle;
-}
-
-.infoBlockText {
-  line-height: 24px;
-  text-align: center;
-  vertical-align: middle;
 }

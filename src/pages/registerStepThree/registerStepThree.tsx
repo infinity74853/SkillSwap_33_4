@@ -11,7 +11,12 @@ import * as yup from 'yup';
 import boardIcon from '@/app/assets/static/images/background/school-board.svg';
 import { DragAndDrop } from '@/widgets/dragAndDrop/dragAndDrop';
 import { useDispatch } from '@/services/store/store';
-import { updateStepThreeData } from '@/services/slices/registrationSlice';
+import {
+  resetStepThreeData,
+  setStep,
+  updateStepThreeData,
+} from '@/services/slices/registrationSlice';
+import { RegistrationInfoPanel } from '@/shared/ui/registrationInfoPanel/registrationInfoPanel';
 
 export const RegisterStepThree: FC = () => {
   const skills = Object.keys(skillsCategories).map(val => {
@@ -169,7 +174,13 @@ export const RegisterStepThree: FC = () => {
           )}
         />
         <div className={styles.buttonContainer}>
-          <Button children="Назад" type="quaternary" />
+          <Button
+            children="Назад"
+            type="quaternary"
+            onClick={() => {
+              (dispatch(setStep(2)), dispatch(resetStepThreeData()));
+            }}
+          />
           <Button
             children="Продолжить"
             type="primary"
@@ -181,15 +192,11 @@ export const RegisterStepThree: FC = () => {
           />
         </div>
       </form>
-      <section className={styles.aboutSection}>
-        <img src={boardIcon} className={styles.userIcon} />
-        <div className={styles.infoBlock}>
-          <header className={styles.infoBlockHeader}> Укажите, чем вы готовы заниматься</header>
-          <p className={styles.infoBlockText}>
-            Так другие люди смогут увидеть ваши предложения и предложить вам обмен!
-          </p>
-        </div>
-      </section>
+      <RegistrationInfoPanel
+        icon={boardIcon}
+        headerText="Укажите, чем вы готовы заниматься"
+        text="Так другие люди смогут увидеть ваши предложения и предложить вам обмен!"
+      />
     </div>
   );
 };

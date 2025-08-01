@@ -15,17 +15,17 @@
   height: 100%;
   width: 100%;
   justify-items: center;
-  max-width: 436px;
+  max-width: 556px;
   background-color: var(--color-card);
 }
 
 .elementFull {
   grid-column: 1 / 3;
-  max-height: 76px;
+  max-height: 78px;
 }
 
 .fixedHeight {
-  max-height: 76px; /* приходится ограниичивать элемент по высоте, т.к. нужно показывать ошибки, что не было предусмотрено дизайном */
+  max-height: 78px; /* приходится ограниичивать элемент по высоте, т.к. нужно показывать ошибки, что не было предусмотрено дизайном */
 }
 
 .logoContainer {
@@ -103,43 +103,4 @@
   grid-column: 1 / 3;
   width: 100%;
   height: 100%;
-}
-
-.aboutSection {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-  background-color: white;
-  padding: 132px 60px;
-}
-
-.userIcon {
-  max-width: 300px;
-  max-height: 300px;
-}
-
-.infoBlock {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  max-width: 1136px;
-  max-height: 100%;
-}
-
-.infoBlockHeader {
-  font-family: Jost;
-  font-weight: 500;
-  font-style: Medium;
-  font-size: 24px;
-  line-height: 28px;
-  text-align: center;
-  vertical-align: middle;
-}
-
-.infoBlockText {
-  line-height: 24px;
-  text-align: center;
-  vertical-align: middle;
 }

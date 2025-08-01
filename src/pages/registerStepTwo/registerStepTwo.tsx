@@ -14,8 +14,9 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { russianCities } from '@/shared/lib/cities';
 import userIcon from '@/app/assets/static/images/background/user-info.svg';
-import { setStep, updateStepTwoData } from '@/services/slices/registrationSlice';
+import { resetStepTwoData, setStep, updateStepTwoData } from '@/services/slices/registrationSlice';
 import { useDispatch } from '@/services/store/store';
+import { RegistrationInfoPanel } from '@/shared/ui/registrationInfoPanel/registrationInfoPanel';
 
 export const RegisterStepTwo: FC = () => {
   const [isDatePickerOpen, setDatePicker] = useState(false);
@@ -213,9 +214,12 @@ export const RegisterStepTwo: FC = () => {
               title="Город"
               placeholder="Не указан"
               suggestions={russianCities}
-              error={errors.city?.message! as string}
+              error={errors.city?.message || '  '}
+              onFocus={() => {
+                clearErrors('city');
+              }}
             />
-          )} /* тут без красных бордеров у инпутов, иначе верстка летит к хренам */
+          )}
         />
         <Controller
           name="categories"
@@ -269,7 +273,14 @@ export const RegisterStepTwo: FC = () => {
           )}
         />
         <div className={styles.buttonContainer}>
-          <Button children="Назад" type="quaternary" />
+          <Button
+            children="Назад"
+            type="quaternary"
+            onClick={() => {
+              dispatch(resetStepTwoData());
+              dispatch(setStep(1));
+            }}
+          />
           <Button
             children="Продолжить"
             type="primary"
@@ -287,15 +298,11 @@ export const RegisterStepTwo: FC = () => {
           />
         </div>
       </form>
-      <section className={styles.aboutSection}>
-        <img src={userIcon} className={styles.userIcon} />
-        <div className={styles.infoBlock}>
-          <header className={styles.infoBlockHeader}> Расскажите немного о себе</header>
-          <p className={styles.infoBlockText}>
-            Это поможет другим людям лучше вас узнать, чтобы выбрать для обмена
-          </p>
-        </div>
-      </section>
+      <RegistrationInfoPanel
+        headerText="Расскажите немного о себе"
+        icon={userIcon}
+        text="Это поможет другим людям лучше вас узнать, чтобы выбрать для обмена"
+      />
     </div>
   );
 };

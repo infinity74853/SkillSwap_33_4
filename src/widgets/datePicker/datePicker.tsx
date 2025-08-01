@@ -6,6 +6,7 @@ import 'dayjs/locale/ru';
 import 'react-day-picker/style.css';
 import Chevron from '@/app/assets/static/images/icons/chevron-down.svg';
 import { Button } from '@/shared/ui/button/button';
+import { useClickOutside } from '@/shared/hooks/useClickOutside';
 
 type CustomDatePickerProps = {
   selected: Date | undefined;
@@ -15,7 +16,7 @@ type CustomDatePickerProps = {
   disabled?: Matcher;
   onCancelClick: () => void;
   onChooseClick: () => void;
-  onClose?: () => void; // Добавил для закрытия по клику снаружи
+  onClose: () => void; // Добавил для закрытия по клику снаружи
 };
 
 export const CustomDatePicker: FC<CustomDatePickerProps> = ({
@@ -29,16 +30,7 @@ export const CustomDatePicker: FC<CustomDatePickerProps> = ({
   onClose,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const handleClickOutside = (event: MouseEvent) => {
-    if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
-      event.stopPropagation();
-      onClose?.();
-    }
-  };
-  useEffect(() => {
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [onClose]);
+  useClickOutside(containerRef, onClose);
 
   return (
     <div ref={containerRef} className={`${styles.datePickerContainer} ${className}`}>

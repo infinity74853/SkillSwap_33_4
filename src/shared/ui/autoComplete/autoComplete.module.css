@@ -48,8 +48,7 @@
   position: absolute;
   top: 100%;
   left: 0;
-  background-color: var(---color-card);
-  border: 1px solid var(--color-caption);
+  background-color: var(--color-card);
   border-radius: 0 0 16px 16px;
   border-top: transparent;
 }
