@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useEffect, useRef } from 'react';
 import styles from './datePicker.module.css';
 import { DayPicker, Matcher, OnSelectHandler } from 'react-day-picker';
 import { ru } from 'react-day-picker/locale';
@@ -15,6 +15,7 @@ type CustomDatePickerProps = {
   disabled?: Matcher;
   onCancelClick: () => void;
   onChooseClick: () => void;
+  onClose?: () => void; // Добавил для закрытия по клику снаружи
 };
 
 export const CustomDatePicker: FC<CustomDatePickerProps> = ({
@@ -25,9 +26,22 @@ export const CustomDatePicker: FC<CustomDatePickerProps> = ({
   disabled,
   onCancelClick,
   onChooseClick,
+  onClose,
 }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const handleClickOutside = (event: MouseEvent) => {
+    if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+      event.stopPropagation();
+      onClose?.();
+    }
+  };
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [onClose]);
+
   return (
-    <div className={`${styles.datePickerContainer} ${className}`}>
+    <div ref={containerRef} className={`${styles.datePickerContainer} ${className}`}>
       <DayPicker
         mode="single"
         fixedWeeks={true}
