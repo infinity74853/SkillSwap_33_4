@@ -10,9 +10,20 @@ import { CopyLinkDropdownItem } from '@/features/copyLink';
 
 interface SkillCardProps {
   skill: Skill;
+  // Пропсы для управления отображением
+  hideActions?: boolean;
+  hideSliderControls?: boolean;
+  renderButton?: () => React.ReactNode;
+  className?: string;
 }
 
-const SkillCard: React.FC<SkillCardProps> = ({ skill }) => {
+const SkillCard: React.FC<SkillCardProps> = ({
+  skill,
+  hideActions = false,
+  hideSliderControls = false,
+  renderButton,
+  ...props
+}) => {
   // Мемоизация preview изображений
   const previewImages = useMemo(
     () => (Array.isArray(skill.imagePreview) ? skill.imagePreview : [skill.imagePreview]),
@@ -78,66 +89,85 @@ const SkillCard: React.FC<SkillCardProps> = ({ skill }) => {
 
   return (
     <>
-      <article className={styles.skillCard} aria-label={`Карточка навыка: ${skill.title}`}>
-        <div className={styles.action}>
-          <LikeButton itemId={skillId} className={styles.actionButton} ariaLabel="Поставить лайк" />
-          <ShareButton
-            title={skill.title}
-            text={`Посмотри этот навык: ${skill.title} в категории ${skill.category}`}
-            url={window.location.href}
-            className={styles.actionButton}
-            aria-label="Поделиться"
-          />
-          <Dropdown
-            trigger={<MoreButton className={styles.actionButton} ariaLabel="Еще" />}
-            items={dropdownItems}
-            position="bottom-right"
-          />
-        </div>
+      <article
+        className={`${styles.skillCard} ${props.className || ''}`}
+        aria-label={`Карточка навыка: ${skill.title}`}
+      >
+        {/* Условное отображение панели действий */}
+        {!hideActions && (
+          <div className={styles.action}>
+            <LikeButton
+              itemId={skillId}
+              className={styles.actionButton}
+              ariaLabel="Поставить лайк"
+            />
+            <ShareButton
+              title={skill.title}
+              text={`Посмотри этот навык: ${skill.title} в категории ${skill.category}`}
+              url={window.location.href}
+              className={styles.actionButton}
+              aria-label="Поделиться"
+            />
+            <Dropdown
+              trigger={<MoreButton className={styles.actionButton} ariaLabel="Еще" />}
+              items={dropdownItems}
+              position="bottom-right"
+            />
+          </div>
+        )}
         <div className={styles.skillDetails}>
           <div className={styles.skillContent}>
             <h1 className={styles.title}>{skill.title}</h1>
             <p className={styles.category}>{skill.category}</p>
             <p className={styles.description}>{skill.description}</p>
-            <button type="button" className={styles.button} onClick={handleExchangeProposal}>
-              Предложить обмен
-            </button>
+            {/* Кастомная или стандартная кнопка */}
+            {renderButton ? (
+              renderButton()
+            ) : (
+              <button type="button" className={styles.button} onClick={handleExchangeProposal}>
+                Предложить обмен
+              </button>
+            )}
           </div>
           <div className={styles.skillImage}>
             <div className={styles.imageSlider} role="group" aria-label="Слайдер изображений">
-              <button
-                type="button"
-                className={styles.prevArrow}
-                aria-label="Предыдущее изображение"
-                onClick={goToPrevImage}
-                disabled={!canNavigate}
-              >
-                <img
-                  className={styles.imageArrow}
-                  src="../src/app/assets/static/images/icons/arrow-chevron-left.svg"
-                  alt=""
-                  aria-hidden="true"
-                />
-              </button>
+              {/* Условное отображение стрелок */}
+              {canNavigate && !hideSliderControls && (
+                <button
+                  type="button"
+                  className={styles.prevArrow}
+                  aria-label="Предыдущее изображение"
+                  onClick={goToPrevImage}
+                >
+                  <img
+                    className={styles.imageArrow}
+                    src="../src/app/assets/static/images/icons/arrow-chevron-left.svg"
+                    alt=""
+                    aria-hidden="true"
+                  />
+                </button>
+              )}
               <img
                 className={styles.image}
                 src={currentMainImage}
                 alt={`${imageAltText} - изображение ${currentImageIndex + 1}`}
               />
-              <button
-                type="button"
-                className={styles.nextArrow}
-                aria-label="Следующее изображение"
-                onClick={goToNextImage}
-                disabled={!canNavigate}
-              >
-                <img
-                  className={styles.imageArrow}
-                  src="../src/app/assets/static/images/icons/arrow-chevron-right.svg"
-                  alt=""
-                  aria-hidden="true"
-                />
-              </button>
+              {canNavigate && !hideSliderControls && (
+                <button
+                  type="button"
+                  className={styles.nextArrow}
+                  aria-label="Следующее изображение"
+                  onClick={goToNextImage}
+                  // disabled={!canNavigate}
+                >
+                  <img
+                    className={styles.imageArrow}
+                    src="../src/app/assets/static/images/icons/arrow-chevron-right.svg"
+                    alt=""
+                    aria-hidden="true"
+                  />
+                </button>
+              )}
             </div>
             <div className={styles.preview}>
               {previewImages.slice(0, 2).map((previewImg, index) => (
