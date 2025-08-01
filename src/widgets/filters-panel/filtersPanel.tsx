@@ -5,7 +5,7 @@ import { experienceOptions, genderOptions } from './constants';
 import { SkillsCategories, City } from './types';
 import styles from './filtersPanel.module.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '@/app/providers/store/store';
+import { RootState } from '@/services/store/store';
 import {
   setMode,
   setGender,

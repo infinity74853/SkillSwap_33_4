@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '@/app/providers/store/store';
+import { RootState } from '@/services/store/store';
 import { removeFilter } from '@/services/slices/filtersSlice';
 import styles from './SelectedFilters.module.css';
 
