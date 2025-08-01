@@ -48,12 +48,11 @@ p {
 }
 
 a {
-  color: var(--link-color);
   text-decoration: none;
 }
 
 a:hover {
-  text-decoration: underline;
+  text-decoration: none;
   background-color: var(--button-primary-hover-color);
 }
 
