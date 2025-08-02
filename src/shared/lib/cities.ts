@@ -317,4 +317,12 @@ export const russianCities = [
   'Кириши',
   'Снежинск',
   'Жигулёвск',
-];
+] as const;
+
+export const cities = russianCities.reduce(
+  (acc, city) => {
+    acc[city] = [city];
+    return acc;
+  },
+  {} as { [key: string]: readonly string[] },
+);
