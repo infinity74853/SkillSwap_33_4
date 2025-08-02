@@ -1,8 +1,7 @@
-import { UserCard } from '../userCard/userCard';
 import styles from './userInfo.module.css';
-import { useSelector } from '@/services/store/store';
-import { RootState } from '@/services/store/store';
 import { useParams } from 'react-router-dom';
+import { UserCard } from '../userCard/userCard';
+import { useSelector, RootState } from '@/services/store/store';
 
 const UserInfo: React.FC = () => {
   const { id } = useParams<{ id: string }>();

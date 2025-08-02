@@ -3,13 +3,72 @@
   flex-direction: column;
   gap: 24px;
   max-width: 1368px;
-  background-color: aquamarine;
+}
+
+.sliderContainer {
+  position: relative;
+  margin-top: 16px;
+}
+
+.cardsSlider {
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.cardsSlider::-webkit-scrollbar {
+  display: none;
 }
 
 .cards {
-  display: grid;
-  flex-wrap: wrap;
-  grid-template-columns: repeat(4, 1fr);
-  justify-content: space-between;
+  display: flex;
   gap: 24px;
+  min-width: max-content;
+}
+
+.cardWrapper {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 324px;
+}
+
+.arrowLeft,
+.arrowRight {
+  position: absolute;
+  top: 50%;
+  z-index: 10;
+  transform: translateY(-50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  border-radius: 50%;
+  padding: 8px;
+  background: var(--color-disabled, #e4e8df);
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
+
+.arrowLeft {
+  left: -16px;
+}
+
+.arrowRight {
+  right: -16px;
+}
+
+.arrowLeft:hover,
+.arrowRight:hover,
+.arrowLeft:focus,
+.arrowRight:focus {
+  background: var(--button-primary-hover-color, #deebc5);
+}
+
+.arrowLeft img,
+.arrowRight img {
+  display: block;
+  width: 16px;
+  height: 16px;
+  pointer-events: none;
 }
