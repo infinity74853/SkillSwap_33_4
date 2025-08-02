@@ -5,8 +5,8 @@ import { LikeButton } from '@/shared/ui/likeButton/likeButton';
 import { MoreButton } from '@/shared/ui/moreButton/moreButton';
 import { ShareButton } from '@/shared/ui/shareButton/shareButton';
 import { Skill } from '@/pages/skillPage/skillPage';
-import { ModalUI } from '@/shared/ui/modal/modalUi';
 import { CopyLinkDropdownItem } from '@/features/copyLink';
+import { Modal } from '@/features/modal/modal';
 
 interface SkillCardProps {
   skill: Skill;
@@ -203,7 +203,7 @@ const SkillCard: React.FC<SkillCardProps> = ({
       </article>
 
       {isModalOpen && (
-        <ModalUI
+        <Modal
           type="confirmation"
           title="Ваше предложение создано"
           description="Теперь вы можете предложить обмен"
