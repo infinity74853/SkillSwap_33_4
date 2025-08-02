@@ -1,12 +1,12 @@
 import { Skill } from '@/shared/ui/skill/skill.tsx';
 import styles from './userCard.module.css';
 import { Button } from '@/shared/ui/button/button';
-import { useState } from 'react';
 import { calculateAge } from '@/shared/lib/helpers/data';
 import { User } from '@/entities/user/model/types';
 import { useDispatch, useSelector } from '@/services/store/store';
 import { selectIsLiked } from '@/services/selectors/likeSelectors';
 import { toggleLike } from '@/services/slices/likeSlice';
+import { useNavigate } from 'react-router-dom';
 
 export const UserCard: React.FC<User> = ({
   image,
@@ -18,7 +18,8 @@ export const UserCard: React.FC<User> = ({
   birthdayDate,
 }) => {
   const dispatch = useDispatch();
-  const [isExchange, setExchange] = useState(false);
+  const navigate = useNavigate();
+  // const [isExchange, setExchange] = useState(false);
   const learnSkill = wantsToLearn.slice(0, 2);
   const moreSkills = wantsToLearn.length - learnSkill.length;
 
@@ -30,8 +31,7 @@ export const UserCard: React.FC<User> = ({
   };
 
   const openProfile = () => {
-    // Заглушка на открытие профиля
-    setExchange(!isExchange);
+    navigate(`/skill/${_id}`);
   };
 
   return (
@@ -71,18 +71,9 @@ export const UserCard: React.FC<User> = ({
           </div>
         </div>
       </div>
-      {isExchange ? (
-        <Button onClick={openProfile} type="secondary">
-          <span className={styles.contentClock}>
-            <div className={styles.clock}></div>
-            <span>Обмен предложен</span>
-          </span>
-        </Button>
-      ) : (
-        <Button onClick={openProfile} type="primary">
-          Подробнее
-        </Button>
-      )}
+      <Button onClick={openProfile} type="primary">
+        Подробнее
+      </Button>
     </div>
   );
 };
