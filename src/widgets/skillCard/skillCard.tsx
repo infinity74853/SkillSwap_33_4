@@ -1,5 +1,4 @@
 import { useState, useCallback, useMemo } from 'react';
-import styles from './skillCard.module.css';
 import { Dropdown } from '@/shared/ui/dropdown/dropdown';
 import { LikeButton } from '@/shared/ui/likeButton/likeButton';
 import { MoreButton } from '@/shared/ui/moreButton/moreButton';
@@ -7,6 +6,9 @@ import { ShareButton } from '@/shared/ui/shareButton/shareButton';
 import { Skill } from '@/pages/skillPage/skillPage';
 import { CopyLinkDropdownItem } from '@/features/copyLink';
 import { Modal } from '@/features/modal/modal';
+import arrowLeft from '@/app/assets/static/images/icons/arrow-chevron-left.svg';
+import arrowRight from '@/app/assets/static/images/icons/arrow-chevron-right.svg';
+import styles from './skillCard.module.css';
 
 interface SkillCardProps {
   skill: Skill;
@@ -139,12 +141,7 @@ const SkillCard: React.FC<SkillCardProps> = ({
                   aria-label="Предыдущее изображение"
                   onClick={goToPrevImage}
                 >
-                  <img
-                    className={styles.imageArrow}
-                    src="../src/app/assets/static/images/icons/arrow-chevron-left.svg"
-                    alt=""
-                    aria-hidden="true"
-                  />
+                  <img className={styles.imageArrow} src={arrowLeft} alt="" aria-hidden="true" />
                 </button>
               )}
               <img
@@ -160,12 +157,7 @@ const SkillCard: React.FC<SkillCardProps> = ({
                   onClick={goToNextImage}
                   // disabled={!canNavigate}
                 >
-                  <img
-                    className={styles.imageArrow}
-                    src="../src/app/assets/static/images/icons/arrow-chevron-right.svg"
-                    alt=""
-                    aria-hidden="true"
-                  />
+                  <img className={styles.imageArrow} src={arrowRight} alt="" aria-hidden="true" />
                 </button>
               )}
             </div>

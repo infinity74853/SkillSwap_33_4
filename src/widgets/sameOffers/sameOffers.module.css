@@ -12,8 +12,8 @@
 
 .cardsSlider {
   overflow-x: auto;
-  scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
   scrollbar-width: none;
 }
 
@@ -38,7 +38,6 @@
   position: absolute;
   top: 50%;
   z-index: 10;
-  transform: translateY(-50%);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -47,6 +46,7 @@
   padding: 8px;
   background: var(--color-disabled, #e4e8df);
   transition: background-color 0.3s ease;
+  transform: translateY(-50%);
   cursor: pointer;
 }
 

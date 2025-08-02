@@ -1,7 +1,9 @@
+import { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import SkillCard from '@/widgets/skillCard/skillCard';
-import styles from './skillPage.module.css';
 import SameOffers from '@/widgets/sameOffers/sameOffers';
 import UserInfo from '@/widgets/userInfo/userInfo';
+import styles from './skillPage.module.css';
 
 export interface Skill {
   id: string;
@@ -45,6 +47,12 @@ const mockSkills: Skill[] = [
 ];
 
 const SkillPage: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
+  // === Прокрутка к верху при открытии страницы ===
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [id]);
+
   return (
     <div className={styles.skillPage}>
       <div className={styles.userOffer}>
