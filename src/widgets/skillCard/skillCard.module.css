@@ -21,7 +21,6 @@
   margin: 0;
   border: none;
   padding: 0;
-  background-color: #000;
   transition: opacity 0.3s ease;
   cursor: pointer;
 }
@@ -51,8 +50,8 @@
 .skillContent {
   display: flex;
   flex-direction: column;
-  min-height: 0;
   flex: 1;
+  min-height: 0;
 }
 
 .title,

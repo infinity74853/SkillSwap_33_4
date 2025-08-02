@@ -1,16 +1,16 @@
 import { useRef, useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { RootState, useSelector } from '@/services/store/store';
 import { UserCard } from '../userCard/userCard';
 import arrowLeft from '@/app/assets/static/images/icons/arrow-chevron-left.svg';
 import arrowRight from '@/app/assets/static/images/icons/arrow-chevron-right.svg';
 import styles from './sameOffers.module.css';
+import { User } from '@/entities/user/model/types';
 
-const SameOffers: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
-  const users = useSelector((state: RootState) => state.catalog.users);
-  const currentUser = users.find(u => u._id === id);
+interface SameOffersProps {
+  currentUser: User;
+  users: User[]; // все пользователи для поиска похожих
+}
 
+const SameOffers: React.FC<SameOffersProps> = ({ currentUser, users }) => {
   const sliderRef = useRef<HTMLDivElement>(null);
   const cardsContainerRef = useRef<HTMLDivElement>(null);
 
@@ -19,16 +19,18 @@ const SameOffers: React.FC = () => {
 
   // === Получаем точный шаг прокрутки ===
   const getScrollStep = (): number => {
-    if (!cardsContainerRef.current) return 348;
+    if (!cardsContainerRef.current || !styles.cardWrapper) return 348;
 
-    const firstCard = cardsContainerRef.current.querySelector(`.${styles.cardWrapper}`);
+    const firstCard = cardsContainerRef.current.querySelector<HTMLElement>(
+      `.${styles.cardWrapper}`,
+    );
     if (!firstCard) return 348;
 
     const cardRect = firstCard.getBoundingClientRect();
     const style = getComputedStyle(cardsContainerRef.current);
-    const gap = parseFloat(style.columnGap) || 16;
+    const gap = parseFloat(style.gap || style.columnGap) || 16;
 
-    return Math.round(cardRect.width + gap); // округляем до целого
+    return Math.round(cardRect.width + gap);
   };
 
   // === Проверка видимости стрелок ===
@@ -36,7 +38,6 @@ const SameOffers: React.FC = () => {
     const slider = sliderRef.current;
     if (!slider) return;
 
-    // Используем порог, а не строго 0
     const isAtStart = slider.scrollLeft < 1;
     const isAtEnd = slider.scrollWidth - slider.scrollLeft - slider.clientWidth < 1;
 
@@ -50,8 +51,6 @@ const SameOffers: React.FC = () => {
     if (!slider) return;
 
     const step = getScrollStep();
-
-    // Текущая позиция
     let targetScrollLeft = slider.scrollLeft;
 
     if (direction === 'right') {
@@ -60,20 +59,17 @@ const SameOffers: React.FC = () => {
       targetScrollLeft = Math.floor((targetScrollLeft - step) / step) * step;
     }
 
-    // Ограничиваем диапазон
     targetScrollLeft = Math.max(
       0,
       Math.min(targetScrollLeft, slider.scrollWidth - slider.clientWidth),
     );
 
-    // Плавная прокрутка
     slider.scrollTo({
       left: targetScrollLeft,
       behavior: 'smooth',
     });
 
-    // После завершения прокрутки — обновляем стрелки
-    setTimeout(checkArrows, 300); // подождём завершения анимации
+    // Убрали setTimeout — checkArrows вызывается через scroll
   };
 
   const scrollLeft = () => scroll('left');
@@ -87,7 +83,6 @@ const SameOffers: React.FC = () => {
     if (!slider) return;
 
     const handleScroll = () => {
-      // Используем requestAnimationFrame для синхронизации с рендером
       requestAnimationFrame(checkArrows);
     };
 

@@ -1,13 +1,12 @@
 import styles from './userInfo.module.css';
-import { useParams } from 'react-router-dom';
 import { UserCard } from '../userCard/userCard';
-import { useSelector, RootState } from '@/services/store/store';
+import { User } from '@/entities/user/model/types';
 
-const UserInfo: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
-  const users = useSelector((state: RootState) => state.catalog.users);
-  const user = users.find(u => u._id === id);
+interface UserInfoProps {
+  user: User;
+}
 
+const UserInfo: React.FC<UserInfoProps> = ({ user }) => {
   if (!user) {
     return <div className={styles.userInfo}>Пользователь не найден</div>;
   }
