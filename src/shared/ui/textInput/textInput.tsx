@@ -24,7 +24,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
   (
     {
       id,
-      title = 'text',
+      title,
       placeholder,
       className,
       icon,
@@ -39,7 +39,6 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
     ref,
   ) => {
     const isTextarea = type === 'textarea';
-
     return (
       <div className={`${styles.container} ${className}`}>
         <label className={styles.label} htmlFor={id}>
@@ -54,7 +53,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
             id={id}
             placeholder={placeholder}
             ref={ref as React.Ref<HTMLTextAreaElement>}
-            rows={4}
+            rows={3}
           />
         ) : (
           <input

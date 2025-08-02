@@ -9,12 +9,14 @@ interface CatalogState {
   users: User[];
   loading: boolean;
   error: string | null;
+  searchQuery: string;
 }
 
 const initialState: CatalogState = {
   users: [],
   loading: false,
   error: null,
+  searchQuery: '',
 };
 
 const getCachedUsers = (): User[] | null => {
@@ -41,7 +43,11 @@ export const fetchCatalog = createAsyncThunk('catalog/fetch', async (_, { reject
 const catalogSlice = createSlice({
   name: 'catalog',
   initialState,
-  reducers: {},
+  reducers: {
+    setSearchQuery(state, action) {
+      state.searchQuery = action.payload.toLowerCase(); // Сохраняем в нижнем регистре
+    },
+  },
   extraReducers: builder => {
     builder
       .addCase(fetchCatalog.pending, state => {
@@ -60,4 +66,5 @@ const catalogSlice = createSlice({
   },
 });
 
+export const { setSearchQuery } = catalogSlice.actions;
 export default catalogSlice.reducer;
