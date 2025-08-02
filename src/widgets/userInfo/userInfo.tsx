@@ -15,7 +15,7 @@ const UserInfo: React.FC = () => {
 
   return (
     <div className={styles.userInfo}>
-      <UserCard {...user} />
+      <UserCard {...user} showLike={false} showDescription={true} showDetails={false} />
     </div>
   );
 };

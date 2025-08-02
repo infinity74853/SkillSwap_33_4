@@ -8,7 +8,14 @@ import { selectIsLiked } from '@/services/selectors/likeSelectors';
 import { toggleLike } from '@/services/slices/likeSlice';
 import { useNavigate } from 'react-router-dom';
 
-export const UserCard: React.FC<User> = ({
+type UserCardProps = User & {
+  // Дополнительные пропсы, если нужны
+  showLike?: boolean;
+  showDescription?: boolean;
+  showDetails?: boolean;
+};
+
+export const UserCard: React.FC<UserCardProps> = ({
   image,
   name,
   city,
@@ -16,6 +23,10 @@ export const UserCard: React.FC<User> = ({
   wantsToLearn,
   _id,
   birthdayDate,
+  description,
+  showLike = true,
+  showDescription = false,
+  showDetails = true,
 }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -38,18 +49,21 @@ export const UserCard: React.FC<User> = ({
     <div className={styles.cardContainer}>
       <div className={styles.headerCard}>
         <img src={image} alt={`Avatar ${name}`} className={styles.image} />
-        <div className={styles.cardLike}>
-          <button
-            onClick={handleLikeClick}
-            className={`${styles.likeButton} ${isLiked ? styles.likeButtonActive : ''}`}
-          ></button>
-        </div>
+        {showLike && (
+          <div className={styles.cardLike}>
+            <button
+              onClick={handleLikeClick}
+              className={`${styles.likeButton} ${isLiked ? styles.likeButtonActive : ''}`}
+            ></button>
+          </div>
+        )}
         <div className={styles.userInfo}>
           <p className={styles.userName}>{name}</p>
           <p className={styles.userCityAndAge}>{`${city}, ${calculateAge(birthdayDate)}`}</p>
         </div>
       </div>
       <div className={styles.bodyCard}>
+        {showDescription && <p className={styles.description}>{description}</p>}
         <div className={styles.teach}>
           <p className={styles.pointCard}>Может научить:</p>
           <div className={styles.skills}>
@@ -71,9 +85,11 @@ export const UserCard: React.FC<User> = ({
           </div>
         </div>
       </div>
-      <Button onClick={openProfile} type="primary">
-        Подробнее
-      </Button>
+      {showDetails && (
+        <Button onClick={openProfile} type="primary">
+          Подробнее
+        </Button>
+      )}
     </div>
   );
 };
