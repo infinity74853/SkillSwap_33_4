@@ -14,7 +14,7 @@ export const Header = () => {
   const { isAuthenticated } = useAuth();
   const dispatch = useDispatch();
 
-   const handleSearch = (query: string) => {
+  const handleSearch = (query: string) => {
     dispatch(setSearchQuery(query));
   };
 
@@ -51,7 +51,7 @@ export const Header = () => {
             <div className={styles.chevronIcon}> </div>
           </nav>
         </div>
-        <SearchInput placeholder="Искать навык" onSearch={handleSearch}/>
+        <SearchInput placeholder="Искать навык" onSearch={handleSearch} />
         <div className={styles.rightSection}>
           <button className={styles.themeToggle} onClick={toggleTheme}>
             <span

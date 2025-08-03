@@ -3,16 +3,17 @@
 }
 
 .skillCard {
-  max-width: 904px;
-  padding: 0;
+  --skill-card-width: 904px;
+  --skill-card-padding: 0;
 }
 
 .skillDetails {
-  gap: 44px;
+  --skill-details-gap: 44px;
 }
 
 .buttonContainer {
   display: flex;
+  flex: 1;
   gap: 12px;
 }
 
