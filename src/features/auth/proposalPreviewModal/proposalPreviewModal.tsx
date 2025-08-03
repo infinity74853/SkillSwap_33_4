@@ -30,7 +30,7 @@ export const ProposalPreviewModal: React.FC<ProposalPreviewModalProps> = ({
       // Передаём весь контент — карточку + кнопки — через children
       children={
         <SkillCard
-          className={styles.skillCard}
+          className={`${styles.skillCard} ${styles.skillDetails}`}
           skill={skill}
           hideActions
           hideSliderControls
