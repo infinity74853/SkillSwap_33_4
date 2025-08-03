@@ -11,6 +11,7 @@ import filtersReducer from '@/services/slices/filtersSlice';
 import likeReducer from '@/services/slices/likeSlice';
 import catalogReducer from '@/services/slices/catalogSlice';
 import exchangeReducer from '@/services/slices/exchangeSlice';
+import { skillsReducer } from '../slices/skillsSlice';
 
 export const rootReducer = combineSlices({
   register: registrationReducer,
@@ -19,6 +20,7 @@ export const rootReducer = combineSlices({
   likes: likeReducer,
   catalog: catalogReducer,
   exchange: exchangeReducer,
+  skills: skillsReducer,
 });
 
 const store = configureStore({
