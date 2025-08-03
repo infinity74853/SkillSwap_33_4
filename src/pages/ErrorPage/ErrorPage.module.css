@@ -1,5 +1,6 @@
 .container {
   margin-top: 100px;
+  margin-bottom: 84px;
   align-items: center;
   width: 100%;
   display: flex;
@@ -9,4 +10,6 @@
 
 .icon {
   max-height: 273px;
+  padding-top: 16px;
+  padding-bottom: 14px;
 }
