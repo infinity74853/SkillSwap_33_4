@@ -11,4 +11,5 @@ export type User = {
   likes: string[];
   canTeach: CustomSkill;
   wantsToLearn: Omit<CustomSkill, 'description' | 'image'>[];
+  email?: string;
 };
