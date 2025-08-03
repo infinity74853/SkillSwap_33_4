@@ -14,7 +14,7 @@ export const Header = () => {
   const { isAuthenticated } = useAuth();
   const dispatch = useDispatch();
 
-   const handleSearch = (query: string) => {
+  const handleSearch = (query: string) => {
     dispatch(setSearchQuery(query));
   };
 
@@ -45,13 +45,15 @@ export const Header = () => {
             <Link to="/about" className={styles.linkAbout}>
               О проекте
             </Link>
-            <Link to="/all_skills" className={styles.linkSkills}>
-              Все навыки
-            </Link>
-            <div className={styles.chevronIcon}> </div>
+            <div className={styles.linkSkillsIcon}>
+              <Link to="/all_skills" className={styles.linkSkills}>
+                Все навыки
+              </Link>
+              <div className={styles.chevronIcon}> </div>
+            </div>
           </nav>
         </div>
-        <SearchInput placeholder="Искать навык" onSearch={handleSearch}/>
+        <SearchInput placeholder="Искать навык" onSearch={handleSearch} />
         <div className={styles.rightSection}>
           <button className={styles.themeToggle} onClick={toggleTheme}>
             <span

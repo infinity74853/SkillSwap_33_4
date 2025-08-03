@@ -36,8 +36,8 @@ export const UserPanel = () => {
 
       {isMenuOpen && (
         <div className={styles.modalMenu}>
-          <button className={styles.menuItem}>Личный кабинет</button>
-          <button className={styles.menuItem} onClick={logout}>
+          <button className={styles.menuItemLk}>Личный кабинет</button>
+          <button className={styles.menuItemOut} onClick={logout}>
             Выйти из аккаунта
             <span className={styles.logoutIcon}></span>
           </button>

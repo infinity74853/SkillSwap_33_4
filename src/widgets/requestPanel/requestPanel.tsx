@@ -1,6 +1,7 @@
 import { selectExchageRequests } from '@/services/selectors/exchangeSelectors';
 import { removeRequest } from '@/services/slices/exchangeSlice';
 import { useDispatch, useSelector } from '@/services/store/store';
+import styles from './requestPanel.module.css';
 
 /* ВРЕМЕННОЕ РЕШЕНИЕ */
 
@@ -20,21 +21,24 @@ const RequestPanel = () => {
   }
 
   return (
-    <div className="exchange-requests-container">
+    <div className={styles.sidePanel}>
       {requests.map(request => (
-        <div key={request.id} className="exchange-request">
-          <div className="request-content">
-            <span className="request-text">{request.fromUserName} предлагает вам обмен</span>
-          </div>
-          <div className="request-actions">
+        <div key={request.id} className={styles.requestCard}>
+          <div className={styles.cardContent}>
+            <div className={styles.requestTextContainer}>
+              <div className={styles.icon}></div>
+              <span className={styles.requestText}>
+                {request.fromUserName} предлагает вам обмен
+              </span>
+              <button className={styles.closeBtn} onClick={() => handleRemove(request.id)}>
+                <div className={styles.closeIcon}></div>
+              </button>
+            </div>
             <button
-              className="accept-btn"
-              onClick={() => console.log('Переход к обмену', request.fromUserId)}
+              className={styles.goBtn}
+              onClick={() => console.log('Переход к обмену', request.id)}
             >
               Перейти
-            </button>
-            <button className="decline-btn" onClick={() => handleRemove(request.id)}>
-              ×
             </button>
           </div>
         </div>

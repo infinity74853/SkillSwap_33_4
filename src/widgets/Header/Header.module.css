@@ -66,7 +66,7 @@
 .themeToggle:hover,
 .linkAbout:hover,
 .iconWrapper:hover,
-.linkSkills:hover {
+.linkSkillsIcon:hover {
   background-color: #deebc5;
   border-radius: 10px;
 }
@@ -90,6 +90,10 @@
 
 .linkSkills {
   padding: 12px;
+}
+
+.linkSkillsIcon {
+  padding: 12px 0;
 }
 
 /* Стиль для иконки "шеврон" */
