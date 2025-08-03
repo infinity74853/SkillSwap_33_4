@@ -43,3 +43,8 @@ export const skillsReducer = skillsSlice.reducer;
 export const getCategoriesSelector = createSelector(getSkillsSelector, skills =>
   Array.from(new Set(skills.map(skill => skill.category))),
 ); // отдельный селектор с мемоизацией
+
+export const getSkillsBySubcategoryPrefixSelector = createSelector(
+  [getSkillsSelector, (_, prefix: string) => prefix],
+  (skills, prefix) => skills.filter(skill => skill.subcategoryId.startsWith(prefix)),
+);
