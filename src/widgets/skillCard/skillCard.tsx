@@ -10,7 +10,7 @@ import styles from './skillCard.module.css';
 import { SuccessModal } from '@/features/successModal/successModal';
 
 // === Интерфейс для canTeach из usersData ===
-interface TeachableSkill {
+export interface TeachableSkill {
   customSkillId: string;
   name: string;
   category: string;
@@ -18,7 +18,7 @@ interface TeachableSkill {
   image: string[];
 }
 
-interface SkillCardProps {
+export interface SkillCardProps {
   skill: TeachableSkill;
   // Пропсы для управления отображением
   hideActions?: boolean;
