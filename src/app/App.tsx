@@ -1,7 +1,7 @@
 import { MainLayout } from '@/widgets/Layout/MainLayout';
 import ProfileDetailsPage from '@/pages/profileDetails/ProfileDetailsPage';
-//import TextTestComponent from '@/widgets/TestComponent/TestComponent';
-//import Catalog from '@/widgets/catalog/catalog';
+import TextTestComponent from '@/widgets/TestComponent/TestComponent';
+import Catalog from '@/widgets/catalog/catalog';
 import './styles/index.css';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import { Suspense, useEffect } from 'react';
@@ -14,7 +14,7 @@ import { RegistrationForms } from '@/features/RegistrationForms/registrationForm
 import { ErrorPage } from '@/pages/ErrorPage/ErrorPage';
 import SkillPage from '@/pages/skillPage/skillPage';
 import { CatalogPage } from '@/pages/catalogPage/catalogPage';
-import './styles/index.css';
+import { fetchUser } from '@/services/thunk/authUser';
 
 function App() {
   const location = useLocation();
@@ -23,6 +23,7 @@ function App() {
 
   useEffect(() => {
     dispatch(initializeLikes());
+    dispatch(fetchUser());
     dispatch(fetchCatalog());
   }, [dispatch]);
 
@@ -63,7 +64,7 @@ function App() {
           path="/login"
           element={
             <ProtectedRoute onlyUnAuth>
-              <>{/* Страница логина, когда будет готова */}</>
+              <RegistrationForms isRegister={false} />
             </ProtectedRoute>
           }
         />
