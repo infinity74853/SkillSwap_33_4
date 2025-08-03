@@ -45,6 +45,9 @@ export const AuthFormContainer = ({ isFirstStage = true }) => {
         };
         setPreviewSkill(skill);
         setIsPreviewOpen(true);
+
+        // Сохраняем userId для передачи в ProposalPreviewModal
+        localStorage.setItem('registrationUserId', firstUser._id);
       } else {
         // Логика отправки формы
         dispatch(stepActions.nextStep());
@@ -133,13 +136,14 @@ export const AuthFormContainer = ({ isFirstStage = true }) => {
           isOpen={isPreviewOpen}
           onClose={() => setIsPreviewOpen(false)}
           skill={previewSkill}
+          userId={localStorage.getItem('registrationUserId') || ''}
           onEdit={handleEdit}
           onSuccess={handleSuccess}
         />
       )}
 
       {/* Модальное окно успешного создания предложения */}
-      {isSuccessOpen && <SuccessModal />}
+      {isSuccessOpen && <SuccessModal onClose={() => setIsSuccessOpen(false)} />}
     </>
   );
 };
