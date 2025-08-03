@@ -1,5 +1,4 @@
 import { CustomSkill } from '@/entities/skill/model/types';
-import { GenderOption } from '@/widgets/filters-panel/types';
 
 export type User = {
   createdAt: string | number | Date;
@@ -13,4 +12,14 @@ export type User = {
   likes: string[];
   canTeach: CustomSkill;
   wantsToLearn: Omit<CustomSkill, 'description' | 'image'>[];
+};
+
+export type ExperienceOption = {
+  value: 'all' | 'want-to-learn' | 'can-teach';
+  label: string;
+};
+
+export type GenderOption = {
+  value: 'any' | 'male' | 'female';
+  label: string;
 };
