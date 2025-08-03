@@ -5,7 +5,7 @@ import styles from './registrationForms.module.css';
 import { Button } from '@/shared/ui/button/button';
 import { useNavigate } from 'react-router-dom';
 
-export const RegistrationForms = () => {
+export const RegistrationForms = ({ isRegister = true }) => {
   const forms = [
     <AuthFormContainer key="step1" isFirstStage={true} />,
     <AuthFormContainer key="step2" isFirstStage={true} />, // Мок данные, заменить на другие формы
@@ -30,7 +30,14 @@ export const RegistrationForms = () => {
           </Button>
         </div>
       </div>
-      <AuthWizard>{forms}</AuthWizard>
+      {isRegister ? (
+        <AuthWizard>{forms}</AuthWizard>
+      ) : (
+        <div className={styles.container}>
+          <h2 className={styles.content}>Вход</h2>
+          <AuthFormContainer isFirstStage={false} />
+        </div>
+      )}
     </div>
   );
 };

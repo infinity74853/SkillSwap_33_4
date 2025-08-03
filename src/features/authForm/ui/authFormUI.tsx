@@ -21,6 +21,8 @@ interface AuthFormUIProps {
   togglePasswordVisibility: () => void;
   handleEmailChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handlePasswordChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handlePasswordBlur: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleEmailBlur: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export const AuthFormUI = ({
@@ -34,6 +36,8 @@ export const AuthFormUI = ({
   togglePasswordVisibility,
   handleEmailChange,
   handlePasswordChange,
+  handlePasswordBlur,
+  handleEmailBlur,
 }: AuthFormUIProps) => {
   return (
     <main className={styles.container}>
@@ -78,6 +82,7 @@ export const AuthFormUI = ({
                 aria-describedby="email-error"
                 value={email}
                 onChange={handleEmailChange}
+                onBlur={handleEmailBlur}
               />
               {!isFirstStage && <p className={styles.validationContent}>{errors.email}</p>}
             </div>
@@ -96,6 +101,7 @@ export const AuthFormUI = ({
                   aria-describedby="password-error"
                   value={password}
                   onChange={handlePasswordChange}
+                  onBlur={handlePasswordBlur}
                 />
                 <button
                   type="button"
@@ -114,7 +120,9 @@ export const AuthFormUI = ({
           </fieldset>
 
           <div className={styles.authLinks}>
-            <Button type="primary">{textContent.buttonText}</Button>
+            <Button type="primary" disabled={!!(errors.email || errors.password || errors.form)}>
+              {textContent.buttonText}
+            </Button>
             {isFirstStage && (
               <a href="/register" className={styles.link}>
                 Зарегистрироваться

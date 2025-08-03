@@ -11,6 +11,7 @@ import { useDispatch } from '../services/store/store';
 import { initializeLikes } from '@/services/slices/likeSlice';
 import './styles/index.css';
 import { SuccessModal } from '@/features/successModal/successModal';
+import { fetchUser } from '@/services/thunk/authUser';
 
 function App() {
   const location = useLocation();
@@ -19,6 +20,7 @@ function App() {
 
   useEffect(() => {
     dispatch(initializeLikes());
+    dispatch(fetchUser());
   }, [dispatch]);
 
   return (
@@ -72,7 +74,7 @@ function App() {
           path="/login"
           element={
             <ProtectedRoute onlyUnAuth>
-              <>{/* Страница логина, когда будет готова */}</>
+              <RegistrationForms isRegister={false} />
             </ProtectedRoute>
           }
         />

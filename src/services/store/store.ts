@@ -8,9 +8,11 @@ import {
 import stepsSlice from '@/services/slices/stepSlice';
 import filtersReducer from '@/services/slices/filtersSlice';
 import likeReducer from '@/services/slices/likeSlice';
+import authSlice from '../slices/authSlice';
 
 export const rootReducer = combineSlices({
   [stepsSlice.name]: stepsSlice.reducer,
+  [authSlice.name]: authSlice.reducer,
   filters: filtersReducer,
   likes: likeReducer,
 });
