@@ -7,8 +7,5 @@ export const useSteps = (stepCount: number) => {
 
   useEffect(() => {
     dispatch(stepActions.initializeSteps(stepCount));
-    return () => {
-      dispatch(stepActions.resetSteps());
-    };
   }, [dispatch, stepCount]);
 };

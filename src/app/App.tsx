@@ -14,7 +14,7 @@ import { RegistrationForms } from '@/features/registrationForms/registrationForm
 import { ErrorPage } from '@/pages/ErrorPage/ErrorPage';
 import SkillPage from '@/pages/skillPage/skillPage';
 import { CatalogPage } from '@/pages/catalogPage/catalogPage';
-import './styles/index.css';
+import { fetchUser } from '@/services/thunk/authUser';
 
 function App() {
   const location = useLocation();
@@ -23,6 +23,7 @@ function App() {
 
   useEffect(() => {
     dispatch(initializeLikes());
+    dispatch(fetchUser());
     dispatch(fetchCatalog());
   }, [dispatch]);
 
@@ -42,10 +43,7 @@ function App() {
           {/* index-маршрут для корневого пути "/" */}
           <Route index element={<CatalogPage />} />
 
-          <Route
-            path="/profile/details"
-            element={<ProfileDetailsPage />}
-          />
+          <Route path="/profile/details" element={<ProfileDetailsPage />} />
           <Route
             path="/profile/favorites"
             element={
@@ -66,7 +64,7 @@ function App() {
           path="/login"
           element={
             <ProtectedRoute onlyUnAuth>
-              <>{/* Страница логина, когда будет готова */}</>
+              <RegistrationForms isRegister={false} />
             </ProtectedRoute>
           }
         />
