@@ -27,11 +27,12 @@ const skillsSlice = createSlice({
         state.error = undefined;
       })
       .addCase(getSkills.rejected, state => {
-        ((state.loading = false),
-          (state.error = new Error('Не удалось загрузить данные о навыках').message));
+        state.loading = false;
+        state.error = 'Не удалось загрузить данные о навыках';
       })
       .addCase(getSkills.fulfilled, (state, action) => {
         state.skills = action.payload.data;
+        state.loading = false;
       });
   },
 });
