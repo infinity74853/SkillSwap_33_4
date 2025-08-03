@@ -4,10 +4,10 @@ import { LikeButton } from '@/shared/ui/likeButton/likeButton';
 import { MoreButton } from '@/shared/ui/moreButton/moreButton';
 import { ShareButton } from '@/shared/ui/shareButton/shareButton';
 import { CopyLinkDropdownItem } from '@/features/copyLink';
-import { Modal } from '@/features/modal/modal';
 import arrowLeft from '@/app/assets/static/images/icons/arrow-chevron-left.svg';
 import arrowRight from '@/app/assets/static/images/icons/arrow-chevron-right.svg';
 import styles from './skillCard.module.css';
+import { SuccessModal } from '@/features/successModal/successModal';
 
 // === Интерфейс для canTeach из usersData ===
 interface TeachableSkill {
@@ -15,7 +15,7 @@ interface TeachableSkill {
   name: string;
   category: string;
   description: string;
-  image: string[]; // массив изображений
+  image: string[];
 }
 
 interface SkillCardProps {
@@ -43,9 +43,11 @@ const SkillCard: React.FC<SkillCardProps> = ({
   const totalImages = allImages.length;
   const canNavigate = totalImages > 1;
 
-  // === Состояние галереи ===
+  // === Состояния ===
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isSuccessOpen, setIsSuccessOpen] = useState(false);
 
+  // === Обработчики ===
   const goToPrevImage = useCallback(() => {
     setCurrentImageIndex(prev => (prev === 0 ? totalImages - 1 : prev - 1));
   }, [totalImages]);
@@ -63,11 +65,8 @@ const SkillCard: React.FC<SkillCardProps> = ({
     [totalImages],
   );
 
-  // === Лайки и действия ===
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
   const handleExchangeProposal = useCallback(() => {
-    setIsModalOpen(true);
+    setIsSuccessOpen(true);
   }, []);
 
   const dropdownItems = useMemo(
@@ -194,15 +193,8 @@ const SkillCard: React.FC<SkillCardProps> = ({
         </div>
       </article>
 
-      {/* === Модалка === */}
-      {isModalOpen && (
-        <Modal
-          type="confirmation"
-          title="Ваше предложение создано"
-          description="Теперь вы можете предложить обмен"
-          onClose={() => setIsModalOpen(false)}
-        />
-      )}
+      {/* Модальное окно успешного создания предложения */}
+      {isSuccessOpen && <SuccessModal />}
     </>
   );
 };
