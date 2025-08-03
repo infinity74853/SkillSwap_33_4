@@ -1,12 +1,22 @@
 import { Link } from 'react-router-dom';
 import { Logo } from '@/shared/ui/Logo/Logo';
 import { SearchInput } from '@/shared/ui/SearchInput/SearchInput';
-import { UserPanel } from '@/features/auth/UserPanel/UserPanel';
+import { UserPanel } from '@/features/auth/ui/UserPanel/UserPanel';
+import { GuestPanel } from '@/features/auth/ui/GuestPanel/GuestPanel';
+import { useAuth } from '@/features/auth/context/AuthContext';
 import styles from './Header.module.css';
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { useDispatch } from '@/services/store/store';
+import { setSearchQuery } from '@/services/slices/catalogSlice';
 
 export const Header = () => {
   const [currentTheme, setCurrentTheme] = useState<'light' | 'dark'>('light');
+  const { isAuthenticated } = useAuth();
+  const dispatch = useDispatch();
+
+  const handleSearch = (query: string) => {
+    dispatch(setSearchQuery(query));
+  };
 
   const toggleTheme = () => {
     const newTheme = currentTheme === 'light' ? 'dark' : 'light';
@@ -25,7 +35,7 @@ export const Header = () => {
   }, []);
 
   return (
-    <header className={styles.header}>
+    <header className={styles.header} data-auth={isAuthenticated ? 'true' : 'false'}>
       <div className={styles.container}>
         <div className={styles.leftSection}>
           <Link to="/" className={styles.logoLink}>
@@ -41,7 +51,7 @@ export const Header = () => {
             <div className={styles.chevronIcon}> </div>
           </nav>
         </div>
-        <SearchInput placeholder="Искать навык" />
+        <SearchInput placeholder="Искать навык" onSearch={handleSearch} />
         <div className={styles.rightSection}>
           <button className={styles.themeToggle} onClick={toggleTheme}>
             <span
@@ -50,7 +60,7 @@ export const Header = () => {
               }`}
             />
           </button>
-          <UserPanel />
+          {isAuthenticated ? <UserPanel /> : <GuestPanel />}
         </div>
       </div>
     </header>

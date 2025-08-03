@@ -1,26 +1,30 @@
+import { MainLayout } from '@/widgets/Layout/MainLayout';
+import ProfileDetailsPage from '@/pages/profileDetails/ProfileDetailsPage';
+import TextTestComponent from '@/widgets/TestComponent/TestComponent'; 
+import Catalog from '@/widgets/catalog/catalog'; 
+import './styles/index.css';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import { Suspense, useEffect } from 'react';
-import { MainLayout } from '@/widgets/Layout/MainLayout';
-import TextTestComponent from '@/widgets/TestComponent/TestComponent';
-import Catalog from '@/widgets/catalog/catalog';
 import { ProtectedRoute } from '@/shared/ui/protectedRoute/protectedRoute';
+import { useDispatch } from '@/services/store/store';
+import { initializeLikes } from '@/services/slices/likeSlice';
+import { fetchCatalog } from '@/services/slices/catalogSlice';
+import { SuccessModal } from '@/features/successModal/successModal';
 import { RegistrationForms } from '@/features/registrationForms/registrationForms';
 import { ErrorPage } from '@/pages/ErrorPage/ErrorPage';
 import SkillPage from '@/pages/skillPage/skillPage';
-import { useDispatch } from '../services/store/store';
-import { initializeLikes } from '@/services/slices/likeSlice';
-import './styles/index.css';
-import { SuccessModal } from '@/features/successModal/successModal';
+import { CatalogPage } from '@/pages/catalogPage/catalogPage';
 import { fetchUser } from '@/services/thunk/authUser';
 
 function App() {
   const location = useLocation();
-  const backgroundLocation = location.state?.background;
+  const backgroundLocation = location.state && location.state.background;
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(initializeLikes());
     dispatch(fetchUser());
+    dispatch(fetchCatalog());
   }, [dispatch]);
 
   return (
@@ -37,23 +41,11 @@ function App() {
         */}
         <Route path="/" element={<MainLayout />}>
           {/* index-маршрут для корневого пути "/" */}
-          <Route
-            index
-            element={
-              <>
-                <TextTestComponent />
-                <Catalog isAuthenticated={false} />
-              </>
-            }
-          />
+          <Route index element={<CatalogPage />} />
 
           <Route
             path="/profile/details"
-            element={
-              <ProtectedRoute>
-                <>{/* Страница подробной информации в профиле, когда будет готова */}</>
-              </ProtectedRoute>
-            }
+            element={<ProfileDetailsPage />}
           />
           <Route
             path="/profile/favorites"
@@ -64,6 +56,7 @@ function App() {
             }
           />
           <Route path="/skill/:id" element={<SkillPage />} />
+          <Route path="*" element={<ErrorPage type="404"></ErrorPage>} />
         </Route>
 
         {/* 
@@ -87,7 +80,6 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route path="/*" element={<ErrorPage type="404"></ErrorPage>} />
       </Routes>
 
       {/* 

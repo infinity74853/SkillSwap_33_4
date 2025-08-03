@@ -1,9 +1,13 @@
 import { PAGE_TEXTS } from '@/features/authForm/ui/authForm';
 import { AuthFormUI } from '@/features/authForm/ui/authFormUI';
 import { useState, useEffect } from 'react';
-import { useDispatch } from '@/services/store/store';
+import { RootState, useDispatch, useSelector } from '@/services/store/store';
 import { stepActions } from '@/services/slices/stepSlice';
 import { loginUser } from '@/services/thunk/authUser';
+import { ProposalPreviewModal } from '@/features/auth/proposalPreviewModal/proposalPreviewModal';
+import { SuccessModal } from '@/features/successModal/successModal';
+import { TeachableSkill } from '@/widgets/skillCard/skillCard';
+import { usersData } from '@/shared/mocks/usersData';
 
 export const AuthFormContainer = ({ isFirstStage = true }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -18,7 +22,12 @@ export const AuthFormContainer = ({ isFirstStage = true }) => {
     email: false,
     password: false,
   });
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [isSuccessOpen, setIsSuccessOpen] = useState(false);
+  const [previewSkill, setPreviewSkill] = useState<TeachableSkill | null>(null);
+
   const dispatch = useDispatch();
+  const currentStep = useSelector((state: RootState) => state.step.currentStep);
 
   const textContent = !isFirstStage ? PAGE_TEXTS.firstStage : PAGE_TEXTS.registration;
 
@@ -59,13 +68,11 @@ export const AuthFormContainer = ({ isFirstStage = true }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Помечаем все поля как "тронутые"
     setTouched({
       email: true,
       password: true,
     });
 
-    // Проверяем валидность перед отправкой
     const emailError = validateEmail(email);
     const passwordError = validatePassword(password);
 
@@ -78,16 +85,33 @@ export const AuthFormContainer = ({ isFirstStage = true }) => {
       return;
     }
 
-    try {
-      await dispatch(loginUser({ email, password })).unwrap();
-      if (isFirstStage) {
-        dispatch(stepActions.nextStep());
+    if (!isFirstStage) {
+      try {
+        await dispatch(loginUser({ email, password })).unwrap();
+      } catch (err) {
+        setErrors(prev => ({
+          ...prev,
+          form: 'Пользователь не зарегистрирован или неверные данные',
+        }));
       }
-    } catch (err) {
-      setErrors(prev => ({
-        ...prev,
-        form: 'Пользователь не зарегистрирован или неверные данные',
-      }));
+      return;
+    }
+
+    if (currentStep === 2) {
+      const firstUser = usersData[0];
+      const { canTeach } = firstUser;
+
+      const skill: TeachableSkill = {
+        customSkillId: canTeach.customSkillId,
+        name: canTeach.name,
+        category: `${canTeach.category} / ${canTeach.subcategory}`,
+        description: canTeach.description,
+        image: canTeach.image || ['/placeholder.jpg'],
+      };
+      setPreviewSkill(skill);
+      setIsPreviewOpen(true);
+    } else {
+      dispatch(stepActions.nextStep());
     }
   };
 
@@ -123,20 +147,44 @@ export const AuthFormContainer = ({ isFirstStage = true }) => {
     }
   };
 
+  const handleEdit = () => {
+    setIsPreviewOpen(false);
+    dispatch(stepActions.goToStep(2));
+  };
+
+  const handleSuccess = () => {
+    setIsPreviewOpen(false);
+    setIsSuccessOpen(true);
+  };
+
   return (
-    <AuthFormUI
-      isFirstStage={!isFirstStage}
-      textContent={textContent}
-      showPassword={showPassword}
-      email={email}
-      password={password}
-      errors={errors}
-      handleSubmit={handleSubmit}
-      togglePasswordVisibility={togglePasswordVisibility}
-      handleEmailChange={handleEmailChange}
-      handlePasswordChange={handlePasswordChange}
-      handleEmailBlur={handleEmailBlur}
-      handlePasswordBlur={handlePasswordBlur}
-    />
+    <>
+      <AuthFormUI
+        isFirstStage={!isFirstStage}
+        textContent={textContent}
+        showPassword={showPassword}
+        email={email}
+        password={password}
+        errors={errors}
+        handleSubmit={handleSubmit}
+        togglePasswordVisibility={togglePasswordVisibility}
+        handleEmailChange={handleEmailChange}
+        handlePasswordChange={handlePasswordChange}
+        handleEmailBlur={handleEmailBlur}
+        handlePasswordBlur={handlePasswordBlur}
+      />
+
+      {isPreviewOpen && previewSkill && (
+        <ProposalPreviewModal
+          isOpen={isPreviewOpen}
+          onClose={() => setIsPreviewOpen(false)}
+          skill={previewSkill}
+          onEdit={handleEdit}
+          onSuccess={handleSuccess}
+        />
+      )}
+
+      {isSuccessOpen && <SuccessModal />}
+    </>
   );
 };

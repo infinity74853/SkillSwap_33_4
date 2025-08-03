@@ -1,31 +1,74 @@
 import { useState, useCallback, useMemo } from 'react';
-import styles from './skillCard.module.css';
 import { Dropdown } from '@/shared/ui/dropdown/dropdown';
 import { LikeButton } from '@/shared/ui/likeButton/likeButton';
 import { MoreButton } from '@/shared/ui/moreButton/moreButton';
 import { ShareButton } from '@/shared/ui/shareButton/shareButton';
-import { Skill } from '@/pages/skillPage/skillPage';
-import { ModalUI } from '@/shared/ui/modal/modalUi';
 import { CopyLinkDropdownItem } from '@/features/copyLink';
+import arrowLeft from '@/app/assets/static/images/icons/arrow-chevron-left.svg';
+import arrowRight from '@/app/assets/static/images/icons/arrow-chevron-right.svg';
+import styles from './skillCard.module.css';
+import { SuccessModal } from '@/features/successModal/successModal';
 
-interface SkillCardProps {
-  skill: Skill;
+// === Интерфейс для canTeach из usersData ===
+export interface TeachableSkill {
+  customSkillId: string;
+  name: string;
+  category: string;
+  description: string;
+  image: string[];
 }
 
-const SkillCard: React.FC<SkillCardProps> = ({ skill }) => {
-  // Мемоизация preview изображений
-  const previewImages = useMemo(
-    () => (Array.isArray(skill.imagePreview) ? skill.imagePreview : [skill.imagePreview]),
-    [skill.imagePreview],
+export interface SkillCardProps {
+  skill: TeachableSkill;
+  // Пропсы для управления отображением
+  hideActions?: boolean;
+  hideSliderControls?: boolean;
+  renderButton?: () => React.ReactNode;
+  className?: string;
+}
+
+const SkillCard: React.FC<SkillCardProps> = ({
+  skill,
+  hideActions = false,
+  hideSliderControls = false,
+  renderButton,
+  className,
+}) => {
+  // === Извлечение изображений ===
+  const mainImage = useMemo(() => skill.image[0] || '/placeholder.jpg', [skill.image]);
+  const previewImages = useMemo(() => skill.image.slice(1), [skill.image]);
+
+  // === Все изображения для слайдера ===
+  const allImages = useMemo(() => [mainImage, ...previewImages], [mainImage, previewImages]);
+  const totalImages = allImages.length;
+  const canNavigate = totalImages > 1;
+
+  // === Состояния ===
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isSuccessOpen, setIsSuccessOpen] = useState(false);
+
+  // === Обработчики ===
+  const goToPrevImage = useCallback(() => {
+    setCurrentImageIndex(prev => (prev === 0 ? totalImages - 1 : prev - 1));
+  }, [totalImages]);
+
+  const goToNextImage = useCallback(() => {
+    setCurrentImageIndex(prev => (prev === totalImages - 1 ? 0 : prev + 1));
+  }, [totalImages]);
+
+  const setImageIndex = useCallback(
+    (index: number) => {
+      if (index >= 0 && index < totalImages) {
+        setCurrentImageIndex(index);
+      }
+    },
+    [totalImages],
   );
 
-  // Уникальный ID для лайков
-  const skillId = useMemo(() => skill.id, [skill.id]);
-  const imageAltText = skill.title;
+  const handleExchangeProposal = useCallback(() => {
+    setIsSuccessOpen(true);
+  }, []);
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  // Мемоизация dropdown items
   const dropdownItems = useMemo(
     () => [
       CopyLinkDropdownItem({
@@ -37,130 +80,108 @@ const SkillCard: React.FC<SkillCardProps> = ({ skill }) => {
     [],
   );
 
-  // Обработчик кнопки "Предложить обмен"
-  const handleExchangeProposal = useCallback(() => {
-    setIsModalOpen(true);
-  }, []);
-
-  // Состояние галереи
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
-  // Мемоизация всех изображений
-  const allImages = useMemo(() => [skill.image, ...previewImages], [skill.image, previewImages]);
-
-  // Текущее основное изображение
-  const currentMainImage = useMemo(
-    () => allImages[currentImageIndex] || skill.image,
-    [allImages, currentImageIndex, skill.image],
-  );
-
-  // Оптимизированные функции навигации
-  const goToPrevImage = useCallback(() => {
-    setCurrentImageIndex(prev => (prev === 0 ? Math.max(0, allImages.length - 1) : prev - 1));
-  }, [allImages.length]);
-
-  const goToNextImage = useCallback(() => {
-    setCurrentImageIndex(prev => (prev === allImages.length - 1 ? 0 : prev + 1));
-  }, [allImages.length]);
-
-  // Функция для установки конкретного изображения
-  const setImageIndex = useCallback(
-    (index: number) => {
-      if (index >= 0 && index < allImages.length) {
-        setCurrentImageIndex(index);
-      }
-    },
-    [allImages.length],
-  );
-
-  // Проверка возможности навигации
-  const canNavigate = allImages.length > 1;
-
   return (
     <>
-      <article className={styles.skillCard} aria-label={`Карточка навыка: ${skill.title}`}>
-        <div className={styles.action}>
-          <LikeButton itemId={skillId} className={styles.actionButton} ariaLabel="Поставить лайк" />
-          <ShareButton
-            title={skill.title}
-            text={`Посмотри этот навык: ${skill.title} в категории ${skill.category}`}
-            url={window.location.href}
-            className={styles.actionButton}
-            aria-label="Поделиться"
-          />
-          <Dropdown
-            trigger={<MoreButton className={styles.actionButton} ariaLabel="Еще" />}
-            items={dropdownItems}
-            position="bottom-right"
-          />
-        </div>
+      <article
+        className={`${styles.skillCard} ${className || ''}`}
+        aria-label={`Навык: ${skill.name}`}
+      >
+        {/* === Панель действий === */}
+        {!hideActions && (
+          <div className={styles.action}>
+            <LikeButton
+              itemId={skill.customSkillId}
+              className={styles.actionButton}
+              ariaLabel="Понравилось"
+            />
+            <ShareButton
+              title={skill.name}
+              text={`Посмотри этот навык: ${skill.name} — ${skill.description}`}
+              url={window.location.href}
+              className={styles.actionButton}
+              aria-label="Поделиться"
+            />
+            <Dropdown
+              trigger={<MoreButton className={styles.actionButton} ariaLabel="Еще" />}
+              items={dropdownItems}
+              position="bottom-right"
+            />
+          </div>
+        )}
+
+        {/* === Основной контент === */}
         <div className={styles.skillDetails}>
           <div className={styles.skillContent}>
-            <h1 className={styles.title}>{skill.title}</h1>
+            <h1 className={styles.title}>{skill.name}</h1>
             <p className={styles.category}>{skill.category}</p>
             <p className={styles.description}>{skill.description}</p>
-            <button type="button" className={styles.button} onClick={handleExchangeProposal}>
-              Предложить обмен
-            </button>
-          </div>
-          <div className={styles.skillImage}>
-            <div className={styles.imageSlider} role="group" aria-label="Слайдер изображений">
+
+            {renderButton ? (
+              renderButton()
+            ) : (
               <button
                 type="button"
-                className={styles.prevArrow}
-                aria-label="Предыдущее изображение"
-                onClick={goToPrevImage}
-                disabled={!canNavigate}
+                className={styles.button}
+                onClick={handleExchangeProposal}
+                aria-label="Предложить обмен"
               >
-                <img
-                  className={styles.imageArrow}
-                  src="../src/app/assets/static/images/icons/arrow-chevron-left.svg"
-                  alt=""
-                  aria-hidden="true"
-                />
+                Предложить обмен
               </button>
+            )}
+          </div>
+
+          {/* === Галерея изображений === */}
+          <div className={styles.skillImage}>
+            <div className={styles.imageSlider} role="group" aria-label="Галерея изображений">
+              {canNavigate && !hideSliderControls && (
+                <button
+                  type="button"
+                  className={styles.prevArrow}
+                  aria-label="Предыдущее изображение"
+                  onClick={goToPrevImage}
+                >
+                  <img src={arrowLeft} alt="" aria-hidden="true" className={styles.imageArrow} />
+                </button>
+              )}
+
               <img
                 className={styles.image}
-                src={currentMainImage}
-                alt={`${imageAltText} - изображение ${currentImageIndex + 1}`}
+                src={allImages[currentImageIndex]}
+                alt={`${skill.name} (${currentImageIndex + 1}/${totalImages})`}
               />
-              <button
-                type="button"
-                className={styles.nextArrow}
-                aria-label="Следующее изображение"
-                onClick={goToNextImage}
-                disabled={!canNavigate}
-              >
-                <img
-                  className={styles.imageArrow}
-                  src="../src/app/assets/static/images/icons/arrow-chevron-right.svg"
-                  alt=""
-                  aria-hidden="true"
-                />
-              </button>
+
+              {canNavigate && !hideSliderControls && (
+                <button
+                  type="button"
+                  className={styles.nextArrow}
+                  aria-label="Следующее изображение"
+                  onClick={goToNextImage}
+                >
+                  <img src={arrowRight} alt="" aria-hidden="true" className={styles.imageArrow} />
+                </button>
+              )}
             </div>
+
+            {/* === Превью === */}
             <div className={styles.preview}>
-              {previewImages.slice(0, 2).map((previewImg, index) => (
+              {previewImages.slice(0, 2).map((img, index) => (
                 <img
                   key={index}
                   className={styles.imagePreview}
-                  src={previewImg}
-                  alt={`Превью ${index + 1}: ${imageAltText}`}
-                  onClick={() => {
-                    const imageIndex = allImages.findIndex(img => img === previewImg);
-                    setImageIndex(imageIndex);
-                  }}
+                  src={img}
+                  alt={`Превью ${index + 1}: ${skill.name}`}
+                  onClick={() => setImageIndex(index + 1)}
                 />
               ))}
               <div className={styles.imagePreviewOverlay}>
                 <img
                   className={styles.imagePreview}
                   src={previewImages[2] || previewImages[0]}
-                  alt={`Превью с оверлеем: ${imageAltText}`}
+                  alt={`Превью с оверлеем: ${skill.name}`}
                   onClick={() => {
                     const targetImage = previewImages[2] || previewImages[0];
-                    const imageIndex = allImages.findIndex(img => img === targetImage);
-                    setImageIndex(imageIndex);
+                    const realIndex = allImages.findIndex(img => img === targetImage);
+                    setImageIndex(realIndex);
                   }}
                 />
                 <span className={styles.overlayText} aria-label="Еще изображения">
@@ -172,14 +193,8 @@ const SkillCard: React.FC<SkillCardProps> = ({ skill }) => {
         </div>
       </article>
 
-      {isModalOpen && (
-        <ModalUI
-          type="confirmation"
-          title="Ваше предложение создано"
-          description="Теперь вы можете предложить обмен"
-          onClose={() => setIsModalOpen(false)}
-        />
-      )}
+      {/* Модальное окно успешного создания предложения */}
+      {isSuccessOpen && <SuccessModal />}
     </>
   );
 };

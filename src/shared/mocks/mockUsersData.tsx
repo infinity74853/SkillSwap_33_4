@@ -1,6 +1,4 @@
-import { ProfileCategory } from '@/entities/profile/model/types';
-
-export const generateProfiles = (count: number, category: ProfileCategory) => {
+export const generateProfiles = (count: number) => {
   return Array.from({ length: count }, (_, i) => ({
     _id: `user_${i + 1}`,
     name: `Пользователь ${i + 1}`,
@@ -28,6 +26,5 @@ export const generateProfiles = (count: number, category: ProfileCategory) => {
         customSkillId: `want_${i + 1}`,
       },
     ],
-    category: category,
   }));
 };

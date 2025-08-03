@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useRef } from 'react';
 import styles from './datePicker.module.css';
 import { DayPicker, Matcher, OnSelectHandler } from 'react-day-picker';
 import { ru } from 'react-day-picker/locale';
@@ -6,6 +6,7 @@ import 'dayjs/locale/ru';
 import 'react-day-picker/style.css';
 import Chevron from '@/app/assets/static/images/icons/chevron-down.svg';
 import { Button } from '@/shared/ui/button/button';
+import { useClickOutside } from '@/shared/hooks/useClickOutside';
 
 type CustomDatePickerProps = {
   selected: Date | undefined;
@@ -15,6 +16,7 @@ type CustomDatePickerProps = {
   disabled?: Matcher;
   onCancelClick: () => void;
   onChooseClick: () => void;
+  onClose: () => void; // Добавил для закрытия по клику снаружи
 };
 
 export const CustomDatePicker: FC<CustomDatePickerProps> = ({
@@ -25,9 +27,13 @@ export const CustomDatePicker: FC<CustomDatePickerProps> = ({
   disabled,
   onCancelClick,
   onChooseClick,
+  onClose,
 }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  useClickOutside(containerRef, onClose);
+
   return (
-    <div className={`${styles.datePickerContainer} ${className}`}>
+    <div ref={containerRef} className={`${styles.datePickerContainer} ${className}`}>
       <DayPicker
         mode="single"
         fixedWeeks={true}

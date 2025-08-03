@@ -18,7 +18,7 @@ export const LikeButton: React.FC<LikeButtonProps> = ({
     <button
       type="button"
       onClick={toggleLike}
-      className={`${styles.likeButton} ${isLiked ? styles.likeButtonActive : ''} ${className}`}
+      className={`${className} ${isLiked ? styles.likeButtonActive : styles.likeButton}`}
       aria-label={isLiked ? 'Убрать лайк' : ariaLabel}
     />
   );

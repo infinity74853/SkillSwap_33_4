@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 import styles from './checkbox.module.css';
 import { CustomCheckboxMask } from './type';
 
-interface CheckboxUiProps {
+export interface CheckboxUiProps {
   // Базовые пропсы input
   id: string;
   checked: boolean;
@@ -15,7 +15,7 @@ interface CheckboxUiProps {
   customCheckboxMask?: CustomCheckboxMask;
 
   // Обработчики
-  onChange: () => void;
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   onLabelClick?: (e: React.MouseEvent) => void;
 
   // ARIA-атрибуты
@@ -47,7 +47,7 @@ export const CheckboxUI: React.FC<CheckboxUiProps> = ({
         checked={checked}
         disabled={disabled}
         readOnly={readOnly}
-        onClick={onChange}
+        onChange={onChange}
         className={styles.hiddenCheckbox}
         aria-label={ariaLabel || label}
         aria-labelledby={ariaLabelledby}

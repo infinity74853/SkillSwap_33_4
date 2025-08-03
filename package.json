@@ -18,12 +18,13 @@
     "stylelint:check": "stylelint '**/*.module.css'"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.2.1",
     "@laynezh/vite-plugin-lib-assets": "^1.1.0",
     "@reduxjs/toolkit": "^2.8.2",
     "@storybook/addon-themes": "^8.6.14",
     "cors": "^2.8.5",
     "express": "^5.1.0",
-    "framer-motion": "^12.23.11",
+    "framer-motion": "^12.23.12",
     "i18next": "^25.2.0",
     "i18next-browser-languagedetector": "^8.1.0",
     "i18next-http-backend": "^3.0.2",
@@ -34,13 +35,15 @@
     "react-day-picker": "^9.8.1",
     "react-dom": "^18.3.1",
     "react-helmet-async": "^2.0.5",
+    "react-hook-form": "^7.61.1",
     "react-i18next": "^15.5.2",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.5.0",
     "redux": "^5.0.1",
     "translation-check": "^1.1.1",
     "vite-plugin-dts": "^4.5.4",
-    "vite-plugin-lib-inject-css": "^2.2.2"
+    "vite-plugin-lib-inject-css": "^2.2.2",
+    "yup": "^1.6.1"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^3.2.6",
