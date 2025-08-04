@@ -1,12 +1,13 @@
 import editIcon from '@/app/assets/static/images/icons/edit.svg';
 import styles from './proposalPreviewModal.module.css';
-import SkillCard, { TeachableSkill } from '@/widgets/skillCard/skillCard';
+import SkillCard from '@/widgets/skillCard/skillCard';
 import { Modal } from '@/features/modal/modal';
+import { CustomSkill } from '@/entities/skill/model/types';
 
 interface ProposalPreviewModalProps {
   isOpen: boolean;
   onClose: () => void;
-  skill: TeachableSkill;
+  skill: CustomSkill;
   onEdit: () => void;
   onSuccess: () => void;
 }

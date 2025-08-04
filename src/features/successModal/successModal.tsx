@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 export const SuccessModal = () => {
   const navigate = useNavigate();
   const onClose = () => {
-    navigate('/profile/details');
+    navigate('/');
   };
   return (
     <Modal

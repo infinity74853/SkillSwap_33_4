@@ -8,18 +8,20 @@ import arrowLeft from '@/app/assets/static/images/icons/arrow-chevron-left.svg';
 import arrowRight from '@/app/assets/static/images/icons/arrow-chevron-right.svg';
 import styles from './skillCard.module.css';
 import { SuccessModal } from '@/features/successModal/successModal';
+import { CustomSkill } from '@/entities/skill/model/types';
 
 // === Интерфейс для canTeach из usersData ===
-export interface TeachableSkill {
+/*  export interface TeachableSkill {
   customSkillId: string;
   name: string;
   category: string;
   description: string;
   image: string[];
-}
+} */
+// ?? Что это? уже есть тип CustomSkill
 
 export interface SkillCardProps {
-  skill: TeachableSkill;
+  skill: CustomSkill;
   // Пропсы для управления отображением
   hideActions?: boolean;
   hideSliderControls?: boolean;

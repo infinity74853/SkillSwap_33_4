@@ -1,31 +1,45 @@
 import { MainLayout } from '@/widgets/Layout/MainLayout';
 import ProfileDetailsPage from '@/pages/profileDetails/ProfileDetailsPage';
-import TextTestComponent from '@/widgets/TestComponent/TestComponent'; 
-import Catalog from '@/widgets/catalog/catalog'; 
 import './styles/index.css';
-import { Route, Routes, useLocation } from 'react-router-dom';
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { Suspense, useEffect } from 'react';
 import { ProtectedRoute } from '@/shared/ui/protectedRoute/protectedRoute';
-import { useDispatch } from '@/services/store/store';
+import { useDispatch, useSelector } from '@/services/store/store';
 import { initializeLikes } from '@/services/slices/likeSlice';
 import { fetchCatalog } from '@/services/slices/catalogSlice';
 import { SuccessModal } from '@/features/successModal/successModal';
-import { RegistrationForms } from '@/features/registrationForms/registrationForms';
+import { RegistrationForms } from '@/features/RegistrationForms/registrationForms';
 import { ErrorPage } from '@/pages/ErrorPage/ErrorPage';
 import SkillPage from '@/pages/skillPage/skillPage';
 import { CatalogPage } from '@/pages/catalogPage/catalogPage';
 import { fetchUser } from '@/services/thunk/authUser';
-
+import { ProposalPreviewModal } from '@/features/auth/proposalPreviewModal/proposalPreviewModal';
+import { registerUser, setStep } from '@/services/slices/registrationSlice';
+import { getSkills } from '@/services/slices/skillsSlice';
+import { CustomSkill } from '@/entities/skill/model/types';
 function App() {
   const location = useLocation();
   const backgroundLocation = location.state && location.state.background;
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(initializeLikes());
     dispatch(fetchUser());
     dispatch(fetchCatalog());
+    dispatch(getSkills());
   }, [dispatch]);
+  const skill = useSelector(state => {
+    return {
+      name: state.register.stepThreeData.skillName ?? '',
+      category: state.register.stepThreeData.skillCategory ?? 'Бизнес и карьера',
+      subcategory: state.register.stepThreeData.skillSubCategory?.[0] ?? 'Управление командой',
+      subcategoryId: state.register.stepThreeData.skillSubCategoryId ?? 'bc001',
+      description: state.register.stepThreeData.description ?? '',
+      image: state.register.stepThreeData.pics ?? [],
+      customSkillId: state.register.stepThreeData.customSkillId ?? '',
+    } as CustomSkill;
+  });
 
   return (
     <Suspense fallback={<></> /*Loader, когда будет готов*/}>
@@ -43,10 +57,7 @@ function App() {
           {/* index-маршрут для корневого пути "/" */}
           <Route index element={<CatalogPage />} />
 
-          <Route
-            path="/profile/details"
-            element={<ProfileDetailsPage />}
-          />
+          <Route path="/profile/details" element={<ProfileDetailsPage />} />
           <Route
             path="/profile/favorites"
             element={
@@ -94,16 +105,23 @@ function App() {
           <Route
             path="/register/preview"
             element={
-              <ProtectedRoute onlyUnAuth>
-                <>{/* Модалка с превью своего предложения */}</>
-              </ProtectedRoute>
+              <ProposalPreviewModal
+                isOpen
+                onClose={() => dispatch(setStep(3)) && navigate(-1)}
+                onEdit={() => dispatch(setStep(3)) && navigate(-1)}
+                skill={skill}
+                onSuccess={() => {
+                  dispatch(registerUser());
+                  navigate('/register/success', { state: { background: '/' } });
+                }}
+              />
             }
           />
           <Route
             path="/register/success"
             element={
               <ProtectedRoute onlyUnAuth>
-                <>{/* Модалка об успешной регистрации */}</>
+                <SuccessModal />
               </ProtectedRoute>
             }
           />

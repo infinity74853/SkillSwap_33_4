@@ -1,9 +1,9 @@
 import { createAsyncThunk, createSelector, createSlice } from '@reduxjs/toolkit';
 import { getSkillsApi } from '@/api/skillSwapApi';
-import { Skill } from '@/entities/skill/model/types';
+import { Skill, SkillCategory } from '@/entities/skill/model/types';
 
 type SkillsState = {
-  skills: Array<Skill>;
+  skills: Skill[];
   loading: boolean;
   error: string | undefined;
 };
@@ -31,7 +31,7 @@ const skillsSlice = createSlice({
         state.error = 'Не удалось загрузить данные о навыках';
       })
       .addCase(getSkills.fulfilled, (state, action) => {
-        state.skills = action.payload.data;
+        state.skills = action.payload;
         state.loading = false;
       });
   },
@@ -44,7 +44,28 @@ export const getCategoriesSelector = createSelector(getSkillsSelector, skills =>
   Array.from(new Set(skills.map(skill => skill.category))),
 ); // отдельный селектор с мемоизацией
 
-export const getSkillsBySubcategoryPrefixSelector = createSelector(
+export const getSkillsBySubcategoryPrefix = createSelector(
   [getSkillsSelector, (_, prefix: string) => prefix],
   (skills, prefix) => skills.filter(skill => skill.subcategoryId.startsWith(prefix)),
+);
+
+export const getSubcategoriesByCategory = createSelector(
+  [
+    getSkillsSelector,
+    (_, selectedCategories: SkillCategory[] | SkillCategory) => selectedCategories,
+  ],
+  (skills, selectedCategories) => {
+    const filtered = skills.filter(skill => selectedCategories.includes(skill.category));
+
+    // Вернём уникальные подкатегории по их ID (строкой)
+    return Array.from(new Set(filtered.map(skill => skill.subcategory)));
+  },
+);
+
+export const getSubcategoryIdByName = createSelector(
+  [getSkillsSelector, (_, subcategoryName: string) => subcategoryName],
+  (skills, subcategoryName) => {
+    const skill = skills.find(s => s.subcategory === subcategoryName);
+    return skill ? skill.subcategoryId : undefined;
+  },
 );
