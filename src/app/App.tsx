@@ -1,7 +1,5 @@
 import { MainLayout } from '@/widgets/Layout/MainLayout';
 import ProfileDetailsPage from '@/pages/profileDetails/ProfileDetailsPage';
-import TextTestComponent from '@/widgets/TestComponent/TestComponent';
-import Catalog from '@/widgets/catalog/catalog';
 import './styles/index.css';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import { Suspense, useEffect } from 'react';
@@ -87,7 +85,16 @@ function App() {
       {backgroundLocation && (
         <Routes>
           {/* Руты для модалок */}
-          <Route path="/success" element={<SuccessModal />} />
+          <Route
+            path="/success"
+            element={
+              <SuccessModal
+                onClose={function (): void {
+                  throw new Error('Function not implemented.');
+                }}
+              />
+            }
+          />
           <Route
             path="/register/preview"
             element={
