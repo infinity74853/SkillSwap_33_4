@@ -116,6 +116,7 @@
   .sidePanel {
     width: 100%;
     margin-left: 0;
+    top: 390px;
     padding: 0 16px;
     box-sizing: border-box;
   }
