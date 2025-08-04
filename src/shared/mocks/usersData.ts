@@ -4,7 +4,7 @@ export const usersData: User[] = [
   {
     _id: 'user_001',
     name: 'Александр Иванов',
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d',
+    image: 'https://avatars.mds.yandex.net/get-yapic/28439/c2C5tZ34ITInGSxIVJrWaPMZiA-1/orig',
     city: 'Москва',
     gender: 'male',
     birthdayDate: '1990-05-15',
@@ -44,7 +44,7 @@ export const usersData: User[] = [
   {
     _id: 'user_002',
     name: 'Мария Петрова',
-    image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80',
+    image: 'https://i.pinimg.com/originals/b8/e6/3b/b8e63b99cd3b38474fe11eb98f3045fd.jpg',
     city: 'Санкт-Петербург',
     gender: 'female',
     birthdayDate: '1985-11-22',
@@ -77,7 +77,7 @@ export const usersData: User[] = [
   {
     _id: 'user_003',
     name: 'Дмитрий Смирнов',
-    image: 'https://images.unsplash.com/photo-1544725176-7c40e5a71c5e',
+    image: 'https://i.pinimg.com/736x/c1/d3/3d/c1d33d6901e0d4082409830c683b63ea.jpg',
     city: 'Екатеринбург',
     gender: 'male',
     birthdayDate: '1982-08-30',
@@ -116,7 +116,7 @@ export const usersData: User[] = [
   {
     _id: 'user_004',
     name: 'Анна Козлова',
-    image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2',
+    image: 'https://stihi.ru/pics/2025/07/03/5421.jpg',
     city: 'Новосибирск',
     gender: 'female',
     birthdayDate: '1993-03-12',
@@ -163,7 +163,8 @@ export const usersData: User[] = [
   {
     _id: 'user_005',
     name: 'Екатерина Волкова',
-    image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2',
+    image:
+      'https://avatars.mds.yandex.net/get-shedevrum/12421798/img_7f6287dcfefb11ee87c89608ae710c1d/orig',
     city: 'Сочи',
     gender: 'female',
     birthdayDate: '1987-04-05',
@@ -196,7 +197,7 @@ export const usersData: User[] = [
   {
     _id: 'user_006',
     name: 'Иван Николаев',
-    image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e',
+    image: 'https://i.pinimg.com/originals/65/05/21/6505211baace954cdcc8b4c97a2e41f3.jpg',
     city: 'Казань',
     gender: 'male',
     birthdayDate: '1991-07-19',
@@ -236,7 +237,8 @@ export const usersData: User[] = [
   {
     _id: 'user_007',
     name: 'Ольга Семенова',
-    image: 'https://images.unsplash.com/photo-1554151228-14d9def656e4',
+    image:
+      'https://avatars.mds.yandex.net/get-shedevrum/11270697/img_bdb3217b091c11efb1e4425307c1c5e5/orig',
     city: 'Ростов-на-Дону',
     gender: 'female',
     birthdayDate: '1988-09-28',
@@ -269,7 +271,7 @@ export const usersData: User[] = [
   {
     _id: 'user_008',
     name: 'Артем Васильев',
-    image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d',
+    image: 'https://i.pinimg.com/736x/7c/ee/e8/7ceee832d7f2fca5c3aea32c818623bf.jpg',
     city: 'Владивосток',
     gender: 'male',
     birthdayDate: '1984-12-03',
@@ -309,7 +311,7 @@ export const usersData: User[] = [
   {
     _id: 'user_009',
     name: 'Наталья Кузнецова',
-    image: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e',
+    image: 'https://stihi.ru/pics/2024/05/31/137.jpg',
     city: 'Краснодар',
     gender: 'female',
     birthdayDate: '1995-02-14',
@@ -349,7 +351,8 @@ export const usersData: User[] = [
   {
     _id: 'user_010',
     name: 'Сергей Попов',
-    image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a',
+    image:
+      'https://avatars.mds.yandex.net/get-shedevrum/12421798/img_51aa6f68ef8111eea76b3aa34a603afe/orig',
     city: 'Уфа',
     gender: 'male',
     birthdayDate: '1980-06-25',
@@ -382,7 +385,7 @@ export const usersData: User[] = [
   {
     _id: 'user_011',
     name: 'Алина Морозова',
-    image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2',
+    image: 'https://stihi.ru/pics/2025/06/06/1045.jpg',
     city: 'Самара',
     gender: 'female',
     birthdayDate: '1992-09-14',
@@ -415,7 +418,7 @@ export const usersData: User[] = [
   {
     _id: 'user_012',
     name: 'Павел Громов',
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d',
+    image: 'https://stihi.ru/pics/2024/03/30/7855.jpg',
     city: 'Красноярск',
     gender: 'male',
     birthdayDate: '1986-11-30',
@@ -454,7 +457,7 @@ export const usersData: User[] = [
   {
     _id: 'user_013',
     name: 'Юлия Лебедева',
-    image: 'https://images.unsplash.com/photo-1554151228-14d9def656e4',
+    image: 'https://masterpiecer-images.s3.yandex.net/fb3a11eb54b611eeaa384659bdca6a39:upscaled',
     city: 'Воронеж',
     gender: 'female',
     birthdayDate: '1994-04-18',
@@ -486,7 +489,7 @@ export const usersData: User[] = [
   {
     _id: 'user_014',
     name: 'Михаил Соколов',
-    image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a',
+    image: 'https://masterpiecer-images.s3.yandex.net/3011fc6e7e4411ee8071ceda526c50ab:upscaled',
     city: 'Пермь',
     gender: 'male',
     birthdayDate: '1983-07-22',
@@ -526,7 +529,8 @@ export const usersData: User[] = [
   {
     _id: 'user_015',
     name: 'Елена Воробьева',
-    image: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e',
+    image:
+      'https://img.goodfon.com/wallpaper/nbig/e/83/chest-girl-model-panties-tummy-figure-underwear-legs-on-th-4.webp',
     city: 'Тюмень',
     gender: 'female',
     birthdayDate: '1989-12-08',
@@ -559,7 +563,8 @@ export const usersData: User[] = [
   {
     _id: 'user_016',
     name: 'Андрей Новиков',
-    image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d',
+    image:
+      'https://avatars.dzeninfra.ru/get-zen_doc/9827869/pub_64cb7c0e926aa97cdaf192af_64cb7cf4f24c176c51068510/scale_1200',
     city: 'Иркутск',
     gender: 'male',
     birthdayDate: '1990-03-25',
@@ -599,7 +604,7 @@ export const usersData: User[] = [
   {
     _id: 'user_017',
     name: 'Оксана Кузнецова',
-    image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2',
+    image: 'https://masterpiecer-images.s3.yandex.net/f15f38125dfd11ee936a6a0259d7362a:upscaled',
     city: 'Ульяновск',
     gender: 'female',
     birthdayDate: '1985-06-17',
@@ -631,7 +636,8 @@ export const usersData: User[] = [
   {
     _id: 'user_018',
     name: 'Денис Петров',
-    image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e',
+    image:
+      'https://avatars.mds.yandex.net/get-shedevrum/12155741/img_17e57411fda811ee885a6a067d72cb03/orig',
     city: 'Ярославль',
     gender: 'male',
     birthdayDate: '1988-10-11',
@@ -670,7 +676,8 @@ export const usersData: User[] = [
   {
     _id: 'user_019',
     name: 'Татьяна Михайлова',
-    image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80',
+    image:
+      'https://avatars.dzeninfra.ru/get-zen_doc/271828/pub_67acb410ee961d5e4e0c8259_67acb5857ef27a7301872d35/scale_1200',
     city: 'Томск',
     gender: 'female',
     birthdayDate: '1993-01-30',
@@ -703,7 +710,7 @@ export const usersData: User[] = [
   {
     _id: 'user_020',
     name: 'Артур Яковлев',
-    image: 'https://images.unsplash.com/photo-1544725176-7c40e5a71c5e',
+    image: 'https://masterpiecer-images.s3.yandex.net/4c63586d7f0011ee949a5696910b1137:upscaled',
     city: 'Калининград',
     gender: 'male',
     birthdayDate: '1987-08-09',
@@ -743,7 +750,8 @@ export const usersData: User[] = [
   {
     _id: 'user_021',
     name: 'Виктория Семенова',
-    image: 'https://images.unsplash.com/photo-1541823709867-1b206113eafd',
+    image:
+      'https://avatars.mds.yandex.net/get-shedevrum/12363575/cb6e98e3cc8f11ee9a579a79ffaf5bd2/orig',
     city: 'Владимир',
     gender: 'female',
     birthdayDate: '1991-05-19',
@@ -775,7 +783,7 @@ export const usersData: User[] = [
   {
     _id: 'user_022',
     name: 'Глеб Федоров',
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d',
+    image: 'https://masterpiecer-images.s3.yandex.net/7cc3ec2bb06d11ee8a563abd0be4d755:upscaled',
     city: 'Тверь',
     gender: 'male',
     birthdayDate: '1984-12-03',
@@ -815,7 +823,7 @@ export const usersData: User[] = [
   {
     _id: 'user_023',
     name: 'Ксения Павлова',
-    image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2',
+    image: 'https://masterpiecer-images.s3.yandex.net/af7eff9778ea11ee93f7963c1ee369ba:upscaled',
     city: 'Ставрополь',
     gender: 'female',
     birthdayDate: '1989-07-28',
@@ -847,7 +855,7 @@ export const usersData: User[] = [
   {
     _id: 'user_024',
     name: 'Роман Козлов',
-    image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a',
+    image: 'https://i.pinimg.com/originals/a1/6a/f6/a16af6cdac7be9473b6e19acd97e7cec.jpg',
     city: 'Белгород',
     gender: 'male',
     birthdayDate: '1986-02-15',
@@ -880,7 +888,7 @@ export const usersData: User[] = [
   {
     _id: 'user_025',
     name: 'Анастасия Власова',
-    image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2',
+    image: 'https://i.pinimg.com/originals/4b/5c/2d/4b5c2dae9c3818114c40fcd1d954d3b9.jpg',
     city: 'Архангельск',
     gender: 'female',
     birthdayDate: '1993-11-20',
@@ -912,7 +920,8 @@ export const usersData: User[] = [
   {
     _id: 'user_026',
     name: 'Игорь Медведев',
-    image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e',
+    image:
+      'https://avatars.dzeninfra.ru/get-zen_doc/271828/pub_65946b5816f1ad2e391f7745_6594711b4fb36f2999a4d56c/scale_1200',
     city: 'Челябинск',
     gender: 'male',
     birthdayDate: '1981-09-05',
@@ -945,7 +954,7 @@ export const usersData: User[] = [
   {
     _id: 'user_027',
     name: 'Светлана Крылова',
-    image: 'https://images.unsplash.com/photo-1554151228-14d9def656e4',
+    image: 'https://rusradio.ru/uploads/87/ad/faafbf2903ad59b0b84079468302.jpg',
     city: 'Смоленск',
     gender: 'female',
     birthdayDate: '1988-04-12',
@@ -977,7 +986,7 @@ export const usersData: User[] = [
   {
     _id: 'user_028',
     name: 'Вадим Белов',
-    image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d',
+    image: 'https://i.pinimg.com/736x/1c/4e/29/1c4e290f01141c83de7a3e4f526e3f36.jpg',
     city: 'Курск',
     gender: 'male',
     birthdayDate: '1983-06-30',
@@ -1010,7 +1019,7 @@ export const usersData: User[] = [
   {
     _id: 'user_029',
     name: 'Людмила Степанова',
-    image: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e',
+    image: 'https://i.pinimg.com/originals/6c/e6/98/6ce6987eddb90d15e291e4411b5fbaea.jpg',
     city: 'Орёл',
     gender: 'female',
     birthdayDate: '1979-10-18',
@@ -1042,7 +1051,8 @@ export const usersData: User[] = [
   {
     _id: 'user_030',
     name: 'Григорий Давыдов',
-    image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a',
+    image:
+      'https://avatars.mds.yandex.net/get-shedevrum/12151221/img_aa7a3734f0be11ee970ffa438e8a26f5/orig',
     city: 'Вологда',
     gender: 'male',
     birthdayDate: '1985-01-25',
@@ -1075,7 +1085,7 @@ export const usersData: User[] = [
   {
     _id: 'user_031',
     name: 'Зоя Алексеева',
-    image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2',
+    image: 'https://i.pinimg.com/originals/d9/88/ac/d988ace7d3bff035bdff4eafaae0fb57.webp',
     city: 'Ижевск',
     gender: 'female',
     birthdayDate: '1990-08-14',
@@ -1107,7 +1117,7 @@ export const usersData: User[] = [
   {
     _id: 'user_032',
     name: 'Максим Орлов',
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d',
+    image: 'https://cdn1.flamp.ru/711b8b3234f41e9f68d629229ff27f14.jpg',
     city: 'Брянск',
     gender: 'male',
     birthdayDate: '1987-03-22',
@@ -1139,7 +1149,8 @@ export const usersData: User[] = [
   {
     _id: 'user_033',
     name: 'Элина Сорокина',
-    image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2',
+    image:
+      'https://avatars.dzeninfra.ru/get-zen_doc/5218815/pub_63ead032afb29857ce316e07_63ead1016f86f30cddf567cf/scale_1200',
     city: 'Тула',
     gender: 'female',
     birthdayDate: '1994-11-05',
@@ -1172,7 +1183,7 @@ export const usersData: User[] = [
   {
     _id: 'user_034',
     name: 'Станислав Баранов',
-    image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a',
+    image: 'https://i.pinimg.com/736x/61/fe/28/61fe28c3f1dda2a9879f0e2d36ed99cc.jpg',
     city: 'Магнитогорск',
     gender: 'male',
     birthdayDate: '1982-07-30',
@@ -1204,7 +1215,7 @@ export const usersData: User[] = [
   {
     _id: 'user_035',
     name: 'Вероника Зайцева',
-    image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80',
+    image: 'https://i.ytimg.com/vi/ZV2TnBohs6A/maxresdefault.jpg',
     city: 'Кемерово',
     gender: 'female',
     birthdayDate: '1989-04-17',
@@ -1236,7 +1247,7 @@ export const usersData: User[] = [
   {
     _id: 'user_036',
     name: 'Арсений Гусев',
-    image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d',
+    image: 'https://p0.piqsels.com/preview/217/979/788/man-male-smile-portrait.jpg',
     city: 'Липецк',
     gender: 'male',
     birthdayDate: '1983-12-08',
@@ -1268,7 +1279,7 @@ export const usersData: User[] = [
   {
     _id: 'user_037',
     name: 'Диана Егорова',
-    image: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e',
+    image: 'https://i.pinimg.com/originals/3c/9f/2c/3c9f2cb07b98e34f4cbe77e02e0f20de.jpg',
     city: 'Оренбург',
     gender: 'female',
     birthdayDate: '1992-02-11',
@@ -1300,7 +1311,7 @@ export const usersData: User[] = [
   {
     _id: 'user_038',
     name: 'Ярослав Комаров',
-    image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e',
+    image: 'https://i.pinimg.com/originals/7d/ca/be/7dcabe92370fff0c6489aba65af5dab2.jpg',
     city: 'Рязань',
     gender: 'male',
     birthdayDate: '1986-06-25',
@@ -1332,7 +1343,7 @@ export const usersData: User[] = [
   {
     _id: 'user_039',
     name: 'Арина Фомина',
-    image: 'https://images.unsplash.com/photo-1541823709867-1b206113eafd',
+    image: 'https://i.pinimg.com/originals/ed/92/9e/ed929e87ab35ddc754ae50feae0228db.jpg',
     city: 'Пенза',
     gender: 'female',
     birthdayDate: '1995-09-03',
@@ -1364,7 +1375,7 @@ export const usersData: User[] = [
   {
     _id: 'user_040',
     name: 'Георгий Данилов',
-    image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a',
+    image: 'https://i.pinimg.com/736x/ee/71/74/ee7174feb2450d8f79f30e6f0e31c411.jpg',
     city: 'Астрахань',
     gender: 'male',
     birthdayDate: '1984-10-19',
@@ -1396,7 +1407,8 @@ export const usersData: User[] = [
   {
     _id: 'user_041',
     name: 'Лидия Тихонова',
-    image: 'https://images.unsplash.com/photo-1554151228-14d9def656e4',
+    image:
+      'https://yobte.ru/uploads/posts/2019-11/devushki-s-golubymi-glazami-s-rusymi-volosami-41-foto-3.jpg',
     city: 'Киров',
     gender: 'female',
     birthdayDate: '1988-05-28',
@@ -1428,7 +1440,7 @@ export const usersData: User[] = [
   {
     _id: 'user_042',
     name: 'Руслан Савельев',
-    image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d',
+    image: 'https://i.pinimg.com/736x/aa/01/39/aa0139b260f3edebb46dc1bd2e7a1117.jpg',
     city: 'Чебоксары',
     gender: 'male',
     birthdayDate: '1981-11-15',
@@ -1461,7 +1473,7 @@ export const usersData: User[] = [
   {
     _id: 'user_043',
     name: 'Алиса Герасимова',
-    image: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e',
+    image: 'https://i.pinimg.com/originals/c0/62/63/c0626354ac57b138ec7a113c7353f014.jpg',
     city: 'Калининград',
     gender: 'female',
     birthdayDate: '1993-07-07',
@@ -1493,7 +1505,7 @@ export const usersData: User[] = [
   {
     _id: 'user_044',
     name: 'Илья Дмитриев',
-    image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e',
+    image: 'https://i.pinimg.com/originals/e4/79/de/e479de8cae918f5ad91076bd3dfe7078.jpg',
     city: 'Тамбов',
     gender: 'male',
     birthdayDate: '1987-12-22',
@@ -1525,7 +1537,7 @@ export const usersData: User[] = [
   {
     _id: 'user_045',
     name: 'Валерия Соболева',
-    image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2',
+    image: 'https://i.pinimg.com/originals/70/a9/2f/70a92f8895863a5c544b71d49c3a5dea.jpg',
     city: 'Ставрополь',
     gender: 'female',
     birthdayDate: '1990-04-01',
@@ -1557,7 +1569,7 @@ export const usersData: User[] = [
   {
     _id: 'user_046',
     name: 'Тимур Власов',
-    image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a',
+    image: 'https://i.pinimg.com/originals/b4/75/db/b475db4f81386bdf37dd4cf49bbc9f60.jpg',
     city: 'Барнаул',
     gender: 'male',
     birthdayDate: '1985-08-09',
@@ -1589,7 +1601,7 @@ export const usersData: User[] = [
   {
     _id: 'user_047',
     name: 'Ульяна Котова',
-    image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2',
+    image: 'https://i.pinimg.com/originals/cf/4f/d4/cf4fd4743158b3801d6b6fa47ea3ba8d.jpg',
     city: 'Владикавказ',
     gender: 'female',
     birthdayDate: '1994-01-26',
@@ -1621,7 +1633,8 @@ export const usersData: User[] = [
   {
     _id: 'user_048',
     name: 'Даниил Жуков',
-    image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d',
+    image:
+      'https://www.churchofjesuschrist.org/bc/content/shared/content/images/gospel-library/manual/PD60004369/iStock-157403823.jpg',
     city: 'Грозный',
     gender: 'male',
     birthdayDate: '1989-06-13',
@@ -1653,7 +1666,7 @@ export const usersData: User[] = [
   {
     _id: 'user_049',
     name: 'Кира Новикова',
-    image: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e',
+    image: 'https://wallpaper.forfun.com/fetch/4a/4a18c32ad3e38db6ab287a7fd06185d4.jpeg',
     city: 'Сыктывкар',
     gender: 'female',
     birthdayDate: '1991-03-08',
@@ -1685,7 +1698,7 @@ export const usersData: User[] = [
   {
     _id: 'user_050',
     name: 'Артур Тимофеев',
-    image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a',
+    image: 'https://i.pinimg.com/originals/3a/69/68/3a696883cde69524213c569c8013b2c0.jpg',
     city: 'Якутск',
     gender: 'male',
     birthdayDate: '1983-10-31',
