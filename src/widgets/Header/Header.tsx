@@ -5,16 +5,19 @@ import { UserPanel } from '@/features/auth/ui/UserPanel/UserPanel';
 import { GuestPanel } from '@/features/auth/ui/GuestPanel/GuestPanel';
 import { useAuth } from '@/features/auth/context/AuthContext';
 import styles from './Header.module.css';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useDispatch } from '@/services/store/store';
 import { setSearchQuery } from '@/services/slices/catalogSlice';
+import { SkillsDropdown } from '@/widgets/skillsDropdown/skillsDropdown';
 
 export const Header = () => {
   const [currentTheme, setCurrentTheme] = useState<'light' | 'dark'>('light');
   const { isAuthenticated } = useAuth();
   const dispatch = useDispatch();
+  const [isSkillsDropdownOpen, setIsSkillsDropdownOpen] = useState(false);
+  const skillsButtonRef = useRef<HTMLButtonElement>(null);
 
-   const handleSearch = (query: string) => {
+  const handleSearch = (query: string) => {
     dispatch(setSearchQuery(query));
   };
 
@@ -23,6 +26,15 @@ export const Header = () => {
     setCurrentTheme(newTheme);
     document.documentElement.classList.toggle('dark', newTheme === 'dark');
     localStorage.setItem('theme', newTheme);
+  };
+
+  const toggleSkillsDropdown = (e: React.MouseEvent) => {
+    e.stopPropagation(); 
+    setIsSkillsDropdownOpen(prev => !prev);
+  };
+
+  const closeSkillsDropdown = () => {
+    setIsSkillsDropdownOpen(false);
   };
 
   useEffect(() => {
@@ -45,13 +57,21 @@ export const Header = () => {
             <Link to="/about" className={styles.linkAbout}>
               О проекте
             </Link>
-            <Link to="/all_skills" className={styles.linkSkills}>
+            <button
+              ref={skillsButtonRef}
+              className={`${styles.linkSkills} ${isSkillsDropdownOpen ? styles.active : ''}`}
+              onClick={toggleSkillsDropdown}
+              aria-expanded={isSkillsDropdownOpen}
+            >
               Все навыки
-            </Link>
-            <div className={styles.chevronIcon}> </div>
+              <span className={styles.chevronIcon} />
+            </button>
+            {isSkillsDropdownOpen && (
+              <SkillsDropdown isOpen={isSkillsDropdownOpen} onClose={closeSkillsDropdown} />
+            )}
           </nav>
         </div>
-        <SearchInput placeholder="Искать навык" onSearch={handleSearch}/>
+        <SearchInput placeholder="Искать навык" onSearch={handleSearch} />
         <div className={styles.rightSection}>
           <button className={styles.themeToggle} onClick={toggleTheme}>
             <span
