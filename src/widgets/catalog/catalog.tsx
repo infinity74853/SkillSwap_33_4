@@ -19,7 +19,7 @@ export type ProfileCategory = 'popular' | 'new' | 'ideas' | 'recommended' | 'mat
 
 const Catalog: React.FC<{ isAuthenticated: boolean; isFiltered: boolean }> = ({
   isAuthenticated,
-  isFiltered: initialIsFiltered,
+  isFiltered,
 }) => {
   const [currentCategory, setCurrentCategory] = useState<ProfileCategory | null>(null);
   const allUsers = useSelector(selectCatalogItems) as User[];
@@ -39,10 +39,10 @@ const Catalog: React.FC<{ isAuthenticated: boolean; isFiltered: boolean }> = ({
   // Определяем режим отображения
   const displayMode = useMemo(() => {
     if (currentCategory) return 'category';
-    if (initialIsFiltered) return 'forced-filter';
+    if (isFiltered) return 'forced-filter';
     if (isActuallyFiltered) return 'auto-filter';
     return 'default';
-  }, [currentCategory, initialIsFiltered, isActuallyFiltered]);
+  }, [currentCategory, isFiltered, isActuallyFiltered]);
 
   // Категоризация пользователей
   // const categorizedUsers = useMemo(() => {
