@@ -7,9 +7,9 @@
   border-radius: 12px;
   padding: 60px;
   z-index: 1001;
-  max-height: 80vh; /* Ограничиваем максимальную высоту */
-  overflow-y: auto; /* Включаем вертикальный скролл */
-  scrollbar-width: none; /* Скрываем скроллбар для Firefox */
+  max-height: 80vh; 
+  overflow-y: auto; 
+  scrollbar-width: none; 
 }
 
 .skillsDropdown::-webkit-scrollbar {
