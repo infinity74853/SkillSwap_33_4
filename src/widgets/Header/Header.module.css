@@ -67,8 +67,8 @@
 .linkAbout:hover,
 .iconWrapper:hover,
 .linkSkillsIcon:hover {
-  background-color: #deebc5;
-  border-radius: 10px;
+  background-color: var(--button-primary-hover-color);
+  border-radius: 12px;
 }
 
 .themeToggle {

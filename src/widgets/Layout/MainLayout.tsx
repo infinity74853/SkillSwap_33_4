@@ -4,8 +4,6 @@ import { Footer } from '@/widgets/Footer/Footer';
 import { Outlet } from 'react-router-dom';
 import styles from './MainLayout.module.css';
 
-import { AuthDebugTools } from '@/devtools/AuthDebugTools';
-
 export const MainLayout = () => {
   return (
     <AuthProvider>
@@ -14,7 +12,6 @@ export const MainLayout = () => {
         <Outlet />
       </main>
       <Footer />
-      {import.meta.env.DEV && <AuthDebugTools />}
     </AuthProvider>
   );
 };

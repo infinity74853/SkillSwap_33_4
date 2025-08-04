@@ -110,7 +110,7 @@ export const NotificationMenu = ({ isOpen }: NotificationMenuProps) => {
           </div>
           {viewedNotifications.map(notification => (
             <div key={notification.id} className={styles.notificationItem}>
-              <div className={styles.notificationHeader}>
+              <div className={styles.notificationView}>
                 <img src={IdeaIcon} alt="Иконка" className={styles.icon} />
                 <div className={styles.notificationInfo}>
                   <div className={styles.userLine}>

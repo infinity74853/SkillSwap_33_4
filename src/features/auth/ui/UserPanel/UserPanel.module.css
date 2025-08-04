@@ -21,7 +21,7 @@
 }
 
 .iconWrapper:hover {
-  background-color: #deebc5;
+  background-color: var(--button-primary-hover-color);
   border-radius: 10px;
 }
 
@@ -76,7 +76,7 @@ body.menu-open {
 }
 
 .userInfo:hover {
-  background-color: #deebc5;
+  background-color: var(--button-primary-hover-color);
 }
 
 .avatar {

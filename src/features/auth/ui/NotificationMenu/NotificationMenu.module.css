@@ -1,3 +1,4 @@
+/* stylelint-disable no-descending-specificity */
 /* stylelint-disable alpha-value-notation */
 /* stylelint-disable color-function-notation */
 
@@ -7,7 +8,7 @@
   max-height: 64vh;
   top: 98px;
   right: 260px;
-  background: rgb(187, 191, 215);
+  background: var(--bg-color);
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   padding: 35px 60px;
@@ -31,9 +32,15 @@
   border: none;
   color: #4a6b22;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 500;
-  letter-spacing: 1px;
+  letter-spacing: 0.3px;
+  padding: 0;
+}
+
+.readAll:hover,
+.clearButton:hover {
+  background-color: var(--button-primary-hover-color);
 }
 
 .notificationList {
@@ -84,7 +91,7 @@
 
 .date {
   color: #69735d;
-  font-size: 0.8rem;
+  font-size: 16px;
   margin-left: auto;
 }
 
@@ -118,7 +125,7 @@
 }
 
 .viewedSection {
-  margin-top: 1px;
+  margin-bottom: 20px;
 }
 
 .viewedHeader {
@@ -132,12 +139,20 @@
   margin: 14px 0;
 }
 
+.notificationView {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin: 4px 0;
+}
+
 .clearButton {
   background: none;
   border: none;
   color: #4a6b22;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 16px;
+  font-weight: 500;
 }
 
 @media (max-width: 768px) {
