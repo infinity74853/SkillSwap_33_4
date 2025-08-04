@@ -1,6 +1,12 @@
 import { PAGE_TEXTS } from '@/features/authForm/ui/authForm';
 import { AuthFormUI } from '@/features/authForm/ui/authFormUI';
 import { useState } from 'react';
+import { RootState, useDispatch, useSelector } from '@/services/store/store';
+import { stepActions } from '@/services/slices/stepSlice';
+import { ProposalPreviewModal } from '@/features/auth/proposalPreviewModal/proposalPreviewModal';
+import { SuccessModal } from '@/features/successModal/successModal';
+import { TeachableSkill } from '@/widgets/skillCard/skillCard';
+import { usersData } from '@/shared/mocks/usersData';
 
 export const AuthFormContainer = ({ isFirstStage = true }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -12,14 +18,40 @@ export const AuthFormContainer = ({ isFirstStage = true }) => {
     form: '',
   });
 
-  const textContent = isFirstStage ? PAGE_TEXTS.firstStage : PAGE_TEXTS.registration;
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [isSuccessOpen, setIsSuccessOpen] = useState(false);
+  const [previewSkill, setPreviewSkill] = useState<TeachableSkill | null>(null);
+
+  const dispatch = useDispatch();
+
+  const currentStep = useSelector((state: RootState) => state.step.currentStep);
+
+  const textContent = !isFirstStage ? PAGE_TEXTS.firstStage : PAGE_TEXTS.registration;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     if (validateForm()) {
-      // Логика отправки формы
-      console.log('Форма отправлена', { email, password });
+      if (currentStep === 2) {
+        const firstUser = usersData[0]; // или выберите нужного пользователя
+        const { canTeach } = firstUser;
+
+        const skill: TeachableSkill = {
+          customSkillId: canTeach.customSkillId,
+          name: canTeach.name,
+          category: `${canTeach.category} / ${canTeach.subcategory}`,
+          description: canTeach.description,
+          image: canTeach.image || ['/placeholder.jpg'], // защита от пустого
+        };
+        setPreviewSkill(skill);
+        setIsPreviewOpen(true);
+
+        // Сохраняем userId для передачи в ProposalPreviewModal
+        localStorage.setItem('registrationUserId', firstUser._id);
+      } else {
+        // Логика отправки формы
+        dispatch(stepActions.nextStep());
+      }
     }
   };
 
@@ -73,18 +105,45 @@ export const AuthFormContainer = ({ isFirstStage = true }) => {
     }
   };
 
+  const handleEdit = () => {
+    setIsPreviewOpen(false);
+    dispatch(stepActions.goToStep(2));
+  };
+
+  const handleSuccess = () => {
+    setIsPreviewOpen(false);
+    setIsSuccessOpen(true);
+  };
+
   return (
-    <AuthFormUI
-      isFirstStage={isFirstStage}
-      textContent={textContent}
-      showPassword={showPassword}
-      email={email}
-      password={password}
-      errors={errors}
-      handleSubmit={handleSubmit}
-      togglePasswordVisibility={togglePasswordVisibility}
-      handleEmailChange={handleEmailChange}
-      handlePasswordChange={handlePasswordChange}
-    />
+    <>
+      <AuthFormUI
+        isFirstStage={!isFirstStage}
+        textContent={textContent}
+        showPassword={showPassword}
+        email={email}
+        password={password}
+        errors={errors}
+        handleSubmit={handleSubmit}
+        togglePasswordVisibility={togglePasswordVisibility}
+        handleEmailChange={handleEmailChange}
+        handlePasswordChange={handlePasswordChange}
+      />
+
+      {/* Модальное окно предпросмотра */}
+      {isPreviewOpen && previewSkill && (
+        <ProposalPreviewModal
+          isOpen={isPreviewOpen}
+          onClose={() => setIsPreviewOpen(false)}
+          skill={previewSkill}
+          userId={localStorage.getItem('registrationUserId') || ''}
+          onEdit={handleEdit}
+          onSuccess={handleSuccess}
+        />
+      )}
+
+      {/* Модальное окно успешного создания предложения */}
+      {isSuccessOpen && <SuccessModal onClose={() => setIsSuccessOpen(false)} />}
+    </>
   );
 };

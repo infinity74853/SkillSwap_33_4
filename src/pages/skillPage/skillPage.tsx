@@ -1,42 +1,85 @@
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import SkillCard from '@/widgets/skillCard/skillCard';
+import SameOffers from '@/widgets/sameOffers/sameOffers';
+import UserInfo from '@/widgets/userInfo/userInfo';
+import { usersData } from '@/shared/mocks/usersData';
 import styles from './skillPage.module.css';
-
-export interface Skill {
-  title: string;
-  category: string;
-  description: string;
-  image: string;
-  imagePreview: string;
-}
+import { LoginRequiredModal } from '@/features/loginRequiredModal/loginRequiredModal';
+import { AlreadyProposedModal } from '@/features/alreadyProposedModal/alreadyProposedModal';
 
 const SkillPage: React.FC = () => {
-  const skill: Skill = {
-    title: 'Игра на барабанах',
-    category: 'Творчество и искусство / Музыка и звук',
-    description:
-      'Привет! Я играю на барабанах уже больше 10 лет — от репетиций в гараже до выступлений на сцене с живыми группами. Научу основам техники (и как не отбить себе пальцы), играть любимые ритмы и разбирать песни, импровизировать и звучать уверенно даже без паритуры',
-    image:
-      '../src/app/assets/static/images/authUserProfileImages/706f87d20b14825dacb3f1b32ca9fb7be905f467.jpg',
-    imagePreview:
-      '../src/app/assets/static/images/authUserProfileImages/706f87d20b14825dacb3f1b32ca9fb7be905f467.jpg',
+  const { id } = useParams<{ id: string }>();
+  const [modalState, setModalState] = useState<'none' | 'login' | 'alreadyProposed'>('none');
+
+  // Сохраняем ID навыка при первой загрузке
+  useEffect(() => {
+    if (id) {
+      localStorage.setItem('lastViewedSkillId', id);
+    }
+  }, [id]);
+
+  const currentUser = useMemo(() => {
+    return usersData.find(user => user._id === id);
+  }, [id]);
+
+  // const { isAuthenticated } = useAuth();
+  const isAuthenticated = true; //временно
+
+  // === Обработчик "Предложить обмен" ===
+  const handleExchangeProposal = useCallback(() => {
+    if (!isAuthenticated) {
+      setModalState('login'); // → LoginRequiredModal
+    } else {
+      setModalState('alreadyProposed'); // → AlreadyProposedModal
+    }
+  }, [isAuthenticated]);
+
+  // === Рендер нужной модалки ===
+  const renderModal = () => {
+    const closeModal = () => setModalState('none');
+
+    switch (modalState) {
+      case 'login':
+        return <LoginRequiredModal onClose={closeModal} />;
+      case 'alreadyProposed':
+        return <AlreadyProposedModal onClose={closeModal} />;
+      case 'none':
+      default:
+        return null;
+    }
   };
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [id]);
+
+  if (!id) {
+    return <div className={styles.error}>Неверный ID</div>;
+  }
+
+  if (!currentUser) {
+    return <div className={styles.error}>Пользователь не найден</div>;
+  }
+
+  if (!currentUser.canTeach) {
+    return <div className={styles.error}>Нет доступного навыка</div>;
+  }
+
   return (
-    <div className={styles.skillPage}>
-      <div className={styles.userOffer}>
-        <div className={styles.userInfo}>Заглушка</div>
-        <SkillCard skill={skill} />
-      </div>
-      <div className={styles.sameOffers}>
-        <h3>Похожие предложения</h3>
-        <div className={styles.cards}>
-          <div className="userCard">Карточка 1</div>
-          <div className="userCard">Карточка 2</div>
-          <div className="userCard">Карточка 3</div>
-          <div className="userCard">Карточка 4</div>
+    <>
+      <div className={styles.skillPage}>
+        <div className={styles.userOffer}>
+          <UserInfo user={currentUser} />
+          <SkillCard skill={currentUser.canTeach} onExchangeClick={handleExchangeProposal} />
         </div>
+        {/* Передаём данные в SameOffers */}
+        <SameOffers currentUser={currentUser} users={usersData} />
       </div>
-    </div>
+
+      {/* === Единый портал для модалок === */}
+      {modalState !== 'none' && renderModal()}
+    </>
   );
 };
 

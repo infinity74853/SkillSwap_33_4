@@ -2,9 +2,9 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
-  width: 916px;
+  width: var(--skill-card-width, 916px);
   border-radius: 12px;
-  padding: 32px 52px;
+  padding: var(--skill-card-padding, 32px 52px);
   background-color: var(--color-card, #fff);
 }
 
@@ -21,7 +21,6 @@
   margin: 0;
   border: none;
   padding: 0;
-  background-color: #000;
   transition: opacity 0.3s ease;
   cursor: pointer;
 }
@@ -41,30 +40,18 @@
   outline-offset: 2px;
 }
 
-.likeButton {
-  mask: url('@/app/assets/static/images/icons/like.svg') no-repeat center;
-}
-
-.shareButton {
-  mask: url('@/app/assets/static/images/icons/share.svg') no-repeat center;
-}
-
-.moreButton {
-  mask: url('@/app/assets/static/images/icons/more-square.svg') no-repeat center;
-}
-
 .skillDetails {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  gap: 77px;
+  gap: var(--skill-details-gap, 77px);
 }
 
 .skillContent {
   display: flex;
   flex-direction: column;
-  min-height: 0;
   flex: 1;
+  min-height: 0;
 }
 
 .title,
@@ -106,9 +93,8 @@
   cursor: pointer;
 }
 
-.button:hover,
-.button:focus {
-  background-color: var(--button-primary-hover, #9bc26a);
+.button:hover {
+  background-color: var(--button-primary-hover-color, #deebc5);
 }
 
 .button:focus {
@@ -243,7 +229,7 @@
 .overlayText {
   position: absolute;
   inset: 0;
-  z-index: 100;
+  z-index: 10;
   display: flex;
   justify-content: center;
   align-items: center;

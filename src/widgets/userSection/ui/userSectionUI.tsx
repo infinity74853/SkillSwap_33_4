@@ -22,7 +22,7 @@ export const UserSectionUI: React.FC<UserSectionUIProps> = ({
   buttonAction,
   users,
   onLoadMore,
-  loading = false,
+  loading,
   isRecommended = false,
   hasMore = false, // По умолчанию false — безопасно
 }) => {
@@ -31,7 +31,7 @@ export const UserSectionUI: React.FC<UserSectionUIProps> = ({
   return (
     <div className={styles.category}>
       <div className={styles.categoryHeader}>
-        <h2>{displayTitle}</h2>
+        <h1>{displayTitle}</h1>
         {buttonAction && (
           <div className={styles.customButton}>
             <Button type="tertiary" onClick={buttonAction}>

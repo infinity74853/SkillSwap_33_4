@@ -1,11 +1,21 @@
 import { Skill } from '@/shared/ui/skill/skill.tsx';
 import styles from './userCard.module.css';
 import { Button } from '@/shared/ui/button/button';
-import { useState } from 'react';
 import { calculateAge } from '@/shared/lib/helpers/data';
 import { User } from '@/entities/user/model/types';
+import { useDispatch, useSelector } from '@/services/store/store';
+import { selectIsLiked } from '@/services/selectors/likeSelectors';
+import { toggleLike } from '@/services/slices/likeSlice';
+import { useNavigate } from 'react-router-dom';
 
-export const UserCard: React.FC<User> = ({
+type UserCardProps = User & {
+  // Дополнительные пропсы, если нужны
+  showLike?: boolean;
+  showDescription?: boolean;
+  showDetails?: boolean;
+};
+
+export const UserCard: React.FC<UserCardProps> = ({
   image,
   name,
   city,
@@ -13,41 +23,47 @@ export const UserCard: React.FC<User> = ({
   wantsToLearn,
   _id,
   birthdayDate,
+  description,
+  showLike = true,
+  showDescription = false,
+  showDetails = true,
 }) => {
-  const myLikes = ['001', '002', '003']; // Заглушка лайков зарегистрированного пользователя
-
-  const like = myLikes.some(like => like === _id);
-  const [isLiked, setIsliked] = useState(like);
-  const [isExchange, setExchange] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  // const [isExchange, setExchange] = useState(false);
   const learnSkill = wantsToLearn.slice(0, 2);
   const moreSkills = wantsToLearn.length - learnSkill.length;
 
+  // Получаем состояние лайка из Redux
+  const isLiked = useSelector(state => selectIsLiked(state, _id));
+
   const handleLikeClick = () => {
-    setIsliked(!isLiked);
-    //Куда то будет отправляться лайк
+    dispatch(toggleLike(_id)); // Отправляем действие в Redux
   };
 
   const openProfile = () => {
-    // Заглушка на открытие профиля
-    setExchange(!isExchange);
+    navigate(`/skill/${_id}`);
   };
 
   return (
     <div className={styles.cardContainer}>
       <div className={styles.headerCard}>
         <img src={image} alt={`Avatar ${name}`} className={styles.image} />
-        <div className={styles.cardLike}>
-          <button
-            onClick={handleLikeClick}
-            className={`${styles.likeButton} ${isLiked ? styles.likeButtonActive : ''}`}
-          ></button>
-        </div>
+        {showLike && (
+          <div className={styles.cardLike}>
+            <button
+              onClick={handleLikeClick}
+              className={`${styles.likeButton} ${isLiked ? styles.likeButtonActive : ''}`}
+            ></button>
+          </div>
+        )}
         <div className={styles.userInfo}>
           <p className={styles.userName}>{name}</p>
           <p className={styles.userCityAndAge}>{`${city}, ${calculateAge(birthdayDate)}`}</p>
         </div>
       </div>
       <div className={styles.bodyCard}>
+        {showDescription && <p className={styles.description}>{description}</p>}
         <div className={styles.teach}>
           <p className={styles.pointCard}>Может научить:</p>
           <div className={styles.skills}>
@@ -69,14 +85,7 @@ export const UserCard: React.FC<User> = ({
           </div>
         </div>
       </div>
-      {isExchange ? (
-        <Button onClick={openProfile} type="secondary">
-          <span className={styles.contentClock}>
-            <div className={styles.clock}></div>
-            <span>Обмен предложен</span>
-          </span>
-        </Button>
-      ) : (
+      {showDetails && (
         <Button onClick={openProfile} type="primary">
           Подробнее
         </Button>

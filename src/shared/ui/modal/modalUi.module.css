@@ -2,21 +2,24 @@
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
   z-index: var(--z-index-modal);
+  box-sizing: border-box;
+  min-width: 556px;
+  min-height: 420px;
   margin: auto;
-  padding: 80px 60px;
-  background-color: #fff;
   border-radius: 12px;
-  inline-size: 436px;
+  padding: 75px 60px 0;
+  background-color: #fff;
+  transform: translate(-50%, -50%);
 }
 
 .header {
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-height: 88px;
   gap: 10px;
+  min-height: 88px;
+  margin-bottom: 10px;
 }
 
 .title {
@@ -25,14 +28,15 @@
 
 .description {
   margin: 0;
+  text-align: center;
 }
 
 .img {
   display: block;
+  min-width: 75px;
+  min-height: 75px;
   margin: auto;
-  min-width: 100px;
-  min-height: 100px;
-  padding-block-end: 52px;
+  margin-bottom: 60px;
 }
 
 .content {
@@ -40,6 +44,7 @@
 }
 
 .buttonContainer {
-  margin-top: 32px;
+  display: flex;
+  gap: 20px;
   text-align: center;
 }

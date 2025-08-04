@@ -4,12 +4,28 @@ import { TModalUIProps } from './type';
 import { ModalOverlayUI } from '../modal-overlay/modal-overlay';
 import { Button } from '../button/button';
 
-export const ModalUI: FC<TModalUIProps> = memo(
-  ({ type = 'info', title, description, image, onClose, children }) => (
+const ModalUIComponent: FC<TModalUIProps> = ({
+  type = 'info',
+  title,
+  description,
+  image,
+  onClose,
+  children,
+  className,
+  primaryButtonText = 'Готово',
+  primaryButtonAction,
+  secondaryButtonText,
+  secondaryButtonAction,
+}) => {
+  // Определяем действие для основной кнопки
+  const handlePrimary = primaryButtonAction || onClose;
+
+  return (
     <>
       <ModalOverlayUI onClick={onClose} />
 
-      <div className={styles.modal}>
+      {/* Модальное окно */}
+      <div className={`${styles.modal} ${className || ''}`}>
         {/* Показываем изображение только для типа confirmation */}
         {type === 'confirmation' && image && (
           <img src={image} alt="Status" className={styles.img} />
@@ -21,17 +37,26 @@ export const ModalUI: FC<TModalUIProps> = memo(
         </div>
 
         {/* Дочерний контент только для типа info */}
-        {type === 'info' && <div className={styles.content}>{children}</div>}
+        {type === 'info' && children && <div className={styles.content}>{children}</div>}
 
-        {/* Кнопка только для типа confirmation */}
+        {/* Кнопки только для типа confirmation */}
         {type === 'confirmation' && (
           <div className={styles.buttonContainer}>
-            <Button onClick={onClose} type="primary">
-              Готово
+            {secondaryButtonText && secondaryButtonAction && (
+              <Button type="secondary" onClick={secondaryButtonAction}>
+                {secondaryButtonText}
+              </Button>
+            )}
+            <Button type="primary" onClick={handlePrimary}>
+              {primaryButtonText}
             </Button>
           </div>
         )}
       </div>
     </>
-  ),
-);
+  );
+};
+
+export const ModalUI = memo(ModalUIComponent);
+
+ModalUI.displayName = 'ModalUI';

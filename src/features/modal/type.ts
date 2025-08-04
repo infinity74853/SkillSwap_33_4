@@ -5,4 +5,9 @@ export type TModalProps = {
   image?: string; // URL изображения (только для confirmation)
   onClose: () => void; // Обработчик закрытия
   children?: React.ReactNode; // Дочерний контент (только для info)
+  className?: string;
+  primaryButtonText?: string;
+  primaryButtonAction?: () => void;
+  secondaryButtonText?: string;
+  secondaryButtonAction?: () => void;
 };
