@@ -4,19 +4,26 @@ import { useDebounce } from '@/shared/hooks/useDebounce';
 
 type SearchInputProps = {
   placeholder?: string;
+  value: string;
   onSearch: (query: string) => void;
 };
 
-export const SearchInput = ({ placeholder, onSearch }: SearchInputProps) => {
-  const [value, setValue] = useState('');
-  const debouncedValue = useDebounce(value, 300);
+export const SearchInput = ({ placeholder, value, onSearch }: SearchInputProps) => {
+  const [localValue, setLocalValue] = useState(value);
+  const debouncedValue = useDebounce(localValue, 300);
+
+  useEffect(() => {
+    if (value !== localValue) {
+      setLocalValue(value);
+    }
+  }, [value]);
 
   useEffect(() => {
     onSearch(debouncedValue);
   }, [debouncedValue, onSearch]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value);
+    setLocalValue(e.target.value);
   };
 
   return (
@@ -26,7 +33,7 @@ export const SearchInput = ({ placeholder, onSearch }: SearchInputProps) => {
         type="text"
         placeholder={placeholder}
         className={styles.input}
-        value={value}
+        value={localValue}
         onChange={handleChange}
       />
     </div>

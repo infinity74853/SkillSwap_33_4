@@ -8,12 +8,14 @@ import styles from './Header.module.css';
 import { useState, useEffect } from 'react';
 import { useDispatch } from '@/services/store/store';
 import { setSearchQuery } from '@/services/slices/catalogSlice';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/services/store/store';
 
 export const Header = () => {
   const [currentTheme, setCurrentTheme] = useState<'light' | 'dark'>('light');
   const { isAuthenticated } = useAuth();
   const dispatch = useDispatch();
-
+  const searchQuery = useSelector((state: RootState) => state.catalog.searchQuery);
   const handleSearch = (query: string) => {
     dispatch(setSearchQuery(query));
   };
@@ -51,7 +53,7 @@ export const Header = () => {
             <div className={styles.chevronIcon}> </div>
           </nav>
         </div>
-        <SearchInput placeholder="Искать навык" onSearch={handleSearch} />
+        <SearchInput placeholder="Искать навык" onSearch={handleSearch} value={searchQuery || ''} />
         <div className={styles.rightSection}>
           <button className={styles.themeToggle} onClick={toggleTheme}>
             <span
