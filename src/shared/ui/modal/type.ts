@@ -6,4 +6,9 @@ export type TModalUIProps = {
   onClose: () => void; // Обработчик закрытия
   children?: React.ReactNode; // Дочерний контент (только для info)
   className?: string; // Дополнительные классы для стилизации
+  // Гибкие кнопки
+  primaryButtonText?: string;
+  primaryButtonAction?: () => void;
+  secondaryButtonText?: string;
+  secondaryButtonAction?: () => void;
 };

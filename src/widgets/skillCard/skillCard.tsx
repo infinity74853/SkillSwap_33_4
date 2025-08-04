@@ -1,4 +1,5 @@
 import { useState, useCallback, useMemo } from 'react';
+// import { useAuth } from '@/features/auth/context/AuthContext'; //временно заменён на жёсткое значение
 import { Dropdown } from '@/shared/ui/dropdown/dropdown';
 import { LikeButton } from '@/shared/ui/likeButton/likeButton';
 import { MoreButton } from '@/shared/ui/moreButton/moreButton';
@@ -7,7 +8,6 @@ import { CopyLinkDropdownItem } from '@/features/copyLink';
 import arrowLeft from '@/app/assets/static/images/icons/arrow-chevron-left.svg';
 import arrowRight from '@/app/assets/static/images/icons/arrow-chevron-right.svg';
 import styles from './skillCard.module.css';
-import { SuccessModal } from '@/features/successModal/successModal';
 
 // === Интерфейс для canTeach из usersData ===
 export interface TeachableSkill {
@@ -25,6 +25,7 @@ export interface SkillCardProps {
   hideSliderControls?: boolean;
   renderButton?: () => React.ReactNode;
   className?: string;
+  onExchangeClick?: () => void;
 }
 
 const SkillCard: React.FC<SkillCardProps> = ({
@@ -33,6 +34,7 @@ const SkillCard: React.FC<SkillCardProps> = ({
   hideSliderControls = false,
   renderButton,
   className,
+  onExchangeClick,
 }) => {
   // === Извлечение изображений ===
   const mainImage = useMemo(() => skill.image[0] || '/placeholder.jpg', [skill.image]);
@@ -45,7 +47,6 @@ const SkillCard: React.FC<SkillCardProps> = ({
 
   // === Состояния ===
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [isSuccessOpen, setIsSuccessOpen] = useState(false);
 
   // === Обработчики ===
   const goToPrevImage = useCallback(() => {
@@ -64,10 +65,6 @@ const SkillCard: React.FC<SkillCardProps> = ({
     },
     [totalImages],
   );
-
-  const handleExchangeProposal = useCallback(() => {
-    setIsSuccessOpen(true);
-  }, []);
 
   const dropdownItems = useMemo(
     () => [
@@ -122,7 +119,7 @@ const SkillCard: React.FC<SkillCardProps> = ({
               <button
                 type="button"
                 className={styles.button}
-                onClick={handleExchangeProposal}
+                onClick={onExchangeClick}
                 aria-label="Предложить обмен"
               >
                 Предложить обмен
@@ -192,9 +189,6 @@ const SkillCard: React.FC<SkillCardProps> = ({
           </div>
         </div>
       </article>
-
-      {/* Модальное окно успешного создания предложения */}
-      {isSuccessOpen && <SuccessModal />}
     </>
   );
 };

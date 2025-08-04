@@ -15,7 +15,7 @@ const MOCK_USER = {
   birthdayDate: '1988-07-22',
   description: 'Фотограф с 10-летним опытом, специализация - портретная съемка',
   likes: ['фотография', 'искусство', 'преподавание'],
-  createdAt: new Date(2023, 2, 18),
+  createdAt: new Date(2023, 2, 18).toString(),
   canTeach: {
     category: 'Творчество и искусство',
     subcategory: 'Фотография',
@@ -55,15 +55,19 @@ const MOCK_DELAY = 500;
 const generateToken = () =>
   Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
 
-const mockCookies: Record<string, string> = {};
-const setCookie = (name: string, value: string) => (mockCookies[name] = value);
-const getCookie = (name: string) => mockCookies[name];
+const setToStorage = (key: string, value: string) => localStorage.setItem(key, value);
 
-const mockStorage: Record<string, string> = {
-  refreshToken: generateToken(),
+const getFromStorage = (key: string) => localStorage.getItem(key);
+
+const setCookie = (name: string, value: string) => {
+  const maxAge = 60 * 60 * 24 * 7;
+  document.cookie = `${name}=${value}; max-age=${maxAge}; path=/; samesite=lax`;
 };
-const getFromStorage = (key: string) => mockStorage[key];
-const setToStorage = (key: string, value: string) => (mockStorage[key] = value);
+
+const getCookie = (name: string) => {
+  const match = document.cookie.match(new RegExp(`(^| )${name}=([^;]+)`));
+  return match?.[2] || null;
+};
 
 export const refreshToken = (): Promise<TRefreshResponse> => {
   return new Promise((resolve, reject) => {
@@ -111,8 +115,8 @@ export const getUserApi = (): Promise<TUserResponse> => {
 export const logoutApi = (): Promise<TServerResponse<object>> => {
   return new Promise(resolve => {
     setTimeout(() => {
-      setToStorage('refreshToken', '');
-      setCookie('accessToken', '');
+      localStorage.removeItem('refreshToken');
+      document.cookie = 'accessToken=; max-age=0; path=/';
 
       resolve({
         success: true,
@@ -140,7 +144,7 @@ export const loginUserApi = (data: TLoginData): Promise<TAuthResponse> => {
       } else {
         reject({
           success: false,
-          message: 'Invalid',
+          message: 'Invalid credentials',
         });
       }
     }, MOCK_DELAY);

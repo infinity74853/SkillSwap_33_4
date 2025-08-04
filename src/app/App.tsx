@@ -87,7 +87,16 @@ function App() {
       {backgroundLocation && (
         <Routes>
           {/* Руты для модалок */}
-          <Route path="/success" element={<SuccessModal />} />
+          <Route
+            path="/success"
+            element={
+              <SuccessModal
+                onClose={function (): void {
+                  throw new Error('Function not implemented.');
+                }}
+              />
+            }
+          />
           <Route
             path="/register/preview"
             element={

@@ -1,4 +1,4 @@
-import { ExperienceOption, GenderOption } from './types';
+import { ExperienceOption, GenderOption } from '@/entities/user/model/types';
 
 export const experienceOptions: ExperienceOption[] = [
   { value: 'all', label: 'Все' },

@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction, Draft } from '@reduxjs/toolkit';
-import { ExperienceOption, GenderOption } from '@/widgets/filters-panel/types';
+import { ExperienceOption, GenderOption } from '@/entities/user/model/types';
 
 interface FiltersState {
   mode: ExperienceOption['value'];
