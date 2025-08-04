@@ -7,6 +7,7 @@ interface ProposalPreviewModalProps {
   isOpen: boolean;
   onClose: () => void;
   skill: TeachableSkill;
+  userId: string;
   onEdit: () => void;
   onSuccess: () => void;
 }
@@ -15,6 +16,7 @@ export const ProposalPreviewModal: React.FC<ProposalPreviewModalProps> = ({
   isOpen,
   onClose,
   skill,
+  userId,
   onEdit,
   onSuccess,
 }) => {
@@ -48,7 +50,17 @@ export const ProposalPreviewModal: React.FC<ProposalPreviewModalProps> = ({
                 <button
                   type="button"
                   className={`${styles.primaryButton} ${styles.button}`}
-                  onClick={onSuccess}
+                  onClick={() => {
+                    // Защита от undefined
+                    if (userId) {
+                      // Сохраняем данные для передачи в SuccessModal
+                      localStorage.setItem(
+                        'postProposalRedirect',
+                        JSON.stringify({ userId, skill }),
+                      );
+                    }
+                    onSuccess(); // → SuccessModal
+                  }}
                 >
                   Готово
                 </button>

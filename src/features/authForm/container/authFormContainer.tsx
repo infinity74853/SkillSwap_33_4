@@ -1,9 +1,8 @@
 import { PAGE_TEXTS } from '@/features/authForm/ui/authForm';
 import { AuthFormUI } from '@/features/authForm/ui/authFormUI';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { RootState, useDispatch, useSelector } from '@/services/store/store';
 import { stepActions } from '@/services/slices/stepSlice';
-import { loginUser } from '@/services/thunk/authUser';
 import { ProposalPreviewModal } from '@/features/auth/proposalPreviewModal/proposalPreviewModal';
 import { SuccessModal } from '@/features/successModal/successModal';
 import { TeachableSkill } from '@/widgets/skillCard/skillCard';
@@ -18,100 +17,41 @@ export const AuthFormContainer = ({ isFirstStage = true }) => {
     password: '',
     form: '',
   });
-  const [touched, setTouched] = useState({
-    email: false,
-    password: false,
-  });
+
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [isSuccessOpen, setIsSuccessOpen] = useState(false);
   const [previewSkill, setPreviewSkill] = useState<TeachableSkill | null>(null);
 
   const dispatch = useDispatch();
+
   const currentStep = useSelector((state: RootState) => state.step.currentStep);
 
   const textContent = !isFirstStage ? PAGE_TEXTS.firstStage : PAGE_TEXTS.registration;
 
-  const validateEmail = (value: string) => {
-    if (!value.trim()) return 'Поле Email обязательно для заполнения';
-    if (!/\S+@\S+\.\S+/.test(value)) return 'Некорректный формат email';
-    return '';
-  };
-
-  const validatePassword = (value: string) => {
-    if (!value.trim()) return 'Поле Пароль обязательно для заполнения';
-    if (value.length < 8) return 'Пароль должен содержать минимум 8 символов';
-    return '';
-  };
-
-  useEffect(() => {
-    const emailError = touched.email ? validateEmail(email) : '';
-    const passwordError = touched.password ? validatePassword(password) : '';
-
-    const formError =
-      emailError || passwordError
-        ? 'Email или пароль введён неверно. Пожалуйста проверьте правильность введённых данных'
-        : errors.form;
-
-    if (
-      emailError !== errors.email ||
-      passwordError !== errors.password ||
-      formError !== errors.form
-    ) {
-      setErrors({
-        email: emailError,
-        password: passwordError,
-        form: formError,
-      });
-    }
-  }, [email, password, touched]);
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    setTouched({
-      email: true,
-      password: true,
-    });
+    if (validateForm()) {
+      if (currentStep === 2) {
+        const firstUser = usersData[0]; // или выберите нужного пользователя
+        const { canTeach } = firstUser;
 
-    const emailError = validateEmail(email);
-    const passwordError = validatePassword(password);
+        const skill: TeachableSkill = {
+          customSkillId: canTeach.customSkillId,
+          name: canTeach.name,
+          category: `${canTeach.category} / ${canTeach.subcategory}`,
+          description: canTeach.description,
+          image: canTeach.image || ['/placeholder.jpg'], // защита от пустого
+        };
+        setPreviewSkill(skill);
+        setIsPreviewOpen(true);
 
-    if (emailError || passwordError) {
-      setErrors({
-        email: emailError,
-        password: passwordError,
-        form: 'Email или пароль введён неверно. Пожалуйста проверьте правильность введённых данных',
-      });
-      return;
-    }
-
-    if (!isFirstStage) {
-      try {
-        await dispatch(loginUser({ email, password })).unwrap();
-      } catch (err) {
-        setErrors(prev => ({
-          ...prev,
-          form: 'Пользователь не зарегистрирован или неверные данные',
-        }));
+        // Сохраняем userId для передачи в ProposalPreviewModal
+        localStorage.setItem('registrationUserId', firstUser._id);
+      } else {
+        // Логика отправки формы
+        dispatch(stepActions.nextStep());
       }
-      return;
-    }
-
-    if (currentStep === 2) {
-      const firstUser = usersData[0];
-      const { canTeach } = firstUser;
-
-      const skill: TeachableSkill = {
-        customSkillId: canTeach.customSkillId,
-        name: canTeach.name,
-        category: `${canTeach.category} / ${canTeach.subcategory}`,
-        description: canTeach.description,
-        image: canTeach.image || ['/placeholder.jpg'],
-      };
-      setPreviewSkill(skill);
-      setIsPreviewOpen(true);
-    } else {
-      dispatch(stepActions.nextStep());
     }
   };
 
@@ -119,31 +59,49 @@ export const AuthFormContainer = ({ isFirstStage = true }) => {
     setShowPassword(!showPassword);
   };
 
+  const validateForm = () => {
+    const newErrors = { email: '', password: '', form: '' };
+    let isValid = true;
+
+    if (!email.trim()) {
+      newErrors.email = 'Поле Email обязательно для заполнения';
+      newErrors.form =
+        'Email или пароль введён неверно. Пожалуйста проверьте правильность введённых данных';
+      isValid = false;
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      newErrors.email = 'Некорректный формат email';
+      newErrors.form =
+        'Email или пароль введён неверно. Пожалуйста проверьте правильность введённых данных';
+      isValid = false;
+    }
+
+    if (!password.trim()) {
+      newErrors.password = 'Поле Пароль обязательно для заполнения';
+      newErrors.form =
+        'Email или пароль введён неверно. Пожалуйста проверьте правильность введённых данных';
+      isValid = false;
+    } else if (password.length < 8) {
+      newErrors.password = 'Пароль должен содержать минимум 8 символов';
+      newErrors.form =
+        'Email или пароль введён неверно. Пожалуйста проверьте правильность введённых данных';
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
-    if (!touched.email) {
-      setTouched(prev => ({ ...prev, email: true }));
+    if (errors.email) {
+      setErrors(prev => ({ ...prev, email: '' }));
     }
-    setErrors(prev => ({ ...prev, form: '' }));
   };
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
-    if (!touched.password) {
-      setTouched(prev => ({ ...prev, password: true }));
-    }
-    setErrors(prev => ({ ...prev, form: '' }));
-  };
-
-  const handleEmailBlur = () => {
-    if (!touched.email) {
-      setTouched(prev => ({ ...prev, email: true }));
-    }
-  };
-
-  const handlePasswordBlur = () => {
-    if (!touched.password) {
-      setTouched(prev => ({ ...prev, password: true }));
+    if (errors.password) {
+      setErrors(prev => ({ ...prev, password: '' }));
     }
   };
 
@@ -170,21 +128,22 @@ export const AuthFormContainer = ({ isFirstStage = true }) => {
         togglePasswordVisibility={togglePasswordVisibility}
         handleEmailChange={handleEmailChange}
         handlePasswordChange={handlePasswordChange}
-        handleEmailBlur={handleEmailBlur}
-        handlePasswordBlur={handlePasswordBlur}
       />
 
+      {/* Модальное окно предпросмотра */}
       {isPreviewOpen && previewSkill && (
         <ProposalPreviewModal
           isOpen={isPreviewOpen}
           onClose={() => setIsPreviewOpen(false)}
           skill={previewSkill}
+          userId={localStorage.getItem('registrationUserId') || ''}
           onEdit={handleEdit}
           onSuccess={handleSuccess}
         />
       )}
 
-      {isSuccessOpen && <SuccessModal />}
+      {/* Модальное окно успешного создания предложения */}
+      {isSuccessOpen && <SuccessModal onClose={() => setIsSuccessOpen(false)} />}
     </>
   );
 };
