@@ -11,7 +11,6 @@ type SearchInputProps = {
 export const SearchInput = ({ placeholder, value, onSearch }: SearchInputProps) => {
   const [localValue, setLocalValue] = useState(value);
   const debouncedValue = useDebounce(localValue, 300);
-
   useEffect(() => {
     if (value !== localValue) {
       setLocalValue(value);
@@ -33,7 +32,7 @@ export const SearchInput = ({ placeholder, value, onSearch }: SearchInputProps) 
         type="text"
         placeholder={placeholder}
         className={styles.input}
-        value={localValue}
+        value={localValue} 
         onChange={handleChange}
       />
     </div>
