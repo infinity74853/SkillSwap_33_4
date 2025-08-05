@@ -1,5 +1,5 @@
 import { User } from '@/entities/user/model/types';
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AUTH_USER_SLICE } from './slicesName';
 import { RequestStatus } from '@/entities/auth/model/types';
 import { fetchUser, loginUser, logoutUserApi } from '../thunk/authUser';
@@ -13,13 +13,26 @@ export interface AuthState {
 export const initialState: AuthState = {
   data: null,
   authStatus: RequestStatus.Idle,
-  userCheck: false, // была ли проверка по токену
+  userCheck: false,
 };
 
 export const authSlice = createSlice({
   name: AUTH_USER_SLICE,
   initialState,
-  reducers: {},
+  reducers: {
+    // Добавляем редюсер для обновления данных пользователя
+    setUserData: (state, action: PayloadAction<Partial<User>>) => {
+      if (state.data) {
+        state.data = { ...state.data, ...action.payload };
+      }
+    },
+    // Можно добавить другие редюсеры по необходимости
+    clearUserData: state => {
+      state.data = null;
+      state.authStatus = RequestStatus.Idle;
+      state.userCheck = false;
+    },
+  },
   extraReducers: builder => {
     const handlePending = (state: AuthState) => {
       state.authStatus = RequestStatus.Loading;
