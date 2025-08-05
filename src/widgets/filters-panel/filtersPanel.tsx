@@ -13,6 +13,7 @@ import {
   setSkills,
   resetFilters,
 } from '@/services/slices/filtersSlice';
+import { setSearchQuery } from '@/services/slices/catalogSlice';
 
 interface FiltersPanelProps {
   skillsCategories: SkillsCategories;
@@ -24,6 +25,10 @@ export const FiltersPanel = ({ skillsCategories, cities }: FiltersPanelProps) =>
 
   const dispatch = useDispatch();
   const { mode, gender, city, skill } = useSelector((state: RootState) => state.filters);
+  const searchQuery = useSelector((state: RootState) => {
+    const query = state.catalog.searchQuery;
+    return query && query.trim() ? query : null;
+  });
 
   // Вычисляем количество активных фильтров
   const activeFiltersCount = useMemo(() => {
@@ -39,6 +44,7 @@ export const FiltersPanel = ({ skillsCategories, cities }: FiltersPanelProps) =>
 
   const handleReset = () => {
     dispatch(resetFilters());
+    dispatch(setSearchQuery(''));
   };
 
   // Типизированные обработчики
@@ -62,7 +68,7 @@ export const FiltersPanel = ({ skillsCategories, cities }: FiltersPanelProps) =>
         <h2 className={styles.title}>
           Фильтры {activeFiltersCount > 0 && `(${activeFiltersCount})`}
         </h2>
-        {activeFiltersCount > 0 && (
+        {(activeFiltersCount > 0 || searchQuery) && (
           <button onClick={handleReset} className={styles.resetButton} type="button">
             Сбросить
           </button>
