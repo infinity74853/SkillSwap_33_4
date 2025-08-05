@@ -1,37 +1,29 @@
-import { FC, useEffect } from 'react';
+import { FC } from 'react';
 import styles from './registerStepThree.module.css';
 import { TextInput } from '@/shared/ui/textInput/textInput';
 import { CustomSelect } from '@/shared/ui/customSelect/customSelect';
+import { MultiSelect } from '@/shared/ui/multiSelect/multiSelect';
+import { skillsCategories } from '@/shared/lib/categories';
 import { Controller, useForm } from 'react-hook-form';
 import { Button } from '@/shared/ui/button/button';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import boardIcon from '@/app/assets/static/images/background/school-board.svg';
 import { DragAndDrop } from '@/widgets/dragAndDrop/dragAndDrop';
-import { useDispatch, useSelector } from '@/services/store/store';
+import { useDispatch } from '@/services/store/store';
 import {
   resetStepThreeData,
   setStep,
   updateStepThreeData,
 } from '@/services/slices/registrationSlice';
 import { RegistrationInfoPanel } from '@/shared/ui/registrationInfoPanel/registrationInfoPanel';
-import { useLocation, useNavigate } from 'react-router-dom';
-import {
-  getCategoriesSelector,
-  getSubcategoriesByCategory,
-  getSubcategoryIdByName,
-} from '@/services/slices/skillsSlice';
-import { SkillSubcategory } from '@/entities/skill/model/types';
 
 export const RegisterStepThree: FC = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const rawSkills = useSelector(getCategoriesSelector);
-  const skills = rawSkills.map(category => ({
-    label: category,
-    value: category,
-  }));
-  const defaultValues = useSelector(state => state.register.stepThreeData);
+  const skills = Object.keys(skillsCategories).map(val => {
+    return { value: val, label: val };
+  });
+  const verifiedSkills = Object.keys(skillsCategories);
+  const verifiedSkillsSubcategories = Object.values(skillsCategories).flat();
   const dispatch = useDispatch();
   const schema = yup.object({
     skillName: yup
@@ -40,8 +32,15 @@ export const RegisterStepThree: FC = () => {
       .matches(/^[а-яёА-ЯЁ\s]+$/, 'Только кириллические символы')
       .min(3, 'Минимум 3 символа')
       .max(50, 'Максимум 50 символов'),
-    skillCategory: yup.string().required('Укажите категорию навыка').oneOf(rawSkills),
-    skillSubCategory: yup.string().required('Подкатегория обязательна'),
+    skill: yup
+      .string()
+      .required('Укажите категорию навыка')
+      .oneOf(verifiedSkills, 'Неверная категория'),
+    subcategories: yup
+      .array()
+      .of(yup.string().defined().oneOf(verifiedSkillsSubcategories, 'Неверная подкатегория'))
+      .min(1, 'Выберите хотя бы одну подкатегорию')
+      .required('Подкатегория обязательна'),
     description: yup.string().required('Введите описание навыка').max(500, 'Максимум 500 символов'),
     images: yup
       .mixed<File[]>()
@@ -69,71 +68,21 @@ export const RegisterStepThree: FC = () => {
     control,
     trigger,
     setError,
-    setValue,
-  } = useForm({
-    resolver: yupResolver(schema),
-    mode: 'onBlur',
-    defaultValues: { ...defaultValues, images: undefined },
-  });
-  const selectedCategory = watch('skillCategory') || '';
-  const subcategoryOptions = useSelector(state =>
-    getSubcategoriesByCategory(state, selectedCategory),
-  ).map((category: string) => ({
-    label: category,
-    value: category,
-  }));
-  const subcategoryId = useSelector(state =>
-    getSubcategoryIdByName(state, watch('skillSubCategory')),
-  );
-  const user = useSelector(state => state.register);
-  useEffect(() => {
-    if (subcategoryOptions.length > 0) {
-      setValue('skillSubCategory', subcategoryOptions[0].value);
-      clearErrors('skillSubCategory');
-    } else {
-      setValue('skillSubCategory', '');
-    }
-  }, [subcategoryOptions, clearErrors, setValue]);
+  } = useForm({ resolver: yupResolver(schema), mode: 'onBlur' });
+  const selectedCategory = watch('skill');
+  const filteredSubcategories = selectedCategory
+    ? skillsCategories[selectedCategory as keyof typeof skillsCategories]?.map(val => ({
+        value: val,
+        label: val,
+      })) || []
+    : [];
   return (
     <div className={styles.registrationContainer}>
       <form
         className={styles.registrationForm}
-        onSubmit={async e => {
-          e.preventDefault();
-
-          await handleSubmit(async data => {
-            dispatch(resetStepThreeData());
-            const files: File[] = data.images ?? [];
-            const base64Images = await Promise.all(
-              files.map(
-                file =>
-                  new Promise<string>((res, rej) => {
-                    const reader = new FileReader();
-                    reader.readAsDataURL(file);
-                    reader.onload = () => res(reader.result as string);
-                    reader.onerror = err => rej(err);
-                  }),
-              ),
-            );
-
-            dispatch(
-              updateStepThreeData({
-                skillName: data.skillName,
-                skillCategory: data.skillCategory,
-                skillSubCategory: data.skillSubCategory as SkillSubcategory<
-                  typeof data.skillCategory
-                >,
-                description: data.description,
-                pics: base64Images,
-                customSkillId: String(Math.random()),
-                skillSubCategoryId: subcategoryId,
-              }),
-            );
-            dispatch(setStep(null));
-            console.log(user);
-            navigate('/register/preview', { state: { background: location } });
-          })();
-        }}
+        onSubmit={handleSubmit(data => {
+          console.log(data);
+        })}
       >
         <TextInput
           {...register('skillName')}
@@ -146,7 +95,7 @@ export const RegisterStepThree: FC = () => {
         />
 
         <Controller
-          name="skillCategory"
+          name="skill"
           control={control}
           render={({ field }) => (
             <CustomSelect
@@ -156,36 +105,36 @@ export const RegisterStepThree: FC = () => {
               id="gender"
               title="Категория навыка"
               placeholder="Выберите категорию навыка"
-              error={errors.skillCategory?.message}
-              onFocus={() => clearErrors('skillCategory')}
+              error={errors.skill?.message}
+              onFocus={() => clearErrors('skill')}
             />
           )}
         ></Controller>
         <Controller
-          name="skillSubCategory"
+          name="subcategories"
           control={control}
           render={({ field }) => (
-            <CustomSelect
+            <MultiSelect
               {...field}
               className={styles.fixedHeight}
-              options={subcategoryOptions}
+              options={filteredSubcategories}
               title="Подкатегория навыка, которому хотите научиться"
               id="skill"
               placeholder="Выберите подкатегорию"
               value={field.value}
               onChange={value => {
                 field.onChange(value);
-                trigger('skillSubCategory');
+                trigger('subcategories');
               }}
-              error={errors.skillSubCategory?.message}
+              error={errors.subcategories?.message}
               onFocus={() => {
-                if (subcategoryOptions.length === 0) {
-                  setError('skillSubCategory', {
+                if (filteredSubcategories.length === 0) {
+                  setError('subcategories', {
                     type: 'manual',
-                    message: 'Сначала выберите категорию',
+                    message: 'Сначала выберите    категорию',
                   });
                 } else {
-                  clearErrors('skillSubCategory');
+                  clearErrors('subcategories');
                 }
               }}
             />
@@ -229,12 +178,18 @@ export const RegisterStepThree: FC = () => {
             children="Назад"
             type="quaternary"
             onClick={() => {
-              dispatch(setStep(2));
-              dispatch(resetStepThreeData());
+              (dispatch(setStep(2)), dispatch(resetStepThreeData()));
             }}
-            htmlType="button"
           />
-          <Button children="Продолжить" type="primary" />
+          <Button
+            children="Продолжить"
+            type="primary"
+            onClick={() =>
+              handleSubmit(data => {
+                dispatch(updateStepThreeData(data));
+              })
+            }
+          />
         </div>
       </form>
       <RegistrationInfoPanel
