@@ -1,9 +1,10 @@
 {
   "extends": "./tsconfig.app.json",
   "compilerOptions": {
-    "composite": true,
+    "plugins": [{ "transform": "@ts-tools/transform-import-meta" }],
+
     "types": ["vite/client", "jest", "@testing-library/jest-dom"]
   },
 
-  "include": ["vite.config.ts", "src/**/*.test.ts", "src/**/*.test.tsx"]
+  "include": ["vite.config.ts", "src/**/*.test.ts", "src/**/*.test.tsx", "jest.config.ts"]
 }
