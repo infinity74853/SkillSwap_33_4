@@ -1,4 +1,5 @@
 import { useState, useCallback, useMemo } from 'react';
+// import { useAuth } from '@/features/auth/context/AuthContext'; //временно заменён на жёсткое значение
 import { Dropdown } from '@/shared/ui/dropdown/dropdown';
 import { LikeButton } from '@/shared/ui/likeButton/likeButton';
 import { MoreButton } from '@/shared/ui/moreButton/moreButton';
@@ -7,10 +8,17 @@ import { CopyLinkDropdownItem } from '@/features/copyLink';
 import arrowLeft from '@/app/assets/static/images/icons/arrow-chevron-left.svg';
 import arrowRight from '@/app/assets/static/images/icons/arrow-chevron-right.svg';
 import styles from './skillCard.module.css';
-import { CustomSkill } from '@/entities/skill/model/types';
+
+export interface TeachableSkill {
+  customSkillId: string;
+  name: string;
+  category: string;
+  description: string;
+  image: string[];
+}
 
 export interface SkillCardProps {
-  skill: CustomSkill;
+  skill: TeachableSkill;
   hideActions?: boolean;
   hideSliderControls?: boolean;
   renderButton?: () => React.ReactNode;

@@ -7,6 +7,7 @@ import calendarIcon from '@/app/assets/static/images/icons/calendar.svg';
 import { CustomSelect } from '@/shared/ui/customSelect/customSelect';
 import { Autocomplete } from '@/shared/ui/autoComplete/autoComplete';
 import { MultiSelect } from '@/shared/ui/multiSelect/multiSelect';
+import { skillsCategories } from '@/shared/lib/categories';
 import { Controller, useForm } from 'react-hook-form';
 import { Button } from '@/shared/ui/button/button';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -14,15 +15,18 @@ import * as yup from 'yup';
 import { russianCities } from '@/shared/lib/cities';
 import userIcon from '@/app/assets/static/images/background/user-info.svg';
 import { resetStepTwoData, setStep, updateStepTwoData } from '@/services/slices/registrationSlice';
-import { useDispatch, useSelector } from '@/services/store/store';
+import { useDispatch } from '@/services/store/store';
 import { RegistrationInfoPanel } from '@/shared/ui/registrationInfoPanel/registrationInfoPanel';
-import { getCategoriesSelector, getSubcategoriesByCategory } from '@/services/slices/skillsSlice';
 
 export const RegisterStepTwo: FC = () => {
   const [isDatePickerOpen, setDatePicker] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
+  const skills = Object.keys(skillsCategories).map(val => {
+    return { value: val, label: val };
+  });
   const dispatch = useDispatch();
-  const defaultValues = useSelector(state => state.register.stepTwoData);
+  const verifiedSkills = Object.keys(skillsCategories);
+  const verifiedSkillsSubcategories = Object.values(skillsCategories).flat();
   const genders = ['Мужской', 'Женский'];
   const schema = yup.object({
     name: yup
@@ -68,11 +72,13 @@ export const RegisterStepTwo: FC = () => {
     gender: yup.string().required('Укажите пол').oneOf(genders, 'Выберите пол'),
     categories: yup
       .array()
+      .of(yup.string().defined().oneOf(verifiedSkills, 'Неверная категория'))
       .min(1, 'Выберите хотя бы одну категорию')
       .required('Категория обязательна'),
 
-    skillSubCategory: yup
+    subcategories: yup
       .array()
+      .of(yup.string().defined().oneOf(verifiedSkillsSubcategories, 'Неверная подкатегория'))
       .min(1, 'Выберите хотя бы одну подкатегорию')
       .required('Подкатегория обязательна'),
   });
@@ -85,43 +91,19 @@ export const RegisterStepTwo: FC = () => {
     control,
     trigger,
     setError,
-  } = useForm({
-    resolver: yupResolver(schema),
-    mode: 'onBlur',
-    defaultValues: { ...defaultValues },
-  });
-  const rawSkills = useSelector(getCategoriesSelector);
-  const skills = rawSkills.map(category => ({
-    label: category,
-    value: category,
-  }));
+  } = useForm({ resolver: yupResolver(schema), mode: 'onBlur' });
+  const genderValue = watch('gender');
   const selectedCategories = watch('categories') || [];
-  const subcategoryOptions = useSelector(state =>
-    getSubcategoriesByCategory(state, selectedCategories),
-  ).map((category: string) => ({
-    label: category,
-    value: category,
-  }));
+  const filteredSubcategories = selectedCategories
+    .flatMap(category => skillsCategories[category as keyof typeof skillsCategories] || [])
+    .map(val => ({ value: val, label: val }));
   return (
     <div className={styles.registrationContainer}>
       <form
         className={styles.registrationForm}
-        onSubmit={e => {
-          e.preventDefault();
-          handleSubmit(data => {
-            dispatch(resetStepTwoData());
-            dispatch(
-              updateStepTwoData({
-                ...data,
-                gender: data.gender as 'Мужской' | 'Женский',
-                birthdate: data.date,
-                skillCategory: data.categories,
-                skillSubCategory: data.skillSubCategory,
-              }),
-            );
-            dispatch(setStep(3));
-          })();
-        }}
+        onSubmit={handleSubmit(data => {
+          console.log(data);
+        })}
       >
         <div className={styles.logoContainer}>
           <label htmlFor="avatar" className={styles.avatarLabel}>
@@ -210,6 +192,7 @@ export const RegisterStepTwo: FC = () => {
               id="gender"
               title="Пол"
               placeholder="Не указан"
+              value={genderValue}
               error={errors.gender?.message}
               onFocus={() => clearErrors('gender')}
             />
@@ -260,30 +243,30 @@ export const RegisterStepTwo: FC = () => {
           )}
         />
         <Controller
-          name="skillSubCategory"
+          name="subcategories"
           control={control}
           render={({ field }) => (
             <MultiSelect
               {...field}
               className={styles.elementFull}
-              options={subcategoryOptions}
+              options={filteredSubcategories}
               title="Подкатегория навыка, которому хотите научиться"
               id="subSkill"
               placeholder="Выберите подкатегорию"
               value={field.value}
               onChange={value => {
                 field.onChange(value);
-                trigger('skillSubCategory');
+                trigger('subcategories');
               }}
-              error={errors.skillSubCategory?.message}
+              error={errors.subcategories?.message}
               onFocus={() => {
-                if (subcategoryOptions.length === 0) {
-                  setError('skillSubCategory', {
+                if (filteredSubcategories.length === 0) {
+                  setError('subcategories', {
                     type: 'manual',
                     message: 'Сначала выберите хотя бы одну категорию',
                   });
                 } else {
-                  clearErrors('skillSubCategory');
+                  clearErrors('subcategories');
                 }
               }}
             />
@@ -297,9 +280,22 @@ export const RegisterStepTwo: FC = () => {
               dispatch(resetStepTwoData());
               dispatch(setStep(1));
             }}
-            htmlType="button"
           />
-          <Button children="Продолжить" type="primary" htmlType="submit" />
+          <Button
+            children="Продолжить"
+            type="primary"
+            onClick={() =>
+              handleSubmit(data => {
+                dispatch(
+                  updateStepTwoData({
+                    ...data,
+                    gender: data.gender as 'Мужской' | 'Женский',
+                  }),
+                );
+                dispatch(setStep(3));
+              })()
+            }
+          />
         </div>
       </form>
       <RegistrationInfoPanel

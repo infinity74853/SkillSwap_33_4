@@ -1,6 +1,7 @@
 import { Children, ReactElement } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import styles from './authWizard.module.css';
+import { stepSelectors } from '@/services/slices/stepSlice';
 import { StepIndicator } from '@/shared/ui/stepIndicator/stepIndicator';
 import { useSelector } from '@/services/store/store';
 
@@ -9,13 +10,13 @@ interface AuthWizardProps {
 }
 
 export const AuthWizard = ({ children }: AuthWizardProps) => {
-  const currentStep = useSelector(state => state.register.step);
-  const totalSteps = 3; // имхо количество общих шагов можно захардкодить
-  // оно меняется за 1 клик и почти ни на что не влияет, слайс избыточен
-  if (currentStep === null) {
-    return <div>Загружаем страницу регистрации</div>;
-  }
+  const currentStep = useSelector(stepSelectors.currentStep);
+  const totalSteps = useSelector(stepSelectors.totalSteps);
   const steps = Children.toArray(children);
+
+  if (steps.length === 0) {
+    return <div>No steps!</div>;
+  }
 
   const variants = {
     enter: (direction: number) => ({
@@ -36,9 +37,9 @@ export const AuthWizard = ({ children }: AuthWizardProps) => {
     <div className={styles.container}>
       <div className={styles.progressInfo}>
         <h2 className={styles.contentStep}>
-          Шаг {currentStep} из {totalSteps}
+          Шаг {currentStep + 1} из {totalSteps}
         </h2>
-        <StepIndicator currentStep={currentStep - 1} totalSteps={totalSteps} />
+        <StepIndicator currentStep={currentStep} totalSteps={totalSteps} />
       </div>
 
       <div className={styles.formsContainer}>
@@ -56,7 +57,7 @@ export const AuthWizard = ({ children }: AuthWizardProps) => {
             }}
             className={styles.formWrapper}
           >
-            {steps[currentStep - 1]}
+            {steps[currentStep]}
           </motion.div>
         </AnimatePresence>
       </div>
