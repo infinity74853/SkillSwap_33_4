@@ -16,6 +16,7 @@ interface AuthFormUIProps {
     email: string;
     password: string;
     form: string;
+    passwordIsFirstStage: string;
   };
   handleSubmit: (e: React.FormEvent) => void;
   togglePasswordVisibility: () => void;
@@ -84,7 +85,11 @@ export const AuthFormUI = ({
                 onChange={handleEmailChange}
                 onBlur={handleEmailBlur}
               />
-              {!isFirstStage && <p className={styles.validationContent}>{errors.email}</p>}
+              {!isFirstStage && (
+                <div className={`${styles.errorContainer} ${errors.email ? styles.withError : ''}`}>
+                  {errors.email && <p className={styles.validationContent}>{errors.email}</p>}
+                </div>
+              )}
             </div>
 
             <div className={styles.inputGroup}>
@@ -112,15 +117,31 @@ export const AuthFormUI = ({
                   <div className={showPassword ? styles.eyeOpen : styles.eyeClosed}></div>
                 </button>
               </div>
-              {!isFirstStage && <p className={styles.validationContent}>{errors.password}</p>}
+              {!isFirstStage && (
+                <div
+                  className={`${styles.errorContainer} ${
+                    errors.password || errors.passwordIsFirstStage ? styles.withError : ''
+                  }`}
+                >
+                  {
+                    <p
+                      className={`${styles.validationContent} ${!errors.password ? styles.validationPass : ''}`}
+                    >
+                      {errors.password ? errors.password : errors.passwordIsFirstStage}
+                    </p>
+                  }
+                </div>
+              )}
             </div>
-            {isFirstStage && errors.form && (
-              <p className={styles.validationContent}>{errors.form}</p>
-            )}
+            <div className={`${styles.errorContainer} ${errors.form ? styles.withError : ''}`}>
+              {isFirstStage && errors.form && (
+                <p className={styles.validationContent}>{errors.form}</p>
+              )}
+            </div>
           </fieldset>
 
           <div className={styles.authLinks}>
-            <Button type="primary" disabled={!!(errors.email || errors.password || errors.form)}>
+            <Button type="primary" disabled={!!(errors.email || errors.password)}>
               {textContent.buttonText}
             </Button>
             {isFirstStage && (

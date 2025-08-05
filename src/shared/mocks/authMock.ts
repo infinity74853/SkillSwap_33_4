@@ -7,10 +7,12 @@ import {
   TServerResponse,
   TUserResponse,
 } from '../utils/api';
+import { User } from '@/entities/user/model/types';
 
 const MOCK_USER: User = {
   _id: 'user_002',
   name: 'Дмитрий',
+  gender: 'male',
   image: 'https://example.com/avatars/dmitry.jpg',
   city: 'Санкт-Петербург',
   birthdayDate: '1988-07-22',
@@ -50,7 +52,7 @@ const MOCK_USER: User = {
       customSkillId: 'want_lang_001',
     } as Omit<CustomSkill, 'description' | 'image'>,
   ],
-};
+} as User;
 
 const MOCK_DELAY = 500;
 

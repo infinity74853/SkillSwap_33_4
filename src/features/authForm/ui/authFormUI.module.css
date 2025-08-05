@@ -111,6 +111,11 @@
   justify-content: flex-start;
   width: 100%;
   margin: 0;
+  transition: margin-bottom 0.5s ease;
+}
+
+.inputGroup:has(.withError) {
+  margin-bottom: 8px;
 }
 
 .input {
@@ -155,18 +160,22 @@
   color: var(--color-error);
   font-size: 12px;
   line-height: 16px;
-  animation: fade 0.3s ease;
+  animation: fade 0.5s ease;
 }
 
 @keyframes fade {
   from {
     opacity: 0;
-    transform: translateY(-5px);
+    transform: translateY(-4px);
   }
   to {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+.validationPass {
+  color: var(--color-text);
 }
 
 .authLinks {
@@ -215,4 +224,18 @@
 
 .inputError {
   border-color: var(--color-error);
+}
+
+.errorContainer {
+  max-height: 0;
+  overflow: hidden;
+  transition:
+    max-height 0.5s ease,
+    opacity 0.5s ease;
+  opacity: 0;
+}
+
+.withError {
+  max-height: 80px;
+  opacity: 1;
 }

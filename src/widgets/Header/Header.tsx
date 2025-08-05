@@ -3,19 +3,19 @@ import { Logo } from '@/shared/ui/Logo/Logo';
 import { SearchInput } from '@/shared/ui/SearchInput/SearchInput';
 import { UserPanel } from '@/features/auth/ui/UserPanel/UserPanel';
 import { GuestPanel } from '@/features/auth/ui/GuestPanel/GuestPanel';
-import { useAuth } from '@/features/auth/context/AuthContext';
 import styles from './Header.module.css';
 import { useState, useEffect } from 'react';
-import { useDispatch } from '@/services/store/store';
+import { RootState, useDispatch, useSelector } from '@/services/store/store';
 import { setSearchQuery } from '@/services/slices/catalogSlice';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/services/store/store';
+import { userSliceSelectors } from '@/services/slices/authSlice';
 
 export const Header = () => {
   const [currentTheme, setCurrentTheme] = useState<'light' | 'dark'>('light');
-  const { isAuthenticated } = useAuth();
   const dispatch = useDispatch();
+
+  const userData = useSelector(userSliceSelectors.selectUser);
   const searchQuery = useSelector((state: RootState) => state.catalog.searchQuery);
+
   const handleSearch = (query: string) => {
     dispatch(setSearchQuery(query));
   };
@@ -30,14 +30,14 @@ export const Header = () => {
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
     const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
     const theme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
+
     setCurrentTheme(theme);
     document.documentElement.classList.toggle('dark', theme === 'dark');
   }, []);
 
   return (
-    <header className={styles.header} data-auth={isAuthenticated ? 'true' : 'false'}>
+    <header className={styles.header} data-auth={userData ? 'true' : 'false'}>
       <div className={styles.container}>
         <div className={styles.leftSection}>
           <Link to="/" className={styles.logoLink}>
@@ -64,7 +64,7 @@ export const Header = () => {
               }`}
             />
           </button>
-          {isAuthenticated ? <UserPanel /> : <GuestPanel />}
+          {userData ? <UserPanel /> : <GuestPanel />}
         </div>
       </div>
     </header>

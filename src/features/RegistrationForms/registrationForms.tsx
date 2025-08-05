@@ -4,12 +4,14 @@ import { AuthWizard } from '../authWizard/authWizard';
 import styles from './registrationForms.module.css';
 import { Button } from '@/shared/ui/button/button';
 import { useNavigate } from 'react-router-dom';
+import { RegisterStepTwo } from '@/pages/registerStepTwo/registerStepTwo';
+import { RegisterStepThree } from '@/pages/registerStepThree/registerStepThree';
 
 export const RegistrationForms = ({ isRegister = true }) => {
   const forms = [
     <AuthFormContainer key="step1" isFirstStage={true} />,
-    <AuthFormContainer key="step2" isFirstStage={true} />, // Мок данные, заменить на другие формы
-    <AuthFormContainer key="step3" isFirstStage={true} />, // Мок данные, заменить на другие формы
+    <RegisterStepTwo key="step2" />,
+    <RegisterStepThree key="step3" />,
   ];
 
   const navigate = useNavigate();

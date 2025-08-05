@@ -1,12 +1,13 @@
 import { PAGE_TEXTS } from '@/features/authForm/ui/authForm';
 import { AuthFormUI } from '@/features/authForm/ui/authFormUI';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { RootState, useDispatch, useSelector } from '@/services/store/store';
 import { stepActions } from '@/services/slices/stepSlice';
 import { ProposalPreviewModal } from '@/features/auth/proposalPreviewModal/proposalPreviewModal';
 import { SuccessModal } from '@/features/successModal/successModal';
 import { TeachableSkill } from '@/widgets/skillCard/skillCard';
 import { usersData } from '@/shared/mocks/usersData';
+import { loginUser } from '@/services/thunk/authUser';
 
 export const AuthFormContainer = ({ isFirstStage = true }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -15,7 +16,12 @@ export const AuthFormContainer = ({ isFirstStage = true }) => {
   const [errors, setErrors] = useState({
     email: '',
     password: '',
+    passwordIsFirstStage: 'Пароль должен содержать не менее 8 знаков',
     form: '',
+  });
+  const [touched, setTouched] = useState({
+    email: false,
+    password: false,
   });
 
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
@@ -25,13 +31,91 @@ export const AuthFormContainer = ({ isFirstStage = true }) => {
   const dispatch = useDispatch();
 
   const currentStep = useSelector((state: RootState) => state.step.currentStep);
+  
+  const textContent = isFirstStage ? PAGE_TEXTS.registration : PAGE_TEXTS.firstStage;
 
-  const textContent = !isFirstStage ? PAGE_TEXTS.firstStage : PAGE_TEXTS.registration;
+  const validateEmail = (value: string) => {
+    if (!value.trim()) return 'Поле Email обязательно для заполнения';
+    if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value)) return 'Некорректный формат email';
+    return '';
+  };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const validatePassword = (value: string) => {
+    if (!value.trim()) return 'Поле Пароль обязательно для заполнения';
+    if (value.length < 8) return 'Пароль должен содержать минимум 8 символов';
+    return '';
+  };
+
+  const validateField = () => {
+    const newErrors = {
+      email: touched.email ? validateEmail(email) : '',
+      password: touched.password ? validatePassword(password) : '',
+      passwordIsFirstStage: !validatePassword(password)
+        ? 'Надёжный'
+        : 'Пароль должен содержать не менее 8 знаков',
+      form: errors.form,
+    };
+
+    const shouldShowFormError = newErrors.email || newErrors.password;
+
+    setErrors({
+      ...newErrors,
+      form: shouldShowFormError
+        ? 'Email или пароль введён неверно. Пожалуйста проверьте правильность введённых данных'
+        : newErrors.form,
+    });
+
+    if (!shouldShowFormError) {
+      setErrors({
+        email: '',
+        password: '',
+        passwordIsFirstStage: newErrors.passwordIsFirstStage,
+        form: '',
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (touched.email || touched.password) {
+      validateField();
+    }
+  }, [email, password, touched.email, touched.password]);
+
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (validateForm()) {
+    setTouched({
+      email: true,
+      password: true,
+    });
+
+    const emailError = validateEmail(email);
+    const passwordError = validatePassword(password);
+
+    if (emailError || passwordError) {
+      setErrors({
+        email: emailError,
+        password: passwordError,
+        passwordIsFirstStage: '',
+        form: 'Email или пароль введён неверно. Пожалуйста проверьте правильность введённых данных',
+      });
+      return;
+    }
+    
+    if (!isFirstStage) {
+      try {
+        await dispatch(loginUser({ email, password })).unwrap();
+      } catch {
+        setErrors(prev => ({
+          ...prev,
+          form: 'Пользователь не зарегистрирован или неверные данные',
+        }));
+      }
+      return;
+    }
+    
+    if (isFirstStage) {
       if (currentStep === 2) {
         const firstUser = usersData[0];
         const { canTeach } = firstUser;
@@ -56,70 +140,20 @@ export const AuthFormContainer = ({ isFirstStage = true }) => {
     setShowPassword(!showPassword);
   };
 
-  const validateForm = () => {
-    const newErrors = { email: '', password: '', form: '' };
-    let isValid = true;
-
-    if (!email.trim()) {
-      newErrors.email = 'Поле Email обязательно для заполнения';
-      newErrors.form =
-        'Email или пароль введён неверно. Пожалуйста проверьте правильность введённых данных';
-      isValid = false;
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      newErrors.email = 'Некорректный формат email';
-      newErrors.form =
-        'Email или пароль введён неверно. Пожалуйста проверьте правильность введённых данных';
-      isValid = false;
-    }
-
-    if (!password.trim()) {
-      newErrors.password = 'Поле Пароль обязательно для заполнения';
-      newErrors.form =
-        'Email или пароль введён неверно. Пожалуйста проверьте правильность введённых данных';
-      isValid = false;
-    } else if (password.length < 8) {
-      newErrors.password = 'Пароль должен содержать минимум 8 символов';
-      newErrors.form =
-        'Email или пароль введён неверно. Пожалуйста проверьте правильность введённых данных';
-      isValid = false;
-    }
-
-    setErrors(newErrors);
-    return isValid;
-  };
-
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
-    if (errors.email) {
-      setErrors(prev => ({ ...prev, email: '' }));
-    }
   };
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
-    if (errors.password) {
-      setErrors(prev => ({ ...prev, password: '' }));
-    }
   };
 
   const handleEmailBlur = () => {
-    if (!email.trim()) {
-      setErrors(prev => ({ ...prev, email: 'Поле Email обязательно для заполнения' }));
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      setErrors(prev => ({ ...prev, email: 'Некорректный формат email' }));
-    } else {
-      setErrors(prev => ({ ...prev, email: '' }));
-    }
+    if (!touched.email) setTouched(prev => ({ ...prev, email: true }));
   };
 
   const handlePasswordBlur = () => {
-    if (!password.trim()) {
-      setErrors(prev => ({ ...prev, password: 'Поле Пароль обязательно для заполнения' }));
-    } else if (password.length < 8) {
-      setErrors(prev => ({ ...prev, password: 'Пароль должен содержать минимум 8 символов' }));
-    } else {
-      setErrors(prev => ({ ...prev, password: '' }));
-    }
+    if (!touched.password) setTouched(prev => ({ ...prev, password: true }));
   };
 
   const handleEdit = () => {
@@ -135,7 +169,7 @@ export const AuthFormContainer = ({ isFirstStage = true }) => {
   return (
     <>
       <AuthFormUI
-        isFirstStage={!isFirstStage}
+        isFirstStage={isFirstStage}
         textContent={textContent}
         showPassword={showPassword}
         email={email}
