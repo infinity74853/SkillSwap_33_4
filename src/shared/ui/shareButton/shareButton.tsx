@@ -34,6 +34,7 @@ export const ShareButton: React.FC<ShareButtonProps> = ({
       className={`${styles.shareButton} ${className}`}
       aria-label={ariaLabel}
       title={isSupported ? 'Поделиться' : 'Копировать ссылку'}
+      data-testid="share-button"
     />
   );
 };
