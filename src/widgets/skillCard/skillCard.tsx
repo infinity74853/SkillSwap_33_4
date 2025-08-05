@@ -1,5 +1,4 @@
 import { useState, useCallback, useMemo } from 'react';
-// import { useAuth } from '@/features/auth/context/AuthContext'; //временно заменён на жёсткое значение
 import { Dropdown } from '@/shared/ui/dropdown/dropdown';
 import { LikeButton } from '@/shared/ui/likeButton/likeButton';
 import { MoreButton } from '@/shared/ui/moreButton/moreButton';
@@ -8,19 +7,10 @@ import { CopyLinkDropdownItem } from '@/features/copyLink';
 import arrowLeft from '@/app/assets/static/images/icons/arrow-chevron-left.svg';
 import arrowRight from '@/app/assets/static/images/icons/arrow-chevron-right.svg';
 import styles from './skillCard.module.css';
-
-// === Интерфейс для canTeach из usersData ===
-export interface TeachableSkill {
-  customSkillId: string;
-  name: string;
-  category: string;
-  description: string;
-  image: string[];
-}
+import { CustomSkill } from '@/entities/skill/model/types';
 
 export interface SkillCardProps {
-  skill: TeachableSkill;
-  // Пропсы для управления отображением
+  skill: CustomSkill;
   hideActions?: boolean;
   hideSliderControls?: boolean;
   renderButton?: () => React.ReactNode;
@@ -37,8 +27,8 @@ const SkillCard: React.FC<SkillCardProps> = ({
   onExchangeClick,
 }) => {
   // === Извлечение изображений ===
-  const mainImage = useMemo(() => skill.image[0] || '/placeholder.jpg', [skill.image]);
-  const previewImages = useMemo(() => skill.image.slice(1), [skill.image]);
+  const mainImage = useMemo(() => (skill.image && skill.image[0]) || '/placeholder.jpg', [skill.image]);
+  const previewImages = useMemo(() => (skill.image ? skill.image.slice(1) : []), [skill.image]);
 
   // === Все изображения для слайдера ===
   const allImages = useMemo(() => [mainImage, ...previewImages], [mainImage, previewImages]);
