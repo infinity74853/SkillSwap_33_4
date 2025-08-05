@@ -35,15 +35,15 @@ test('рендерит кнопку', () => {
   expect(button).toBeInTheDocument();
 });
 
-// test('применяет активный класс, когда isLiked = true', () => {
-//   // Переопределяем реализацию хука
-//   (useLike as jest.Mock).mockImplementation(() => ({
-//     isLiked: true,
-//     toggleLike: mockToggleLike,
-//   }));
+test('применяет активный класс, когда isLiked = true', () => {
+  // Переопределяем реализацию хука
+  (useLike as jest.Mock).mockImplementation(() => ({
+    isLiked: true,
+    toggleLike: mockToggleLike,
+  }));
 
-//   render(<LikeButton itemId="1" />);
+  render(<LikeButton itemId="1" />);
 
-//   const button = screen.getByTestId('like-button');
-//   expect(button).toHaveClass('mock-like-button-active'); // из мока CSS
-// });
+  const button = screen.getByTestId('like-button');
+  expect(button).toHaveClass('mock-like-button-active'); // из мока CSS
+});
