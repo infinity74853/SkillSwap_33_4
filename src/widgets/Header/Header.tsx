@@ -5,26 +5,17 @@ import { UserPanel } from '@/features/auth/ui/UserPanel/UserPanel';
 import { GuestPanel } from '@/features/auth/ui/GuestPanel/GuestPanel';
 import { useAuth } from '@/features/auth/context/AuthContext';
 import styles from './Header.module.css';
-import { useState, useEffect, useRef } from 'react';
-import { useDispatch, useSelector, RootState } from '@/services/store/store';
+import { useState, useEffect } from 'react';
+import { useDispatch } from '@/services/store/store';
 import { setSearchQuery } from '@/services/slices/catalogSlice';
-import { SkillsDropdown } from '@/widgets/skillsDropdown/skillsDropdown';
-import { getSkills } from '@/services/slices/skillsSlice';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/services/store/store';
 
 export const Header = () => {
   const [currentTheme, setCurrentTheme] = useState<'light' | 'dark'>('light');
   const { isAuthenticated } = useAuth();
   const dispatch = useDispatch();
-
-  const [isSkillsDropdownOpen, setIsSkillsDropdownOpen] = useState(false);
-  const skillsButtonRef = useRef<HTMLButtonElement>(null);
-
   const searchQuery = useSelector((state: RootState) => state.catalog.searchQuery);
-
-  useEffect(() => {
-    dispatch(getSkills());
-  }, [dispatch]);
-
   const handleSearch = (query: string) => {
     dispatch(setSearchQuery(query));
   };
@@ -34,15 +25,6 @@ export const Header = () => {
     setCurrentTheme(newTheme);
     document.documentElement.classList.toggle('dark', newTheme === 'dark');
     localStorage.setItem('theme', newTheme);
-  };
-
-  const toggleSkillsDropdown = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setIsSkillsDropdownOpen(prev => !prev);
-  };
-
-  const closeSkillsDropdown = () => {
-    setIsSkillsDropdownOpen(false);
   };
 
   useEffect(() => {
@@ -65,18 +47,12 @@ export const Header = () => {
             <Link to="/about" className={styles.linkAbout}>
               О проекте
             </Link>
-            <button
-              ref={skillsButtonRef}
-              className={`${styles.linkSkills} ${isSkillsDropdownOpen ? styles.active : ''}`}
-              onClick={toggleSkillsDropdown}
-              aria-expanded={isSkillsDropdownOpen}
-            >
-              Все навыки
-              <span className={styles.chevronIcon} />
-            </button>
-            {isSkillsDropdownOpen && (
-              <SkillsDropdown isOpen={isSkillsDropdownOpen} onClose={closeSkillsDropdown} />
-            )}
+            <div className={styles.linkSkillsIcon}>
+              <Link to="/all_skills" className={styles.linkSkills}>
+                Все навыки
+              </Link>
+              <div className={styles.chevronIcon}> </div>
+            </div>
           </nav>
         </div>
         <SearchInput placeholder="Искать навык" onSearch={handleSearch} value={searchQuery || ''} />

@@ -42,12 +42,9 @@
   transition: all 0.2s ease;
 }
 
-.categoryChevron:hover {
-  opacity: 1;
-}
-
 .categoryItem:hover .categoryChevron,
-.categoryItem.expanded .categoryChevron {
+.categoryItem.expanded .categoryChevron,
+.categoryChevron:hover {
   opacity: 1;
 }
 
@@ -76,7 +73,7 @@
   align-items: center;
   gap: 4px;
   cursor: pointer;
-  color: var(--color-text-link, #508826);
+  color: var(--textLink-buttonPressed, #508826);
 }
 
 .chevron {
