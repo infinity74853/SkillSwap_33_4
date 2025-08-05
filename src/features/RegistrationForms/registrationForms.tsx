@@ -1,53 +1,24 @@
+import { useSteps } from '@/shared/hooks/useSteps';
 import { AuthFormContainer } from '../authForm/container/authFormContainer';
 import { AuthWizard } from '../authWizard/authWizard';
 import styles from './registrationForms.module.css';
 import { Button } from '@/shared/ui/button/button';
 import { useNavigate } from 'react-router-dom';
-import { RegisterStepTwo } from '@/features/auth/registerStepTwo/registerStepTwo';
-import { RegisterStepThree } from '@/features/auth/registerStepThree/registerStepThree';
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from '@/services/store/store';
-import {
-  resetStepOneData,
-  resetStepThreeData,
-  resetStepTwoData,
-  setStep,
-} from '@/services/slices/registrationSlice';
 
 export const RegistrationForms = ({ isRegister = true }) => {
   const forms = [
     <AuthFormContainer key="step1" isFirstStage={true} />,
-    <RegisterStepTwo key="step2" />,
-    <RegisterStepThree key="step3" />,
+    <AuthFormContainer key="step2" isFirstStage={true} />, // Мок данные, заменить на другие формы
+    <AuthFormContainer key="step3" isFirstStage={true} />, // Мок данные, заменить на другие формы
   ];
-  const currentStep = useSelector(state => state.register.step);
-  const dispatch = useDispatch();
+
   const navigate = useNavigate();
 
+  useSteps(forms.length);
+
   const onClose = () => {
-    switch (currentStep) {
-      case 1:
-        dispatch(resetStepOneData());
-        break;
-      case 2:
-        dispatch(resetStepTwoData());
-        break;
-      case 3:
-        dispatch(resetStepThreeData());
-        break;
-      default:
-        break;
-    }
-    dispatch(setStep(1));
     navigate('/');
   };
-
-  useEffect(() => {
-    if (currentStep === null) {
-      dispatch(setStep(1));
-    }
-  }, [currentStep, dispatch]); // возможно лучше перенести в App или еще куда-то
-  // пока оставил здесь, ибо было сделано по аналогии
 
   return (
     <div className={styles.page}>

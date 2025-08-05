@@ -15,10 +15,17 @@ type ServerResponse<T> = {
   data: T;
 };
 
-type SkillResponse = ServerResponse<Skill[]>;
+type SkillResponse = ServerResponse<{
+  data: Skill;
+}>;
 
-type UsersResponse = ServerResponse<User[]>;
-type AuthResponse = ServerResponse<{ accessToken: string; refreshToken: string }>;
+type UsersResponse = ServerResponse<{
+  data: User[];
+}>;
+
+type AuthResponse = ServerResponse<{
+  data: { accessToken: string; refreshToken: string };
+}>;
 
 export const getSkillsApi = async () => {
   const res = await fetch(`${URL}/api/skills`);
@@ -29,7 +36,7 @@ export const getSkillsApi = async () => {
 export const getUsersApi = async () => {
   const res = await fetch(`${URL}/api/users/all`);
   const checkedRes = await checkResponse<UsersResponse>(res);
-  return assertSuccess(checkedRes, 'Не удалось получить навыки');
+  return assertSuccess(checkedRes, 'Не удалось получить данные о пользователях');
 };
 
 export type LoginData = {
