@@ -16,7 +16,7 @@ export const AuthFormContainer = ({ isFirstStage = true }) => {
   const [errors, setErrors] = useState({
     email: '',
     password: '',
-    passwordIsFirstStage: '',
+    passwordIsFirstStage: 'Пароль должен содержать не менее 8 знаков',
     form: '',
   });
   const [touched, setTouched] = useState({
@@ -46,7 +46,7 @@ export const AuthFormContainer = ({ isFirstStage = true }) => {
     return '';
   };
 
-  useEffect(() => {
+  const validateField = () => {
     const newErrors = {
       email: touched.email ? validateEmail(email) : '',
       password: touched.password ? validatePassword(password) : '',
@@ -64,7 +64,16 @@ export const AuthFormContainer = ({ isFirstStage = true }) => {
         ? 'Email или пароль введён неверно. Пожалуйста проверьте правильность введённых данных'
         : newErrors.form,
     });
-  }, [touched]);
+
+    if (!shouldShowFormError) {
+      setErrors({
+        email: '',
+        password: '',
+        passwordIsFirstStage: newErrors.passwordIsFirstStage,
+        form: '',
+      });
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -130,20 +139,22 @@ export const AuthFormContainer = ({ isFirstStage = true }) => {
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
-    setErrors(prev => ({ ...prev, email: '', form: '' }));
+    setTouched(prev => ({ ...prev, email: true }));
   };
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
-    setErrors(prev => ({ ...prev, password: '', form: '' }));
+    setTouched(prev => ({ ...prev, password: true }));
   };
 
   const handleEmailBlur = () => {
-    setTouched(prev => ({ ...prev, email: true }));
+    if (!touched.email) setTouched(prev => ({ ...prev, email: true }));
+    validateField();
   };
 
   const handlePasswordBlur = () => {
-    setTouched(prev => ({ ...prev, password: true }));
+    if (!touched.password) setTouched(prev => ({ ...prev, password: true }));
+    validateField();
   };
 
   const handleEdit = () => {
