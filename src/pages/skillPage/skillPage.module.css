@@ -4,32 +4,11 @@
   gap: 60px;
   max-width: 1368px;
   margin: 0 auto;
+  padding: 32px 0 60px;
 }
 
 .userOffer {
   display: grid;
   grid-template-columns: 1fr 3fr;
-  gap: 24px;
-}
-
-.userInfo {
-  width: 324px;
-  height: 444px;
-  background-color: aquamarine;
-}
-
-.sameOffers {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  max-width: 1368px;
-  background-color: aquamarine;
-}
-
-.cards {
-  display: grid;
-  flex-wrap: wrap;
-  grid-template-columns: repeat(4, 1fr);
-  justify-content: space-between;
   gap: 24px;
 }

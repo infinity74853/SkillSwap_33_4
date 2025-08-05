@@ -43,7 +43,7 @@ export const fetchCatalog = createAsyncThunk('catalog/fetch', async (_, { reject
 const catalogSlice = createSlice({
   name: 'catalog',
   initialState,
-  reducers: {    
+  reducers: {
     setSearchQuery(state, action) {
       state.searchQuery = action.payload.toLowerCase(); // Сохраняем в нижнем регистре
     },

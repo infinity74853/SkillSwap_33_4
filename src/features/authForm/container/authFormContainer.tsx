@@ -3,9 +3,10 @@ import { AuthFormUI } from '@/features/authForm/ui/authFormUI';
 import { useState } from 'react';
 import { RootState, useDispatch, useSelector } from '@/services/store/store';
 import { stepActions } from '@/services/slices/stepSlice';
-import { Skill } from '@/pages/skillPage/skillPage';
 import { ProposalPreviewModal } from '@/features/auth/proposalPreviewModal/proposalPreviewModal';
 import { SuccessModal } from '@/features/successModal/successModal';
+import { TeachableSkill } from '@/widgets/skillCard/skillCard';
+import { usersData } from '@/shared/mocks/usersData';
 
 export const AuthFormContainer = ({ isFirstStage = true }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -19,7 +20,7 @@ export const AuthFormContainer = ({ isFirstStage = true }) => {
 
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [isSuccessOpen, setIsSuccessOpen] = useState(false);
-  const [previewSkill, setPreviewSkill] = useState<Skill | null>(null);
+  const [previewSkill, setPreviewSkill] = useState<TeachableSkill | null>(null);
 
   const dispatch = useDispatch();
 
@@ -32,23 +33,21 @@ export const AuthFormContainer = ({ isFirstStage = true }) => {
 
     if (validateForm()) {
       if (currentStep === 2) {
-        const skill: Skill = {
-          id: '1',
-          title: 'Игра на барабанах',
-          category: 'Творчество и искусство / Музыка и звук',
-          description:
-            'Привет! Я играю на барабанах уже больше 10 лет — от репетиций в гараже до выступлений на сцене с живыми группами. Научу основам техники (и как не отбить себе пальцы), играть любимые ритмы и разбирать песни, импровизировать и звучать уверенно даже без паритуры',
-          image:
-            '../src/app/assets/static/images/authUserProfileImages/706f87d20b14825dacb3f1b32ca9fb7be905f467.jpg',
-          imagePreview: [
-            'https://i1.poltava.to/uploads/2021/09/2021-09-25/image1.jpg',
-            'https://b0bcebf4-d767-420b-9f5a-cccfc5015c46.selstorage.ru/iblock/472/03hqhsxyo79gldivild8evlkezaf1vzm.jpg',
-            'https://st4.depositphotos.com/22740078/25330/i/450/depositphotos_253309794-stock-photo-playing-the-drum-cut-out.jpg',
-            'https://st.depositphotos.com/1034582/3737/i/450/depositphotos_37377787-stock-photo man-playing-the-drums.jpg',
-          ],
+        const firstUser = usersData[0]; // или выберите нужного пользователя
+        const { canTeach } = firstUser;
+
+        const skill: TeachableSkill = {
+          customSkillId: canTeach.customSkillId,
+          name: canTeach.name,
+          category: `${canTeach.category} / ${canTeach.subcategory}`,
+          description: canTeach.description,
+          image: canTeach.image || ['/placeholder.jpg'], // защита от пустого
         };
         setPreviewSkill(skill);
         setIsPreviewOpen(true);
+
+        // Сохраняем userId для передачи в ProposalPreviewModal
+        localStorage.setItem('registrationUserId', firstUser._id);
       } else {
         // Логика отправки формы
         dispatch(stepActions.nextStep());
@@ -137,13 +136,14 @@ export const AuthFormContainer = ({ isFirstStage = true }) => {
           isOpen={isPreviewOpen}
           onClose={() => setIsPreviewOpen(false)}
           skill={previewSkill}
+          userId={localStorage.getItem('registrationUserId') || ''}
           onEdit={handleEdit}
           onSuccess={handleSuccess}
         />
       )}
 
       {/* Модальное окно успешного создания предложения */}
-      {isSuccessOpen && <SuccessModal />}
+      {isSuccessOpen && <SuccessModal onClose={() => setIsSuccessOpen(false)} />}
     </>
   );
 };

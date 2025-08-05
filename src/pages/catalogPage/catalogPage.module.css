@@ -2,7 +2,7 @@
   margin: auto;
   display: grid;
   padding: 36px;
-  grid-template-columns: auto auto;
+  grid-template-columns: 324px auto;
   gap: 24px;
   max-width: 1440px;
 }

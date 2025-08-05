@@ -20,7 +20,7 @@
   --rdp-day-width: 32px;
   --rdp-day_button-height: 32px;
   --rdp-day_button-width: 32px;
-  --rdp-months-gap: 0px;
+  --rdp-months-gap: 0;
 }
 
 .nav {
@@ -69,7 +69,7 @@
 
 .day {
   font-size: 12px;
-  padding: 0px;
+  padding: 0;
 }
 
 .selected {

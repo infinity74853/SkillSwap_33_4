@@ -1,13 +1,13 @@
 import editIcon from '@/app/assets/static/images/icons/edit.svg';
 import styles from './proposalPreviewModal.module.css';
-import SkillCard from '@/widgets/skillCard/skillCard';
-import { Skill } from '@/pages/skillPage/skillPage';
+import SkillCard, { TeachableSkill } from '@/widgets/skillCard/skillCard';
 import { Modal } from '@/features/modal/modal';
 
 interface ProposalPreviewModalProps {
   isOpen: boolean;
   onClose: () => void;
-  skill: Skill;
+  skill: TeachableSkill;
+  userId: string;
   onEdit: () => void;
   onSuccess: () => void;
 }
@@ -16,6 +16,7 @@ export const ProposalPreviewModal: React.FC<ProposalPreviewModalProps> = ({
   isOpen,
   onClose,
   skill,
+  userId,
   onEdit,
   onSuccess,
 }) => {
@@ -31,7 +32,7 @@ export const ProposalPreviewModal: React.FC<ProposalPreviewModalProps> = ({
       // Передаём весь контент — карточку + кнопки — через children
       children={
         <SkillCard
-          className={styles.skillCard}
+          className={`${styles.skillCard} ${styles.skillDetails}`}
           skill={skill}
           hideActions
           hideSliderControls
@@ -49,7 +50,17 @@ export const ProposalPreviewModal: React.FC<ProposalPreviewModalProps> = ({
                 <button
                   type="button"
                   className={`${styles.primaryButton} ${styles.button}`}
-                  onClick={onSuccess}
+                  onClick={() => {
+                    // Защита от undefined
+                    if (userId) {
+                      // Сохраняем данные для передачи в SuccessModal
+                      localStorage.setItem(
+                        'postProposalRedirect',
+                        JSON.stringify({ userId, skill }),
+                      );
+                    }
+                    onSuccess(); // → SuccessModal
+                  }}
                 >
                   Готово
                 </button>

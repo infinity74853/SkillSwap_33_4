@@ -1,7 +1,5 @@
 import { MainLayout } from '@/widgets/Layout/MainLayout';
 import ProfileDetailsPage from '@/pages/profileDetails/ProfileDetailsPage';
-import TextTestComponent from '@/widgets/TestComponent/TestComponent';
-import Catalog from '@/widgets/catalog/catalog';
 import './styles/index.css';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import { Suspense, useEffect } from 'react';
@@ -10,11 +8,11 @@ import { useDispatch } from '@/services/store/store';
 import { initializeLikes } from '@/services/slices/likeSlice';
 import { fetchCatalog } from '@/services/slices/catalogSlice';
 import { SuccessModal } from '@/features/successModal/successModal';
-import { RegistrationForms } from '@/features/registrationForms/registrationForms';
+import { RegistrationForms } from '@/features/RegistrationForms/registrationForms';
 import { ErrorPage } from '@/pages/ErrorPage/ErrorPage';
 import SkillPage from '@/pages/skillPage/skillPage';
 import { CatalogPage } from '@/pages/catalogPage/catalogPage';
-import './styles/index.css';
+import { fetchUser } from '@/services/thunk/authUser';
 
 function App() {
   const location = useLocation();
@@ -23,6 +21,7 @@ function App() {
 
   useEffect(() => {
     dispatch(initializeLikes());
+    dispatch(fetchUser());
     dispatch(fetchCatalog());
   }, [dispatch]);
 
@@ -42,10 +41,7 @@ function App() {
           {/* index-маршрут для корневого пути "/" */}
           <Route index element={<CatalogPage />} />
 
-          <Route
-            path="/profile/details"
-            element={<ProfileDetailsPage />}
-          />
+          <Route path="/profile/details" element={<ProfileDetailsPage />} />
           <Route
             path="/profile/favorites"
             element={
@@ -66,7 +62,7 @@ function App() {
           path="/login"
           element={
             <ProtectedRoute onlyUnAuth>
-              <>{/* Страница логина, когда будет готова */}</>
+              <RegistrationForms isRegister={false} />
             </ProtectedRoute>
           }
         />
@@ -89,7 +85,16 @@ function App() {
       {backgroundLocation && (
         <Routes>
           {/* Руты для модалок */}
-          <Route path="/success" element={<SuccessModal />} />
+          <Route
+            path="/success"
+            element={
+              <SuccessModal
+                onClose={function (): void {
+                  throw new Error('Function not implemented.');
+                }}
+              />
+            }
+          />
           <Route
             path="/register/preview"
             element={

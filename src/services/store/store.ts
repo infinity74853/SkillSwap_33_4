@@ -6,19 +6,25 @@ import {
 } from 'react-redux';
 
 import { registrationReducer } from '@/services/slices/registrationSlice';
+import catalogReducer from '@/services/slices/catalogSlice';
+import exchangeReducer from '@/services/slices/exchangeSlice';
+import { skillsReducer } from '../slices/skillsSlice';
+
 import stepsSlice from '@/services/slices/stepSlice';
 import filtersReducer from '@/services/slices/filtersSlice';
 import likeReducer from '@/services/slices/likeSlice';
-import catalogReducer from '@/services/slices/catalogSlice';
-import exchangeReducer from '@/services/slices/exchangeSlice';
+
+import authSlice from '../slices/authSlice';
 
 export const rootReducer = combineSlices({
   register: registrationReducer,
+  catalog: catalogReducer,
+  exchange: exchangeReducer,
+  skills: skillsReducer,
   [stepsSlice.name]: stepsSlice.reducer,
   filters: filtersReducer,
   likes: likeReducer,
-  catalog: catalogReducer,
-  exchange: exchangeReducer,
+  [authSlice.name]: authSlice.reducer,
 });
 
 const store = configureStore({
