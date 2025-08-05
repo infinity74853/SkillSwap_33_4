@@ -1,49 +1,46 @@
-// likeButton.test.tsx
 import { render, screen } from '@testing-library/react';
-import '@testing-library/jest-dom';
+import { beforeEach, test, expect, vi } from 'vitest';
 import { LikeButton } from './likeButton';
 import { useLike } from '@/shared/hooks/useLike';
 
-// Мокаем CSS-модуль
-jest.mock('./likeButton.module.css', () => ({
-  likeButton: 'mock-like-button',
-  likeButtonActive: 'mock-like-button-active',
+vi.mock('./likeButton.module.css', () => ({
+  default: {
+    likeButton: 'mock-like-button',
+    likeButtonActive: 'mock-like-button-active',
+  },
 }));
 
-// Мокаем хук — делаем его мок-функцией, чтобы можно было менять реализацию
-jest.mock('@/shared/hooks/useLike');
+vi.mock('@/shared/hooks/useLike');
 
-// Объявляем мок-функцию для toggleLike
-const mockToggleLike = jest.fn();
+const mockToggleLike = vi.fn();
 
-// Очистка перед каждым тестом
+const mockedUseLike = vi.mocked(useLike);
+
 beforeEach(() => {
-  jest.clearAllMocks();
-  // Настраиваем поведение по умолчанию
-  (useLike as jest.Mock).mockImplementation(() => ({
-    isLiked: false,
-    toggleLike: mockToggleLike,
-  }));
-});
+  vi.clearAllMocks();
 
-// --- Тесты ---
+  mockedUseLike.mockReturnValue({
+    isLiked: false,
+    isLoading: false,
+    toggleLike: mockToggleLike,
+  });
+});
 
 test('рендерит кнопку', () => {
   render(<LikeButton itemId="1" />);
-
   const button = screen.getByRole('button');
   expect(button).toBeInTheDocument();
 });
 
 test('применяет активный класс, когда isLiked = true', () => {
-  // Переопределяем реализацию хука
-  (useLike as jest.Mock).mockImplementation(() => ({
+  mockedUseLike.mockReturnValue({
     isLiked: true,
+    isLoading: false,
     toggleLike: mockToggleLike,
-  }));
+  });
 
   render(<LikeButton itemId="1" />);
 
-  const button = screen.getByTestId('like-button');
-  expect(button).toHaveClass('mock-like-button-active'); // из мока CSS
+  const button = screen.getByRole('button');
+  expect(button).toHaveClass('mock-like-button-active');
 });
