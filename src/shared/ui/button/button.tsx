@@ -6,7 +6,6 @@ export type TButtonProps = {
   onClick?: () => void;
   disabled?: boolean;
   type?: 'primary' | 'secondary' | 'tertiary' | 'quaternary';
-  htmlType?: 'submit' | 'reset' | 'button';
 };
 
 export const Button: React.FC<TButtonProps> = ({
@@ -14,7 +13,6 @@ export const Button: React.FC<TButtonProps> = ({
   onClick,
   disabled = false,
   type = 'primary',
-  htmlType,
 }) => {
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (disabled) return;
@@ -30,7 +28,6 @@ export const Button: React.FC<TButtonProps> = ({
       onClick={handleClick}
       disabled={disabled}
       aria-disabled={disabled}
-      type={htmlType}
     >
       <span className={styles.content}>{children}</span>
     </button>

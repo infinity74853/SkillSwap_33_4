@@ -15,6 +15,7 @@ export const Header = () => {
   const [currentTheme, setCurrentTheme] = useState<'light' | 'dark'>('light');
   const { isAuthenticated } = useAuth();
   const dispatch = useDispatch();
+
   const [isSkillsDropdownOpen, setIsSkillsDropdownOpen] = useState(false);
   const skillsButtonRef = useRef<HTMLButtonElement>(null);
 

@@ -60,6 +60,7 @@ export const RegisterStepThree: FC = () => {
         return value.every(file => file.size <= 2 * 1024 * 1024);
       }),
   });
+
   const {
     register,
     handleSubmit,
@@ -75,6 +76,7 @@ export const RegisterStepThree: FC = () => {
     mode: 'onBlur',
     defaultValues: { ...defaultValues, images: undefined },
   });
+
   const selectedCategory = watch('skillCategory') || '';
   const subcategoryOptions = useSelector(state =>
     getSubcategoriesByCategory(state, selectedCategory),
@@ -94,6 +96,7 @@ export const RegisterStepThree: FC = () => {
       setValue('skillSubCategory', '');
     }
   }, [subcategoryOptions, clearErrors, setValue]);
+
   return (
     <div className={styles.registrationContainer}>
       <form

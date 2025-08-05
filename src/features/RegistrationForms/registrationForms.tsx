@@ -1,3 +1,4 @@
+import { useSteps } from '@/shared/hooks/useSteps';
 import { AuthFormContainer } from '../authForm/container/authFormContainer';
 import { AuthWizard } from '../authWizard/authWizard';
 import styles from './registrationForms.module.css';
@@ -20,34 +21,14 @@ export const RegistrationForms = ({ isRegister = true }) => {
     <RegisterStepTwo key="step2" />,
     <RegisterStepThree key="step3" />,
   ];
-  const currentStep = useSelector(state => state.register.step);
-  const dispatch = useDispatch();
+
   const navigate = useNavigate();
 
+  useSteps(forms.length);
+
   const onClose = () => {
-    switch (currentStep) {
-      case 1:
-        dispatch(resetStepOneData());
-        break;
-      case 2:
-        dispatch(resetStepTwoData());
-        break;
-      case 3:
-        dispatch(resetStepThreeData());
-        break;
-      default:
-        break;
-    }
-    dispatch(setStep(1));
     navigate('/');
   };
-
-  useEffect(() => {
-    if (currentStep === null) {
-      dispatch(setStep(1));
-    }
-  }, [currentStep, dispatch]); // возможно лучше перенести в App или еще куда-то
-  // пока оставил здесь, ибо было сделано по аналогии
 
   return (
     <div className={styles.page}>

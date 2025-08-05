@@ -24,6 +24,13 @@ export const RegisterStepTwo: FC = () => {
   const dispatch = useDispatch();
   const defaultValues = useSelector(state => state.register.stepTwoData);
   const genders = ['Мужской', 'Женский'];
+
+  const rawSkills = useSelector(getCategoriesSelector);
+  const skills = rawSkills.map(category => ({
+    label: category,
+    value: category,
+  }));
+
   const schema = yup.object({
     name: yup
       .string()
@@ -51,14 +58,11 @@ export const RegisterStepTwo: FC = () => {
         const [day, month, year] = value.split('.');
         const birthDate = new Date(`${year}-${month}-${day}`);
         const today = new Date();
-
         let age = today.getFullYear() - birthDate.getFullYear();
         const monthDiff = today.getMonth() - birthDate.getMonth();
-
         if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
           age--;
         }
-
         return age >= 12 && age <= 100;
       }),
     city: yup
@@ -70,12 +74,12 @@ export const RegisterStepTwo: FC = () => {
       .array()
       .min(1, 'Выберите хотя бы одну категорию')
       .required('Категория обязательна'),
-
     skillSubCategory: yup
       .array()
       .min(1, 'Выберите хотя бы одну подкатегорию')
       .required('Подкатегория обязательна'),
   });
+
   const {
     register,
     handleSubmit,
@@ -90,11 +94,7 @@ export const RegisterStepTwo: FC = () => {
     mode: 'onBlur',
     defaultValues: { ...defaultValues },
   });
-  const rawSkills = useSelector(getCategoriesSelector);
-  const skills = rawSkills.map(category => ({
-    label: category,
-    value: category,
-  }));
+
   const selectedCategories = watch('categories') || [];
   const subcategoryOptions = useSelector(state =>
     getSubcategoriesByCategory(state, selectedCategories),
@@ -102,6 +102,7 @@ export const RegisterStepTwo: FC = () => {
     label: category,
     value: category,
   }));
+
   return (
     <div className={styles.registrationContainer}>
       <form
@@ -125,7 +126,7 @@ export const RegisterStepTwo: FC = () => {
       >
         <div className={styles.logoContainer}>
           <label htmlFor="avatar" className={styles.avatarLabel}>
-            <img className={styles.avatarLabelPlusIcon} src={plusIcon} />
+            <img className={styles.avatarLabelPlusIcon} src={plusIcon} alt="add avatar" />
           </label>
           <input id="avatar" className={styles.avatarInput} type="file" />
         </div>
@@ -146,7 +147,6 @@ export const RegisterStepTwo: FC = () => {
           control={control}
           render={({ field }) => {
             const value = field.value ?? '';
-
             return (
               <div className={styles.datePickerWrapper}>
                 <TextInput
@@ -162,13 +162,10 @@ export const RegisterStepTwo: FC = () => {
                   error={errors.date?.message}
                   hideError={isDatePickerOpen}
                 />
-
                 {isDatePickerOpen && (
                   <CustomDatePicker
                     selected={selectedDate}
-                    onSelect={(date?: Date) => {
-                      setSelectedDate(date);
-                    }}
+                    onSelect={(date?: Date) => setSelectedDate(date)}
                     onCancelClick={() => {
                       setDatePicker(false);
                       setSelectedDate(undefined);
@@ -214,7 +211,7 @@ export const RegisterStepTwo: FC = () => {
               onFocus={() => clearErrors('gender')}
             />
           )}
-        ></Controller>
+        />
         <Controller
           name="city"
           control={control}
@@ -232,9 +229,7 @@ export const RegisterStepTwo: FC = () => {
               placeholder="Не указан"
               suggestions={russianCities}
               error={errors.city?.message || '  '}
-              onFocus={() => {
-                clearErrors('city');
-              }}
+              onFocus={() => clearErrors('city')}
             />
           )}
         />
