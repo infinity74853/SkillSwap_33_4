@@ -9,6 +9,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useDispatch } from '@/services/store/store';
 import { setSearchQuery } from '@/services/slices/catalogSlice';
 import { SkillsDropdown } from '@/widgets/skillsDropdown/skillsDropdown';
+import { getSkills } from '@/services/slices/skillsSlice';
 
 export const Header = () => {
   const [currentTheme, setCurrentTheme] = useState<'light' | 'dark'>('light');
@@ -16,6 +17,10 @@ export const Header = () => {
   const dispatch = useDispatch();
   const [isSkillsDropdownOpen, setIsSkillsDropdownOpen] = useState(false);
   const skillsButtonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    dispatch(getSkills());
+  }, [dispatch]);
 
   const handleSearch = (query: string) => {
     dispatch(setSearchQuery(query));
@@ -29,7 +34,7 @@ export const Header = () => {
   };
 
   const toggleSkillsDropdown = (e: React.MouseEvent) => {
-    e.stopPropagation(); 
+    e.stopPropagation();
     setIsSkillsDropdownOpen(prev => !prev);
   };
 

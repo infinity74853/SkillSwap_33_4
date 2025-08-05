@@ -2,6 +2,8 @@ import React, { useRef, useEffect, useState } from 'react';
 import { skillsCategories, skillsMapping } from '@/shared/lib/categories';
 import { useClickOutside } from '@/shared/hooks/useClickOutside';
 import styles from './SkillsDropdown.module.css';
+import { useSelector } from '@/services/store/store';
+import { getSkillsSelector } from '@/services/slices/skillsSlice';
 
 interface SkillsDropdownProps {
   isOpen: boolean;
@@ -11,6 +13,7 @@ interface SkillsDropdownProps {
 export const SkillsDropdown: React.FC<SkillsDropdownProps> = ({ isOpen, onClose }) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const skills = useSelector(getSkillsSelector);
 
   useClickOutside(dropdownRef, () => {
     if (isOpen) {
@@ -27,6 +30,18 @@ export const SkillsDropdown: React.FC<SkillsDropdownProps> = ({ isOpen, onClose 
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  // Группируем навыки по категориям
+  const groupedSkills = skills.reduce(
+    (acc, skill) => {
+      if (!acc[skill.category]) {
+        acc[skill.category] = new Set();
+      }
+      acc[skill.category].add(skill.subcategory);
+      return acc;
+    },
+    {} as Record<string, Set<string>>,
+  );
 
   if (!isOpen) return null;
 
@@ -61,7 +76,13 @@ export const SkillsDropdown: React.FC<SkillsDropdownProps> = ({ isOpen, onClose 
     </div>
   );
 
-  const categories = Object.entries(skillsCategories);
+  const categories = Object.entries(skillsCategories).map(([category, subcategories]) => {
+    const actualSubcategories = groupedSkills[category]
+      ? Array.from(groupedSkills[category])
+      : subcategories;
+    return [category, actualSubcategories] as [string, string[]];
+  });
+
   const firstColumnCategories = [categories[0], categories[2], categories[4]];
   const secondColumnCategories = [categories[1], categories[3], categories[5]];
 
@@ -73,13 +94,13 @@ export const SkillsDropdown: React.FC<SkillsDropdownProps> = ({ isOpen, onClose 
             <div className={styles.skillscolumn}>
               {firstColumnCategories.map(([skillscategory, subcategories]) => {
                 const { color, icon } = skillsMapping[skillscategory as keyof typeof skillsMapping];
-                return renderCategory(skillscategory, [...subcategories], icon, color);
+                return renderCategory(skillscategory, subcategories, icon, color);
               })}
             </div>
             <div className={styles.skillscolumn}>
               {secondColumnCategories.map(([skillscategory, subcategories]) => {
                 const { color, icon } = skillsMapping[skillscategory as keyof typeof skillsMapping];
-                return renderCategory(skillscategory, [...subcategories], icon, color);
+                return renderCategory(skillscategory, subcategories, icon, color);
               })}
             </div>
           </>
@@ -88,7 +109,7 @@ export const SkillsDropdown: React.FC<SkillsDropdownProps> = ({ isOpen, onClose 
           <div className={styles.skillscolumn}>
             {categories.map(([skillscategory, subcategories]) => {
               const { color, icon } = skillsMapping[skillscategory as keyof typeof skillsMapping];
-              return renderCategory(skillscategory, [...subcategories], icon, color);
+              return renderCategory(skillscategory, subcategories, icon, color);
             })}
           </div>
         )}
