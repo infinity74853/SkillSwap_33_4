@@ -1,4 +1,4 @@
-import { SkillCategory, SkillSubcategory } from '@/entities/skill/model/types';
+import { SkillCategory } from '@/entities/skill/model/types';
 import { skillsCategories } from '@/shared/lib/categories';
 import { russianCities } from '@/shared/lib/cities';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';

@@ -178,7 +178,8 @@ export const RegisterStepThree: FC = () => {
             children="Назад"
             type="quaternary"
             onClick={() => {
-              (dispatch(setStep(2)), dispatch(resetStepThreeData()));
+              dispatch(setStep(2));
+              dispatch(resetStepThreeData());
             }}
           />
           <Button

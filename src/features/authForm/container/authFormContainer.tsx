@@ -31,8 +31,8 @@ export const AuthFormContainer = ({ isFirstStage = true }) => {
   const dispatch = useDispatch();
 
   const currentStep = useSelector((state: RootState) => state.step.currentStep);
-
-  const textContent = !isFirstStage ? PAGE_TEXTS.firstStage : PAGE_TEXTS.registration;
+  
+  const textContent = isFirstStage ? PAGE_TEXTS.registration : PAGE_TEXTS.firstStage;
 
   const validateEmail = (value: string) => {
     if (!value.trim()) return 'Поле Email обязательно для заполнения';
@@ -75,6 +75,13 @@ export const AuthFormContainer = ({ isFirstStage = true }) => {
     }
   };
 
+  useEffect(() => {
+    if (touched.email || touched.password) {
+      validateField();
+    }
+  }, [email, password, touched.email, touched.password]);
+
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -95,7 +102,7 @@ export const AuthFormContainer = ({ isFirstStage = true }) => {
       });
       return;
     }
-
+    
     if (!isFirstStage) {
       try {
         await dispatch(loginUser({ email, password })).unwrap();
@@ -105,31 +112,27 @@ export const AuthFormContainer = ({ isFirstStage = true }) => {
           form: 'Пользователь не зарегистрирован или неверные данные',
         }));
       }
+      return;
     }
-
+    
     if (isFirstStage) {
-      dispatch(stepActions.nextStep());
-    }
+      if (currentStep === 2) {
+        const firstUser = usersData[0];
+        const { canTeach } = firstUser;
 
-    if (currentStep === 2) {
-      const firstUser = usersData[0]; // или выберите нужного пользователя
-      const { canTeach } = firstUser;
-
-      const skill: TeachableSkill = {
-        customSkillId: canTeach.customSkillId,
-        name: canTeach.name,
-        category: `${canTeach.category} / ${canTeach.subcategory}`,
-        description: canTeach.description,
-        image: canTeach.image || ['/placeholder.jpg'], // защита от пустого
-      };
-      setPreviewSkill(skill);
-      setIsPreviewOpen(true);
-
-      // Сохраняем userId для передачи в ProposalPreviewModal
-      localStorage.setItem('registrationUserId', firstUser._id);
-    } else {
-      // Логика отправки формы
-      //dispatch(stepActions.nextStep());
+        const skill: TeachableSkill = {
+          customSkillId: canTeach.customSkillId,
+          name: canTeach.name,
+          category: `${canTeach.category} / ${canTeach.subcategory}`,
+          description: canTeach.description,
+          image: canTeach.image || ['/placeholder.jpg'],
+        };
+        setPreviewSkill(skill);
+        setIsPreviewOpen(true);
+        localStorage.setItem('registrationUserId', firstUser._id);
+      } else {
+        dispatch(stepActions.nextStep());
+      }
     }
   };
 
@@ -139,22 +142,18 @@ export const AuthFormContainer = ({ isFirstStage = true }) => {
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
-    setTouched(prev => ({ ...prev, email: true }));
   };
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
-    setTouched(prev => ({ ...prev, password: true }));
   };
 
   const handleEmailBlur = () => {
     if (!touched.email) setTouched(prev => ({ ...prev, email: true }));
-    validateField();
   };
 
   const handlePasswordBlur = () => {
     if (!touched.password) setTouched(prev => ({ ...prev, password: true }));
-    validateField();
   };
 
   const handleEdit = () => {
@@ -170,7 +169,7 @@ export const AuthFormContainer = ({ isFirstStage = true }) => {
   return (
     <>
       <AuthFormUI
-        isFirstStage={!isFirstStage}
+        isFirstStage={isFirstStage}
         textContent={textContent}
         showPassword={showPassword}
         email={email}
@@ -184,7 +183,6 @@ export const AuthFormContainer = ({ isFirstStage = true }) => {
         handlePasswordBlur={handlePasswordBlur}
       />
 
-      {/* Модальное окно предпросмотра */}
       {isPreviewOpen && previewSkill && (
         <ProposalPreviewModal
           isOpen={isPreviewOpen}
@@ -196,7 +194,6 @@ export const AuthFormContainer = ({ isFirstStage = true }) => {
         />
       )}
 
-      {/* Модальное окно успешного создания предложения */}
       {isSuccessOpen && <SuccessModal onClose={() => setIsSuccessOpen(false)} />}
     </>
   );

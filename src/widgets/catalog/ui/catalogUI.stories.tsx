@@ -16,7 +16,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// Обновляем истории в соответствии с новыми пропсами
+// Этот код станет правильным после исправления функции generateProfiles
 export const Default: Story = {
   args: {
     sections: [

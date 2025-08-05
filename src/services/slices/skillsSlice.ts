@@ -13,7 +13,10 @@ const initialState: SkillsState = {
   loading: false,
   error: undefined,
 };
-export const getSkills = createAsyncThunk('skills/getAll', async () => getSkillsApi());
+// СТАЛО
+export const getSkills = createAsyncThunk<{ data: Skill[] }>('skills/getAll', async () =>
+  getSkillsApi(),
+);
 
 const skillsSlice = createSlice({
   name: 'skills',

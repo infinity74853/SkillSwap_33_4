@@ -5,14 +5,16 @@ import { UserPanel } from '@/features/auth/ui/UserPanel/UserPanel';
 import { GuestPanel } from '@/features/auth/ui/GuestPanel/GuestPanel';
 import styles from './Header.module.css';
 import { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from '@/services/store/store';
+import { RootState, useDispatch, useSelector } from '@/services/store/store';
 import { setSearchQuery } from '@/services/slices/catalogSlice';
 import { userSliceSelectors } from '@/services/slices/authSlice';
 
 export const Header = () => {
   const [currentTheme, setCurrentTheme] = useState<'light' | 'dark'>('light');
   const dispatch = useDispatch();
+
   const userData = useSelector(userSliceSelectors.selectUser);
+  const searchQuery = useSelector((state: RootState) => state.catalog.searchQuery);
 
   const handleSearch = (query: string) => {
     dispatch(setSearchQuery(query));
@@ -45,13 +47,15 @@ export const Header = () => {
             <Link to="/about" className={styles.linkAbout}>
               О проекте
             </Link>
-            <Link to="/all_skills" className={styles.linkSkills}>
-              Все навыки
-            </Link>
-            <div className={styles.chevronIcon}> </div>
+            <div className={styles.linkSkillsIcon}>
+              <Link to="/all_skills" className={styles.linkSkills}>
+                Все навыки
+              </Link>
+              <div className={styles.chevronIcon}> </div>
+            </div>
           </nav>
         </div>
-        <SearchInput placeholder="Искать навык" onSearch={handleSearch} />
+        <SearchInput placeholder="Искать навык" onSearch={handleSearch} value={searchQuery || ''} />
         <div className={styles.rightSection}>
           <button className={styles.themeToggle} onClick={toggleTheme}>
             <span

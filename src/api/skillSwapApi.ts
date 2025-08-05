@@ -16,7 +16,7 @@ type ServerResponse<T> = {
 };
 
 type SkillResponse = ServerResponse<{
-  data: Skill;
+  data: Skill[];
 }>;
 
 type UsersResponse = ServerResponse<{
