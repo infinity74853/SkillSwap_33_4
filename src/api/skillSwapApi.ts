@@ -1,5 +1,7 @@
 import { Skill } from '@/entities/skill/model/types';
 import { User } from '@/entities/user/model/types';
+import { TServerResponse } from '@/shared/utils/api';
+import { getCookie } from '@/shared/utils/cookies';
 
 const URL = import.meta.env.VITE_SKILLSWAP_API_URL;
 
@@ -9,10 +11,6 @@ const checkResponse = <T>(res: Response): Promise<T> =>
 const assertSuccess = <T>(response: { success: boolean; data: T }, errorText: string) => {
   if (!response.success) throw new Error(errorText);
   return response.data;
-};
-type ServerResponse<T> = {
-  success: boolean;
-  data: T;
 };
 
 type SkillResponse = ServerResponse<{
@@ -54,4 +52,35 @@ export const loginUserApi = async (data: LoginData) => {
   });
   const checkedRes = await checkResponse<AuthResponse>(res);
   return assertSuccess(checkedRes, 'Не удалось залогиниться');
+};
+
+// Добавляем тип для обновления профиля
+export type TUpdateProfileData = {
+  name: string;
+  birthdate: string;
+  gender: 'Мужской' | 'Женский';
+  city: string;
+  description: string;
+  avatar?: string; 
+};
+
+export type TUpdateProfileResponse = TServerResponse<{
+  user: User;
+}>;
+
+// Добавляем метод для обновления профиля
+export const updateProfileApi = (data: TUpdateProfileData): Promise<TUpdateProfileResponse> => {
+  return fetch(`${URL}/api/profile`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8',
+      authorization: getCookie('accessToken') || '',
+    },
+    body: JSON.stringify(data),
+  }).then(res => checkResponse<TUpdateProfileResponse>(res));
+};
+
+export type ServerResponse<T> = {
+  success: boolean;
+  data: T;
 };
