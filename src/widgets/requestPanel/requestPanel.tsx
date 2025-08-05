@@ -34,10 +34,9 @@ const RequestPanel = () => {
                 <div className={styles.closeIcon}></div>
               </button>
             </div>
-            <button
-              className={styles.goBtn}
-              onClick={() => console.log('Переход к обмену', request.id)}
-            >
+            <button className={styles.goBtn}>
+              {/* Здесь будет логика перехода к обмену
+                // Например: navigate(`/exchange/${request.id}`);*/}
               Перейти
             </button>
           </div>

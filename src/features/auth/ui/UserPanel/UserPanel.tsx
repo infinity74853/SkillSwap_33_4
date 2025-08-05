@@ -36,7 +36,7 @@ export const UserPanel = () => {
       <div className={styles.iconsContainer}>
         <div className={styles.iconWrapper} onClick={toggleNotifications}>
           <span className={styles.notificationIcon}></span>
-          <span className={styles.notificationBadge}>4</span>
+          <span className={styles.notificationBadge}></span>
         </div>
         <div className={styles.iconWrapper}>
           <span className={styles.likeIcon}></span>

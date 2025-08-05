@@ -19,7 +19,9 @@ type NotificationMenuProps = {
 
 export const NotificationMenu = ({ isOpen }: NotificationMenuProps) => {
   if (!isOpen) return null;
-
+  {
+    /* Временные моковые данные */
+  }
   const notifications: Notification[] = [
     {
       id: '1',
