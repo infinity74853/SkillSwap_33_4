@@ -3,8 +3,8 @@ import { AuthWizard } from '../authWizard/authWizard';
 import styles from './registrationForms.module.css';
 import { Button } from '@/shared/ui/button/button';
 import { useNavigate } from 'react-router-dom';
-import { RegisterStepTwo } from '@/features/auth/registerStepTwo/registerStepTwo';
-import { RegisterStepThree } from '@/features/auth/registerStepThree/registerStepThree';
+import { RegisterStepTwo } from '@/pages/registerStepTwo/registerStepTwo';
+import { RegisterStepThree } from '@/pages/registerStepThree/registerStepThree';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from '@/services/store/store';
 import {

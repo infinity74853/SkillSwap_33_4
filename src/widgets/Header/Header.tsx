@@ -6,7 +6,7 @@ import { GuestPanel } from '@/features/auth/ui/GuestPanel/GuestPanel';
 import { useAuth } from '@/features/auth/context/AuthContext';
 import styles from './Header.module.css';
 import { useState, useEffect, useRef } from 'react';
-import { useDispatch } from '@/services/store/store';
+import { useDispatch, useSelector, RootState } from '@/services/store/store';
 import { setSearchQuery } from '@/services/slices/catalogSlice';
 import { SkillsDropdown } from '@/widgets/skillsDropdown/skillsDropdown';
 import { getSkills } from '@/services/slices/skillsSlice';
@@ -17,6 +17,8 @@ export const Header = () => {
   const dispatch = useDispatch();
   const [isSkillsDropdownOpen, setIsSkillsDropdownOpen] = useState(false);
   const skillsButtonRef = useRef<HTMLButtonElement>(null);
+
+  const searchQuery = useSelector((state: RootState) => state.catalog.searchQuery);
 
   useEffect(() => {
     dispatch(getSkills());
@@ -76,7 +78,7 @@ export const Header = () => {
             )}
           </nav>
         </div>
-        <SearchInput placeholder="Искать навык" onSearch={handleSearch} />
+        <SearchInput placeholder="Искать навык" onSearch={handleSearch} value={searchQuery || ''} />
         <div className={styles.rightSection}>
           <button className={styles.themeToggle} onClick={toggleTheme}>
             <span
