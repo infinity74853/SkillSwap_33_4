@@ -17,6 +17,7 @@ export const MoreButton: React.FC<MoreButtonProps> = ({
       onClick={onClick}
       className={`${styles.moreButton} ${className}`}
       aria-label={ariaLabel}
+      data-testid="more-button"
     />
   );
 };
