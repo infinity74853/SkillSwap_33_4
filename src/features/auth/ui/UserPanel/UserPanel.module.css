@@ -21,7 +21,7 @@
 }
 
 .iconWrapper:hover {
-  background-color: #deebc5;
+  background-color: var(--button-primary-hover-color);
   border-radius: 10px;
 }
 
@@ -45,14 +45,23 @@
 
 .notificationBadge {
   position: absolute;
-  top: 20px;
-  right: 1px;
-  width: 12px;
-  height: 12px;
+  top: 4px;
+  right: 0;
+  width: 18px;
+  height: 18px;
   background-color: red;
+  color: white;
   border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: bold;
   border: 2px solid white;
-  box-sizing: border-box;
+}
+
+body.menu-open {
+  overflow: hidden;
 }
 
 .userInfo {
@@ -67,7 +76,7 @@
 }
 
 .userInfo:hover {
-  background-color: #deebc5;
+  background-color: var(--button-primary-hover-color);
 }
 
 .avatar {
@@ -93,8 +102,8 @@
 .modalMenu {
   position: fixed;
   width: 260px;
-  height: 152px;
-  top: 120px; /* 80px (хедер) + 50px */
+  height: 120px;
+  top: 96px;
   background: white;
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
@@ -102,7 +111,7 @@
   z-index: 1100;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
 }
 
 /* Добавляем кастомный скролл */
@@ -120,16 +129,26 @@
   border-radius: 3px;
 }
 
-.menuItem {
+.menuItemLk {
   display: flex;
-  align-items: center;
-  justify-content: center;
   width: 100%;
-  padding: 16px 24px;
+  padding: 18px 40px;
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 16px;
+  color: #253017;
+  transition: background-color 0.2s;
+}
+
+.menuItemOut {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  width: 100%;
+  padding: 16px;
+  background: none;
+  border: none;
+  cursor: pointer;
   color: #253017;
   transition: background-color 0.2s;
 }
@@ -141,11 +160,11 @@
   background-color: #253017;
   mask: url('../../../../app/assets/static/images/icons/logout.svg') no-repeat center;
   -webkit-mask: url('../../../../app/assets/static/images/icons/logout.svg') no-repeat center;
-  margin-left: 8px;
 }
 
-.menuItem:hover {
-  background-color: #deebc5;
+.menuItemOut:hover,
+.menuItemLk:hover {
+  background-color: var(--button-primary-hover-color);
 }
 
 /* Мобильная версия */

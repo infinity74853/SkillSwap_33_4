@@ -1,5 +1,7 @@
 import { MainLayout } from '@/widgets/Layout/MainLayout';
 import ProfileDetailsPage from '@/pages/profileDetails/ProfileDetailsPage';
+import TextTestComponent from '@/widgets/TestComponent/TestComponent';
+import Catalog from '@/widgets/catalog/catalog';
 import './styles/index.css';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import { Suspense, useEffect } from 'react';
