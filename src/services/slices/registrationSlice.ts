@@ -1,8 +1,6 @@
 import { SkillCategory, SkillSubcategory } from '@/entities/skill/model/types';
-import { skillsCategories } from '@/shared/lib/categories';
 import { russianCities } from '@/shared/lib/cities';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-type AllSkillSubcategories = (typeof skillsCategories)[SkillCategory][number];
 type cities = (typeof russianCities)[number];
 
 type RegistrationState = {
@@ -17,15 +15,17 @@ type RegistrationState = {
     gender: 'Мужской' | 'Женский' | undefined;
     city: cities | undefined;
     skillCategory: SkillCategory[] | undefined;
-    skillSubCategory: AllSkillSubcategories[] | undefined;
+    skillSubCategory?: SkillSubcategory<SkillCategory>[] | undefined;
   };
 
   stepThreeData: {
     skillName: string | undefined;
     skillCategory: SkillCategory | undefined;
-    skillSubCategory: AllSkillSubcategories[] | undefined;
+    skillSubCategory: SkillSubcategory<SkillCategory> | undefined;
     description: string | undefined;
-    pics: File[] | undefined;
+    pics: string[] | undefined;
+    customSkillId: string | undefined;
+    skillSubCategoryId: string | undefined;
   };
   error: string | undefined;
   loading: boolean;
@@ -51,6 +51,8 @@ const initialState: RegistrationState = {
     skillSubCategory: undefined,
     description: undefined,
     pics: undefined,
+    customSkillId: undefined,
+    skillSubCategoryId: undefined,
   },
   error: undefined,
   loading: false,
