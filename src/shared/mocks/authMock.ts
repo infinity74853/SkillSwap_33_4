@@ -1,4 +1,5 @@
 import { CustomSkill } from '@/entities/skill/model/types';
+import { User } from '@/entities/user/model/types';
 import {
   TAuthResponse,
   TLoginData,
@@ -7,12 +8,13 @@ import {
   TUserResponse,
 } from '../utils/api';
 
-const MOCK_USER = {
+const MOCK_USER: User = {
   _id: 'user_002',
   name: 'Дмитрий',
   image: 'https://example.com/avatars/dmitry.jpg',
   city: 'Санкт-Петербург',
   birthdayDate: '1988-07-22',
+  gender: 'male',
   description: 'Фотограф с 10-летним опытом, специализация - портретная съемка',
   likes: ['фотография', 'искусство', 'преподавание'],
   createdAt: new Date(2023, 2, 18).toString(),

@@ -33,7 +33,7 @@ export const AuthFormContainer = ({ isFirstStage = true }) => {
 
     if (validateForm()) {
       if (currentStep === 2) {
-        const firstUser = usersData[0]; // или выберите нужного пользователя
+        const firstUser = usersData[0];
         const { canTeach } = firstUser;
 
         const skill: TeachableSkill = {
@@ -41,15 +41,12 @@ export const AuthFormContainer = ({ isFirstStage = true }) => {
           name: canTeach.name,
           category: `${canTeach.category} / ${canTeach.subcategory}`,
           description: canTeach.description,
-          image: canTeach.image || ['/placeholder.jpg'], // защита от пустого
+          image: canTeach.image || ['/placeholder.jpg'],
         };
         setPreviewSkill(skill);
         setIsPreviewOpen(true);
-
-        // Сохраняем userId для передачи в ProposalPreviewModal
         localStorage.setItem('registrationUserId', firstUser._id);
       } else {
-        // Логика отправки формы
         dispatch(stepActions.nextStep());
       }
     }
@@ -105,6 +102,26 @@ export const AuthFormContainer = ({ isFirstStage = true }) => {
     }
   };
 
+  const handleEmailBlur = () => {
+    if (!email.trim()) {
+      setErrors(prev => ({ ...prev, email: 'Поле Email обязательно для заполнения' }));
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      setErrors(prev => ({ ...prev, email: 'Некорректный формат email' }));
+    } else {
+      setErrors(prev => ({ ...prev, email: '' }));
+    }
+  };
+
+  const handlePasswordBlur = () => {
+    if (!password.trim()) {
+      setErrors(prev => ({ ...prev, password: 'Поле Пароль обязательно для заполнения' }));
+    } else if (password.length < 8) {
+      setErrors(prev => ({ ...prev, password: 'Пароль должен содержать минимум 8 символов' }));
+    } else {
+      setErrors(prev => ({ ...prev, password: '' }));
+    }
+  };
+
   const handleEdit = () => {
     setIsPreviewOpen(false);
     dispatch(stepActions.goToStep(2));
@@ -128,9 +145,10 @@ export const AuthFormContainer = ({ isFirstStage = true }) => {
         togglePasswordVisibility={togglePasswordVisibility}
         handleEmailChange={handleEmailChange}
         handlePasswordChange={handlePasswordChange}
+        handleEmailBlur={handleEmailBlur}
+        handlePasswordBlur={handlePasswordBlur}
       />
 
-      {/* Модальное окно предпросмотра */}
       {isPreviewOpen && previewSkill && (
         <ProposalPreviewModal
           isOpen={isPreviewOpen}
@@ -142,7 +160,6 @@ export const AuthFormContainer = ({ isFirstStage = true }) => {
         />
       )}
 
-      {/* Модальное окно успешного создания предложения */}
       {isSuccessOpen && <SuccessModal onClose={() => setIsSuccessOpen(false)} />}
     </>
   );
