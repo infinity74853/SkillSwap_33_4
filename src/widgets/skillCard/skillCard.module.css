@@ -25,8 +25,7 @@
   cursor: pointer;
 }
 
-.actionButton:hover,
-.actionButton:focus {
+.actionButton:hover {
   opacity: 0.8;
   background-color: var(--button-primary-pressed-color, #508826);
 }
