@@ -77,8 +77,18 @@ const likeSlice = createSlice({
   },
   extraReducers: builder => {
     builder
+      .addCase(initializeLikes.pending, state => {
+        state.loading = true;
+        state.error = null;
+      })
       .addCase(initializeLikes.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
         state.likedItems = action.payload;
+      })
+      .addCase(initializeLikes.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
       })
       .addCase(toggleLike.pending, state => {
         state.loading = true;
@@ -86,6 +96,7 @@ const likeSlice = createSlice({
       })
       .addCase(toggleLike.fulfilled, (state, action) => {
         state.loading = false;
+        state.error = null;
         const { itemId, liked } = action.payload;
         state.likedItems[itemId] = liked;
       })
