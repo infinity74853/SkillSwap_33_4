@@ -7,26 +7,15 @@ import { CopyLinkDropdownItem } from '@/features/copyLink';
 import arrowLeft from '@/app/assets/static/images/icons/arrow-chevron-left.svg';
 import arrowRight from '@/app/assets/static/images/icons/arrow-chevron-right.svg';
 import styles from './skillCard.module.css';
-import { SuccessModal } from '@/features/successModal/successModal';
 import { CustomSkill } from '@/entities/skill/model/types';
-
-// === Интерфейс для canTeach из usersData ===
-/*  export interface TeachableSkill {
-  customSkillId: string;
-  name: string;
-  category: string;
-  description: string;
-  image: string[];
-} */
-// ?? Что это? уже есть тип CustomSkill
 
 export interface SkillCardProps {
   skill: CustomSkill;
-  // Пропсы для управления отображением
   hideActions?: boolean;
   hideSliderControls?: boolean;
   renderButton?: () => React.ReactNode;
   className?: string;
+  onExchangeClick?: () => void;
 }
 
 const SkillCard: React.FC<SkillCardProps> = ({
@@ -35,10 +24,11 @@ const SkillCard: React.FC<SkillCardProps> = ({
   hideSliderControls = false,
   renderButton,
   className,
+  onExchangeClick,
 }) => {
   // === Извлечение изображений ===
-  const mainImage = useMemo(() => skill.image[0] || '/placeholder.jpg', [skill.image]);
-  const previewImages = useMemo(() => skill.image.slice(1), [skill.image]);
+  const mainImage = useMemo(() => (skill.image && skill.image[0]) || '/placeholder.jpg', [skill.image]);
+  const previewImages = useMemo(() => (skill.image ? skill.image.slice(1) : []), [skill.image]);
 
   // === Все изображения для слайдера ===
   const allImages = useMemo(() => [mainImage, ...previewImages], [mainImage, previewImages]);
@@ -47,7 +37,6 @@ const SkillCard: React.FC<SkillCardProps> = ({
 
   // === Состояния ===
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [isSuccessOpen, setIsSuccessOpen] = useState(false);
 
   // === Обработчики ===
   const goToPrevImage = useCallback(() => {
@@ -66,10 +55,6 @@ const SkillCard: React.FC<SkillCardProps> = ({
     },
     [totalImages],
   );
-
-  const handleExchangeProposal = useCallback(() => {
-    setIsSuccessOpen(true);
-  }, []);
 
   const dropdownItems = useMemo(
     () => [
@@ -124,7 +109,7 @@ const SkillCard: React.FC<SkillCardProps> = ({
               <button
                 type="button"
                 className={styles.button}
-                onClick={handleExchangeProposal}
+                onClick={onExchangeClick}
                 aria-label="Предложить обмен"
               >
                 Предложить обмен
@@ -194,9 +179,6 @@ const SkillCard: React.FC<SkillCardProps> = ({
           </div>
         </div>
       </article>
-
-      {/* Модальное окно успешного создания предложения */}
-      {isSuccessOpen && <SuccessModal />}
     </>
   );
 };

@@ -17,6 +17,7 @@ import { ProposalPreviewModal } from '@/features/auth/proposalPreviewModal/propo
 import { registerUser, setStep } from '@/services/slices/registrationSlice';
 import { getSkills } from '@/services/slices/skillsSlice';
 import { CustomSkill } from '@/entities/skill/model/types';
+
 function App() {
   const location = useLocation();
   const backgroundLocation = location.state && location.state.background;
@@ -29,6 +30,7 @@ function App() {
     dispatch(fetchCatalog());
     dispatch(getSkills());
   }, [dispatch]);
+
   const skill = useSelector(state => {
     return {
       name: state.register.stepThreeData.skillName ?? '',
@@ -56,7 +58,6 @@ function App() {
         <Route path="/" element={<MainLayout />}>
           {/* index-маршрут для корневого пути "/" */}
           <Route index element={<CatalogPage />} />
-
           <Route path="/profile/details" element={<ProfileDetailsPage />} />
           <Route
             path="/profile/favorites"
@@ -86,7 +87,6 @@ function App() {
           path="/register"
           element={
             <ProtectedRoute onlyUnAuth>
-              {/* Я поместил сюда RegistrationForms, так как это логичное место для страницы регистрации */}
               <RegistrationForms />
             </ProtectedRoute>
           }
@@ -101,18 +101,23 @@ function App() {
       {backgroundLocation && (
         <Routes>
           {/* Руты для модалок */}
-          <Route path="/success" element={<SuccessModal />} />
           <Route
             path="/register/preview"
             element={
               <ProposalPreviewModal
                 isOpen
-                onClose={() => dispatch(setStep(3)) && navigate(-1)}
-                onEdit={() => dispatch(setStep(3)) && navigate(-1)}
+                onClose={() => {
+                  dispatch(setStep(3));
+                  navigate(-1);
+                }}
+                onEdit={() => {
+                  dispatch(setStep(3));
+                  navigate(-1);
+                }}
                 skill={skill}
                 onSuccess={() => {
                   dispatch(registerUser());
-                  navigate('/register/success', { state: { background: '/' } });
+                  navigate('/register/success', { state: { background: location } });
                 }}
               />
             }

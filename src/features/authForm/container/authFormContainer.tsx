@@ -12,20 +12,21 @@ export const AuthFormContainer = ({ isFirstStage = true }) => {
   const [errors, setErrors] = useState({
     email: '',
     password: '',
+    passwordIsFirstStage: '',
     form: '',
   });
   const [touched, setTouched] = useState({
     email: false,
     password: false,
   });
+
   const dispatch = useDispatch();
   const currentStep = useSelector((state: RootState) => state.register.step);
-
   const textContent = !isFirstStage ? PAGE_TEXTS.firstStage : PAGE_TEXTS.registration;
 
   const validateEmail = (value: string) => {
     if (!value.trim()) return 'Поле Email обязательно для заполнения';
-    if (!/\S+@\S+\.\S+/.test(value)) return 'Некорректный формат email';
+    if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value)) return 'Некорректный формат email';
     return '';
   };
 
@@ -36,30 +37,25 @@ export const AuthFormContainer = ({ isFirstStage = true }) => {
   };
 
   useEffect(() => {
-    const emailError = touched.email ? validateEmail(email) : '';
-    const passwordError = touched.password ? validatePassword(password) : '';
-
-    const formError =
-      emailError || passwordError
+    const newErrors = {
+      email: touched.email ? validateEmail(email) : '',
+      password: touched.password ? validatePassword(password) : '',
+      passwordIsFirstStage: !validatePassword(password)
+        ? 'Надёжный'
+        : 'Пароль должен содержать не менее 8 знаков',
+      form: errors.form,
+    };
+    const shouldShowFormError = newErrors.email || newErrors.password;
+    setErrors({
+      ...newErrors,
+      form: shouldShowFormError
         ? 'Email или пароль введён неверно. Пожалуйста проверьте правильность введённых данных'
-        : errors.form;
-
-    if (
-      emailError !== errors.email ||
-      passwordError !== errors.password ||
-      formError !== errors.form
-    ) {
-      setErrors({
-        email: emailError,
-        password: passwordError,
-        form: formError,
-      });
-    }
-  }, [email, password, touched]);
+        : newErrors.form,
+    });
+  }, [email, password, touched, errors.form]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     setTouched({
       email: true,
       password: true,
@@ -72,6 +68,7 @@ export const AuthFormContainer = ({ isFirstStage = true }) => {
       setErrors({
         email: emailError,
         password: passwordError,
+        passwordIsFirstStage: '',
         form: 'Email или пароль введён неверно. Пожалуйста проверьте правильность введённых данных',
       });
       return;
@@ -80,49 +77,40 @@ export const AuthFormContainer = ({ isFirstStage = true }) => {
     if (!isFirstStage) {
       try {
         await dispatch(loginUser({ email, password })).unwrap();
-      } catch (err) {
+      } catch {
         setErrors(prev => ({
           ...prev,
           form: 'Пользователь не зарегистрирован или неверные данные',
         }));
       }
-      return;
     }
-    if (currentStep === 1 && email && password) {
+
+    if (isFirstStage && currentStep === 1 && email && password) {
       dispatch(updateStepOneData({ email, password }));
       dispatch(setStep(2));
     }
   };
+
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
-    if (!touched.email) {
-      setTouched(prev => ({ ...prev, email: true }));
-    }
-    setErrors(prev => ({ ...prev, form: '' }));
+    setErrors(prev => ({ ...prev, email: '', form: '' }));
   };
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
-    if (!touched.password) {
-      setTouched(prev => ({ ...prev, password: true }));
-    }
-    setErrors(prev => ({ ...prev, form: '' }));
+    setErrors(prev => ({ ...prev, password: '', form: '' }));
   };
 
   const handleEmailBlur = () => {
-    if (!touched.email) {
-      setTouched(prev => ({ ...prev, email: true }));
-    }
+    setTouched(prev => ({ ...prev, email: true }));
   };
 
   const handlePasswordBlur = () => {
-    if (!touched.password) {
-      setTouched(prev => ({ ...prev, password: true }));
-    }
+    setTouched(prev => ({ ...prev, password: true }));
   };
 
   return (

@@ -28,7 +28,6 @@ export const ProposalPreviewModal: React.FC<ProposalPreviewModalProps> = ({
       title="Ваше предложение"
       description="Пожалуйста, проверьте и подтвердите правильность данных"
       onClose={onClose}
-      // Передаём весь контент — карточку + кнопки — через children
       children={
         <SkillCard
           className={`${styles.skillCard} ${styles.skillDetails}`}
@@ -49,7 +48,7 @@ export const ProposalPreviewModal: React.FC<ProposalPreviewModalProps> = ({
                 <button
                   type="button"
                   className={`${styles.primaryButton} ${styles.button}`}
-                  onClick={onSuccess}
+                  onClick={onSuccess} 
                 >
                   Готово
                 </button>

@@ -18,7 +18,7 @@
 }
 
 .link:hover {
-  background-color: #deebc5;
+  background-color: var(--button-primary-hover-color);
 }
 
 .buttonLink {
@@ -36,7 +36,7 @@
   }
 
   .link {
-    width: 100%;
+    min-width: 184px;
     text-align: center;
     padding: 8px;
   }
