@@ -6,7 +6,6 @@ export const SuccessModal = ({ onClose }: { onClose: () => void }) => {
   const navigate = useNavigate();
 
   const handleDone = () => {
-    // Защита от undefined
     if (typeof onClose !== 'function') {
       console.error('onClose is not a function');
       navigate('/');
@@ -30,7 +29,6 @@ export const SuccessModal = ({ onClose }: { onClose: () => void }) => {
       navigate('/', { replace: true });
     }
 
-    // Очистка
     localStorage.removeItem('postProposalRedirect');
     localStorage.removeItem('registrationUserId');
   };
@@ -40,7 +38,8 @@ export const SuccessModal = ({ onClose }: { onClose: () => void }) => {
       title={'Ваше предложение создано'}
       type="confirmation"
       image={done}
-      onClose={onClose}
+      onClose={handleDone}
+      primaryButtonText="Готово"
       primaryButtonAction={handleDone}
     />
   );

@@ -29,7 +29,6 @@ export const ProposalPreviewModal: React.FC<ProposalPreviewModalProps> = ({
       title="Ваше предложение"
       description="Пожалуйста, проверьте и подтвердите правильность данных"
       onClose={onClose}
-      // Передаём весь контент — карточку + кнопки — через children
       children={
         <SkillCard
           className={`${styles.skillCard} ${styles.skillDetails}`}
@@ -51,15 +50,13 @@ export const ProposalPreviewModal: React.FC<ProposalPreviewModalProps> = ({
                   type="button"
                   className={`${styles.primaryButton} ${styles.button}`}
                   onClick={() => {
-                    // Защита от undefined
                     if (userId) {
-                      // Сохраняем данные для передачи в SuccessModal
                       localStorage.setItem(
                         'postProposalRedirect',
                         JSON.stringify({ userId, skill }),
                       );
                     }
-                    onSuccess(); // → SuccessModal
+                    onSuccess(); 
                   }}
                 >
                   Готово
