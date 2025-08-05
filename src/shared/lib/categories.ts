@@ -59,26 +59,26 @@ export const skillsMapping: Record<keyof typeof skillsCategories, { color: strin
   {
     'Бизнес и карьера': {
       color: '#EEE7F7',
-      icon: '/src/app/assets/static/images/iconsCategory/briefcase.svg',
+      icon: '',
     },
     'Дом и уют': {
       color: '#F7EBE5',
-      icon: '/src/app/assets/static/images/iconsCategory/home.svg',
+      icon: '',
     },
     'Здоровье и лайфстайл': {
       color: '#E9F7E7',
-      icon: '/src/app/assets/static/images/iconsCategory/lifestyle.svg',
+      icon: '',
     },
     'Иностранные языки': {
       color: '#EBE5C5',
-      icon: '/src/app/assets/static/images/iconsCategory/global.svg',
+      icon: '',
     },
     'Образование и развитие': {
       color: '#E7F2F6',
-      icon: '/src/app/assets/static/images/iconsCategory/book.svg',
+      icon: '',
     },
     'Творчество и искусство': {
       color: '#F7E7F2',
-      icon: '/src/app/assets/static/images/iconsCategory/palette.svg',
+      icon: '',
     },
   };

@@ -56,7 +56,7 @@ export const ProposalPreviewModal: React.FC<ProposalPreviewModalProps> = ({
                         JSON.stringify({ userId, skill }),
                       );
                     }
-                    onSuccess();
+                    onSuccess(); 
                   }}
                 >
                   Готово
