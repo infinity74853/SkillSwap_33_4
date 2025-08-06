@@ -1,5 +1,7 @@
+type ModalType = 'info' | 'confirmation'; // Тип модального окна
+
 export type TModalProps = {
-  type?: 'confirmation' | 'info'; // Тип модального окна
+  type?: ModalType;
   title: string; // Обязательный заголовок
   description?: string; // Описание (опционально)
   image?: string; // URL изображения (только для confirmation)
