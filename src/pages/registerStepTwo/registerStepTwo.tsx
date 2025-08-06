@@ -1,9 +1,9 @@
 import { FC, useState } from 'react';
 import styles from './registerStepTwo.module.css';
-import plusIcon from '@/app/assets/static/images/icons/add.svg';
 import { TextInput } from '@/shared/ui/textInput/textInput';
 import { CustomDatePicker } from '@/widgets/datePicker/datePicker';
 import calendarIcon from '@/app/assets/static/images/icons/calendar.svg';
+import plusIcon from '@/app/assets/static/images/icons/add.svg';
 import { CustomSelect } from '@/shared/ui/customSelect/customSelect';
 import { Autocomplete } from '@/shared/ui/autoComplete/autoComplete';
 import { MultiSelect } from '@/shared/ui/multiSelect/multiSelect';
@@ -14,20 +14,20 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { russianCities } from '@/shared/lib/cities';
 import userIcon from '@/app/assets/static/images/background/user-info.svg';
-import { resetStepTwoData, setStep, updateStepTwoData } from '@/services/slices/registrationSlice';
+import { resetStepTwoData, updateStepTwoData } from '@/services/slices/registrationSlice';
 import { useDispatch } from '@/services/store/store';
 import { RegistrationInfoPanel } from '@/shared/ui/registrationInfoPanel/registrationInfoPanel';
+import { stepActions } from '@/services/slices/stepSlice';
 
 export const RegisterStepTwo: FC = () => {
   const [isDatePickerOpen, setDatePicker] = useState(false);
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
-  const skills = Object.keys(skillsCategories).map(val => {
-    return { value: val, label: val };
-  });
   const dispatch = useDispatch();
+
+  const skills = Object.keys(skillsCategories).map(val => ({ value: val, label: val }));
   const verifiedSkills = Object.keys(skillsCategories);
   const verifiedSkillsSubcategories = Object.values(skillsCategories).flat();
-  const genders = ['Мужской', 'Женский'];
+  const genders = ['Мужской', 'Женский', 'Не указан'];
+
   const schema = yup.object({
     name: yup
       .string()
@@ -38,31 +38,28 @@ export const RegisterStepTwo: FC = () => {
     date: yup
       .string()
       .required('Укажите дату рождения')
-      .test('valid-date', 'Введите корректную дату', function (value) {
+      .test('valid-date', 'Введите корректную дату', value => {
         if (!value) return false;
         const [day, month, year] = value.split('.');
-        const date = new Date(`${year}-${month}-${day}`);
+        const date = new Date(+year, +month - 1, +day);
         return !isNaN(date.getTime());
       })
-      .test('not-future', 'Введите настоящую дату', function (value) {
+      .test('not-future', 'Введите настоящую дату', value => {
         if (!value) return true;
         const [day, month, year] = value.split('.');
-        const date = new Date(`${year}-${month}-${day}`);
+        const date = new Date(+year, +month - 1, +day);
         return date <= new Date();
       })
-      .test('age-range', 'Вам должно быть более 12 лет', function (value) {
+      .test('age-range', 'Вам должно быть более 12 лет', value => {
         if (!value) return true;
         const [day, month, year] = value.split('.');
-        const birthDate = new Date(`${year}-${month}-${day}`);
+        const birthDate = new Date(+year, +month - 1, +day);
         const today = new Date();
-
         let age = today.getFullYear() - birthDate.getFullYear();
-        const monthDiff = today.getMonth() - birthDate.getMonth();
-
-        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+        const m = today.getMonth() - birthDate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
           age--;
         }
-
         return age >= 12 && age <= 100;
       }),
     city: yup
@@ -75,13 +72,13 @@ export const RegisterStepTwo: FC = () => {
       .of(yup.string().defined().oneOf(verifiedSkills, 'Неверная категория'))
       .min(1, 'Выберите хотя бы одну категорию')
       .required('Категория обязательна'),
-
     subcategories: yup
       .array()
       .of(yup.string().defined().oneOf(verifiedSkillsSubcategories, 'Неверная подкатегория'))
       .min(1, 'Выберите хотя бы одну подкатегорию')
       .required('Подкатегория обязательна'),
   });
+
   const {
     register,
     handleSubmit,
@@ -91,23 +88,36 @@ export const RegisterStepTwo: FC = () => {
     control,
     trigger,
     setError,
+    getValues,
   } = useForm({ resolver: yupResolver(schema), mode: 'onBlur' });
-  const genderValue = watch('gender');
+
   const selectedCategories = watch('categories') || [];
   const filteredSubcategories = selectedCategories
     .flatMap(category => skillsCategories[category as keyof typeof skillsCategories] || [])
     .map(val => ({ value: val, label: val }));
+
+  const onSubmit = (data: any) => {
+    dispatch(
+      updateStepTwoData({
+        ...data,
+        birthdate: data.date,
+        gender: data.gender as 'Мужской' | 'Женский',
+      }),
+    );
+    dispatch(stepActions.nextStep());
+  };
+
+  const handleBack = () => {
+    dispatch(resetStepTwoData());
+    dispatch(stepActions.prevStep());
+  };
+
   return (
     <div className={styles.registrationContainer}>
-      <form
-        className={styles.registrationForm}
-        onSubmit={handleSubmit(data => {
-          console.log(data);
-        })}
-      >
+      <form className={styles.registrationForm} onSubmit={handleSubmit(onSubmit)}>
         <div className={styles.logoContainer}>
           <label htmlFor="avatar" className={styles.avatarLabel}>
-            <img className={styles.avatarLabelPlusIcon} src={plusIcon} />
+            <img className={styles.avatarLabelPlusIcon} src={plusIcon} alt="Добавить фото" />
           </label>
           <input id="avatar" className={styles.avatarInput} type="file" />
         </div>
@@ -118,64 +128,46 @@ export const RegisterStepTwo: FC = () => {
           placeholder="Введите ваше имя"
           className={styles.elementFull}
           error={errors.name?.message}
-          onFocus={() => {
-            if (errors.name) clearErrors('name');
-          }}
+          onFocus={() => clearErrors('name')}
           onBlur={() => trigger('name')}
         />
         <Controller
           name="date"
           control={control}
-          render={({ field }) => {
-            const value = field.value ?? '';
-
-            return (
-              <div className={styles.datePickerWrapper}>
-                <TextInput
-                  {...field}
-                  type="text"
-                  id="date"
-                  title="Дата рождения"
-                  placeholder="дд.мм.гггг"
-                  icon={calendarIcon}
-                  onClick={() => setDatePicker(true)}
-                  value={value}
-                  className={styles.fixedHeight}
-                  error={errors.date?.message}
-                  hideError={isDatePickerOpen}
-                />
-
-                {isDatePickerOpen && (
-                  <CustomDatePicker
-                    selected={selectedDate}
-                    onSelect={(date?: Date) => {
-                      setSelectedDate(date);
-                    }}
-                    onCancelClick={() => {
-                      setDatePicker(false);
-                      setSelectedDate(undefined);
-                      field.onChange('');
-                      clearErrors('date');
-                    }}
-                    onChooseClick={() => {
-                      setDatePicker(false);
-                      if (selectedDate) {
-                        const formatted = selectedDate.toLocaleDateString('ru-RU');
-                        field.onChange(formatted);
-                        trigger('date');
-                      }
-                    }}
-                    onClose={() => {
-                      setDatePicker(false);
+          render={({ field }) => (
+            <div className={styles.datePickerWrapper}>
+              <TextInput
+                {...field}
+                id="date"
+                title="Дата рождения"
+                placeholder="дд.мм.гггг"
+                icon={calendarIcon}
+                onClick={() => setDatePicker(true)}
+                className={styles.fixedHeight}
+                error={errors.date?.message}
+                hideError={isDatePickerOpen}
+              />
+              {isDatePickerOpen && (
+                <CustomDatePicker
+                  selected={
+                    field.value ? new Date(field.value.split('.').reverse().join('-')) : undefined
+                  }
+                  onSelect={date => {
+                    if (date) {
+                      field.onChange(date.toLocaleDateString('ru-RU'));
                       trigger('date');
-                    }}
-                    className={styles.datePickerPosition}
-                    disabled={{ after: new Date() }}
-                  />
-                )}
-              </div>
-            );
-          }}
+                    }
+                    setDatePicker(false);
+                  }}
+                  onCancelClick={() => setDatePicker(false)}
+                  onChooseClick={() => setDatePicker(false)}
+                  onClose={() => setDatePicker(false)}
+                  className={styles.datePickerPosition}
+                  disabled={{ after: new Date() }}
+                />
+              )}
+            </div>
+          )}
         />
         <Controller
           name="gender"
@@ -183,21 +175,16 @@ export const RegisterStepTwo: FC = () => {
           render={({ field }) => (
             <CustomSelect
               {...field}
-              options={[
-                { value: 'Не указан', label: 'Не указан' },
-                { value: 'Мужской', label: 'Мужской' },
-                { value: 'Женский', label: 'Женский' },
-              ]}
+              options={genders.map(g => ({ value: g, label: g }))}
               className={styles.fixedHeight}
               id="gender"
               title="Пол"
               placeholder="Не указан"
-              value={genderValue}
               error={errors.gender?.message}
               onFocus={() => clearErrors('gender')}
             />
           )}
-        ></Controller>
+        />
         <Controller
           name="city"
           control={control}
@@ -205,25 +192,19 @@ export const RegisterStepTwo: FC = () => {
             <Autocomplete
               {...field}
               className={styles.elementFull}
-              value={field.value}
-              onChange={value => {
-                field.onChange(value);
-                trigger('city');
-              }}
               id="city"
               title="Город"
               placeholder="Не указан"
               suggestions={russianCities}
-              error={errors.city?.message || '  '}
-              onFocus={() => {
-                clearErrors('city');
-              }}
+              error={errors.city?.message}
+              onFocus={() => clearErrors('city')}
             />
           )}
         />
         <Controller
           name="categories"
           control={control}
+          defaultValue={[]}
           render={({ field }) => (
             <MultiSelect
               {...field}
@@ -232,11 +213,6 @@ export const RegisterStepTwo: FC = () => {
               title="Категория навыка, которому хотите научиться"
               id="skill"
               placeholder="Выберите категорию"
-              value={field.value}
-              onChange={value => {
-                field.onChange(value);
-                trigger('categories');
-              }}
               error={errors.categories?.message}
               onFocus={() => clearErrors('categories')}
             />
@@ -245,6 +221,7 @@ export const RegisterStepTwo: FC = () => {
         <Controller
           name="subcategories"
           control={control}
+          defaultValue={[]}
           render={({ field }) => (
             <MultiSelect
               {...field}
@@ -253,14 +230,9 @@ export const RegisterStepTwo: FC = () => {
               title="Подкатегория навыка, которому хотите научиться"
               id="subSkill"
               placeholder="Выберите подкатегорию"
-              value={field.value}
-              onChange={value => {
-                field.onChange(value);
-                trigger('subcategories');
-              }}
               error={errors.subcategories?.message}
               onFocus={() => {
-                if (filteredSubcategories.length === 0) {
+                if (!getValues('categories')?.length) {
                   setError('subcategories', {
                     type: 'manual',
                     message: 'Сначала выберите хотя бы одну категорию',
@@ -273,29 +245,12 @@ export const RegisterStepTwo: FC = () => {
           )}
         />
         <div className={styles.buttonContainer}>
-          <Button
-            children="Назад"
-            type="quaternary"
-            onClick={() => {
-              dispatch(resetStepTwoData());
-              dispatch(setStep(1));
-            }}
-          />
-          <Button
-            children="Продолжить"
-            type="primary"
-            onClick={() =>
-              handleSubmit(data => {
-                dispatch(
-                  updateStepTwoData({
-                    ...data,
-                    gender: data.gender as 'Мужской' | 'Женский',
-                  }),
-                );
-                dispatch(setStep(3));
-              })()
-            }
-          />
+          <Button type="quaternary" onClick={handleBack}>
+            Назад
+          </Button>
+          <Button type="primary" onClick={handleSubmit(onSubmit)}>
+            Продолжить
+          </Button>
         </div>
       </form>
       <RegistrationInfoPanel
