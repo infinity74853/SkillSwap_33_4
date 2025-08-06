@@ -1,4 +1,5 @@
 import { useState, useRef, ChangeEvent } from 'react';
+import { PasswordChangeForm } from '../../components/PasswordChangeForm/PasswordChangeForm';
 import { useDispatch, useSelector } from '@/services/store/store';
 import { updateStepTwoData } from '@/services/slices/registrationSlice';
 import { userSliceSelectors, userSliceActions } from '@/services/slices/authSlice';
@@ -10,6 +11,7 @@ import styles from './ProfileForm.module.css';
 
 type GenderType = 'Мужской' | 'Женский';
 
+// Схема для валидации профиля
 const profileSchema = yup.object().shape({
   name: yup
     .string()
@@ -36,12 +38,23 @@ const profileSchema = yup.object().shape({
   about: yup.string().max(500, 'Описание должно содержать максимум 500 символов'),
 });
 
+// Схема для валидации пароля (из формы авторизации)
+const passwordSchema = yup
+  .string()
+  .required('Пароль обязателен')
+  .min(8, 'Пароль должен содержать минимум 8 символов')
+  .matches(
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/,
+    'Пароль должен содержать хотя бы одну заглавную букву, одну строчную букву и одну цифру',
+  );
+
 export function ProfileForm() {
   const dateInputRef = useRef<HTMLInputElement>(null);
   const dispatch = useDispatch();
   const user = useSelector(userSliceSelectors.selectUser);
   const registrationData = useSelector(state => state.register.stepTwoData);
 
+  // Состояние для основной формы
   const [formData, setFormData] = useState({
     email: user?.email || '',
     name: registrationData?.name || user?.name || '',
@@ -52,6 +65,21 @@ export function ProfileForm() {
       user?.description ||
       'Люблю учиться новому, особенно если это можно делать за чаем и в пижаме. Всегда готова пообщаться и обменяться чем‑то интересным!',
   });
+
+  // Состояние для изменения пароля
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
+  const [passwordData, setPasswordData] = useState({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: '',
+  });
+  const [passwordErrors, setPasswordErrors] = useState({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: '',
+    form: '',
+  });
+  const [showPassword, setShowPassword] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -70,6 +98,56 @@ export function ProfileForm() {
     setFormData(prev => ({ ...prev, birthDate: e.target.value }));
     if (errors.birthDate) {
       setErrors(prev => ({ ...prev, birthDate: '' }));
+    }
+  };
+
+  // Обработчики для формы пароля
+  const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setPasswordData(prev => ({ ...prev, [name]: value }));
+    setPasswordErrors(prev => ({ ...prev, [name]: '' }));
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const validatePassword = async () => {
+    try {
+      await passwordSchema.validate(passwordData.newPassword);
+      if (passwordData.newPassword !== passwordData.confirmPassword) {
+        throw new Error('Пароли не совпадают');
+      }
+      return true;
+    } catch (err) {
+      if (err instanceof yup.ValidationError) {
+        setPasswordErrors(prev => ({ ...prev, newPassword: err.message }));
+      } else if (err instanceof Error) {
+        setPasswordErrors(prev => ({ ...prev, confirmPassword: err.message }));
+      }
+      return false;
+    }
+  };
+
+  const handlePasswordSubmit = async () => {
+    const isValid = await validatePassword();
+    if (!isValid) return;
+
+    try {
+      setIsLoading(true);
+      // Здесь должна быть логика обновления пароля на бэкенде
+
+      // После успешного обновления:
+      setIsChangingPassword(false);
+      setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
+      setPasswordErrors({ currentPassword: '', newPassword: '', confirmPassword: '', form: '' });
+    } catch (err) {
+      setPasswordErrors(prev => ({
+        ...prev,
+        form: 'Ошибка при изменении пароля. Проверьте текущий пароль.',
+      }));
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -161,9 +239,30 @@ export function ProfileForm() {
           <span className={`${styles.profileEditIcon} ${styles.iconEdit}`} />
         </div>
       </div>
-      <button className={styles.profileChangePasswordBtn} type="button">
-        Изменить пароль
-      </button>
+
+      {/* Блок изменения пароля */}
+      {isChangingPassword ? (
+        <PasswordChangeForm
+          passwordData={passwordData}
+          passwordErrors={passwordErrors}
+          showPassword={showPassword}
+          isLoading={isLoading}
+          onPasswordChange={handlePasswordChange}
+          onTogglePasswordVisibility={togglePasswordVisibility}
+          onSubmit={handlePasswordSubmit}
+          onCancel={() => setIsChangingPassword(false)}
+        />
+      ) : (
+        <button
+          className={styles.profileChangePasswordBtn}
+          type="button"
+          onClick={() => setIsChangingPassword(true)}
+        >
+          Изменить пароль
+        </button>
+      )}
+
+      {/* Остальная часть формы */}
       <div className={styles.profileFormInputs}>
         <div className={styles.profileInputBlock}>
           <label>Имя</label>

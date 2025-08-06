@@ -61,7 +61,7 @@ export type TUpdateProfileData = {
   gender: 'Мужской' | 'Женский';
   city: string;
   description: string;
-  avatar?: string; 
+  avatar?: string;
 };
 
 export type TUpdateProfileResponse = TServerResponse<{

@@ -40,16 +40,7 @@ function App() {
         <Route path="/" element={<MainLayout />}>
           {/* index-маршрут для корневого пути "/" */}
           <Route index element={<CatalogPage />} />
-
-          <Route path="/profile/details" element={<ProfileDetailsPage />} />
-          <Route
-            path="/profile/favorites"
-            element={
-              <ProtectedRoute>
-                <>{/* Страница избранных карточек в профиле, когда будет готова */}</>
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/profile/*" element={<ProfileDetailsPage />} />
           <Route path="/skill/:id" element={<SkillPage />} />
           <Route path="*" element={<ErrorPage type="404"></ErrorPage>} />
         </Route>

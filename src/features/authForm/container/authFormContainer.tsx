@@ -96,16 +96,15 @@ export const AuthFormContainer = ({ isFirstStage = true }) => {
     if (isFirstStage) {
       dispatch(updateStepOneData({ email, password }));
       dispatch(stepActions.nextStep());
-      return;
-    }
-
-    try {
-      await dispatch(loginUser({ email, password })).unwrap();
-    } catch {
-      setErrors(prev => ({
-        ...prev,
-        form: 'Пользователь не зарегистрирован или неверные данные',
-      }));
+    } else {
+      try {
+        await dispatch(loginUser({ email, password })).unwrap();
+      } catch {
+        setErrors(prev => ({
+          ...prev,
+          form: 'Пользователь не зарегистрирован или неверные данные',
+        }));
+      }
     }
   };
 
