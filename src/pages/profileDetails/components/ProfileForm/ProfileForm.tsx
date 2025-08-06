@@ -10,6 +10,7 @@ import styles from './ProfileForm.module.css';
 
 type GenderType = 'Мужской' | 'Женский';
 
+// Схема для валидации профиля
 const profileSchema = yup.object().shape({
   name: yup
     .string()
@@ -36,12 +37,23 @@ const profileSchema = yup.object().shape({
   about: yup.string().max(500, 'Описание должно содержать максимум 500 символов'),
 });
 
+// Схема для валидации пароля (из формы авторизации)
+const passwordSchema = yup
+  .string()
+  .required('Пароль обязателен')
+  .min(8, 'Пароль должен содержать минимум 8 символов')
+  .matches(
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/,
+    'Пароль должен содержать хотя бы одну заглавную букву, одну строчную букву и одну цифру',
+  );
+
 export function ProfileForm() {
   const dateInputRef = useRef<HTMLInputElement>(null);
   const dispatch = useDispatch();
   const user = useSelector(userSliceSelectors.selectUser);
   const registrationData = useSelector(state => state.register.stepTwoData);
 
+  // Состояние для основной формы
   const [formData, setFormData] = useState({
     email: user?.email || '',
     name: registrationData?.name || user?.name || '',
@@ -52,6 +64,21 @@ export function ProfileForm() {
       user?.description ||
       'Люблю учиться новому, особенно если это можно делать за чаем и в пижаме. Всегда готова пообщаться и обменяться чем‑то интересным!',
   });
+
+  // Состояние для изменения пароля
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
+  const [passwordData, setPasswordData] = useState({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: '',
+  });
+  const [passwordErrors, setPasswordErrors] = useState({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: '',
+    form: '',
+  });
+  const [showPassword, setShowPassword] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -70,6 +97,57 @@ export function ProfileForm() {
     setFormData(prev => ({ ...prev, birthDate: e.target.value }));
     if (errors.birthDate) {
       setErrors(prev => ({ ...prev, birthDate: '' }));
+    }
+  };
+
+  // Обработчики для формы пароля
+  const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setPasswordData(prev => ({ ...prev, [name]: value }));
+    setPasswordErrors(prev => ({ ...prev, [name]: '' }));
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const validatePassword = async () => {
+    try {
+      await passwordSchema.validate(passwordData.newPassword);
+      if (passwordData.newPassword !== passwordData.confirmPassword) {
+        throw new Error('Пароли не совпадают');
+      }
+      return true;
+    } catch (err) {
+      if (err instanceof yup.ValidationError) {
+        setPasswordErrors(prev => ({ ...prev, newPassword: err.message }));
+      } else if (err instanceof Error) {
+        setPasswordErrors(prev => ({ ...prev, confirmPassword: err.message }));
+      }
+      return false;
+    }
+  };
+
+  const handlePasswordSubmit = async () => {
+    const isValid = await validatePassword();
+    if (!isValid) return;
+
+    try {
+      setIsLoading(true);
+      // Здесь должна быть логика обновления пароля на бэкенде
+      // Например: await updatePasswordApi(passwordData.currentPassword, passwordData.newPassword);
+
+      // После успешного обновления:
+      setIsChangingPassword(false);
+      setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
+      setPasswordErrors({ currentPassword: '', newPassword: '', confirmPassword: '', form: '' });
+    } catch (err) {
+      setPasswordErrors(prev => ({
+        ...prev,
+        form: 'Ошибка при изменении пароля. Проверьте текущий пароль.',
+      }));
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -161,9 +239,116 @@ export function ProfileForm() {
           <span className={`${styles.profileEditIcon} ${styles.iconEdit}`} />
         </div>
       </div>
-      <button className={styles.profileChangePasswordBtn} type="button">
-        Изменить пароль
-      </button>
+
+      {/* Блок изменения пароля */}
+      {isChangingPassword ? (
+        <div className={styles.passwordChangeBlock}>
+          <div className={styles.profileInputBlock}>
+            <label>Текущий пароль</label>
+            <div className={styles.passwordInputWrapper}>
+              <input
+                type={showPassword ? 'text' : 'password'}
+                name="currentPassword"
+                value={passwordData.currentPassword}
+                onChange={handlePasswordChange}
+                className={`${styles.profileEmailInput} ${passwordErrors.currentPassword ? styles.inputError : ''}`}
+                placeholder="Введите текущий пароль"
+              />
+              <button
+                type="button"
+                className={styles.togglePasswordButton}
+                onClick={togglePasswordVisibility}
+                aria-label={showPassword ? 'Скрыть пароль' : 'Показать пароль'}
+              >
+                <span className={showPassword ? styles.eyeOpen : styles.eyeClosed} />
+              </button>
+            </div>
+            {passwordErrors.currentPassword && (
+              <div className={styles.errorText}>{passwordErrors.currentPassword}</div>
+            )}
+          </div>
+
+          <div className={styles.profileInputBlock}>
+            <label>Новый пароль</label>
+            <div className={styles.passwordInputWrapper}>
+              <input
+                type={showPassword ? 'text' : 'password'}
+                name="newPassword"
+                value={passwordData.newPassword}
+                onChange={handlePasswordChange}
+                className={`${styles.profileEmailInput} ${passwordErrors.newPassword ? styles.inputError : ''}`}
+                placeholder="Введите новый пароль"
+              />
+              <button
+                type="button"
+                className={styles.togglePasswordButton}
+                onClick={togglePasswordVisibility}
+                aria-label={showPassword ? 'Скрыть пароль' : 'Показать пароль'}
+              >
+                <span className={showPassword ? styles.eyeOpen : styles.eyeClosed} />
+              </button>
+            </div>
+            {passwordErrors.newPassword && (
+              <div className={styles.errorText}>{passwordErrors.newPassword}</div>
+            )}
+          </div>
+
+          <div className={styles.profileInputBlock}>
+            <label>Подтвердите пароль</label>
+            <div className={styles.passwordInputWrapper}>
+              <input
+                type={showPassword ? 'text' : 'password'}
+                name="confirmPassword"
+                value={passwordData.confirmPassword}
+                onChange={handlePasswordChange}
+                className={`${styles.profileEmailInput} ${passwordErrors.confirmPassword ? styles.inputError : ''}`}
+                placeholder="Повторите новый пароль"
+              />
+              <button
+                type="button"
+                className={styles.togglePasswordButton}
+                onClick={togglePasswordVisibility}
+                aria-label={showPassword ? 'Скрыть пароль' : 'Показать пароль'}
+              >
+                <span className={showPassword ? styles.eyeOpen : styles.eyeClosed} />
+              </button>
+            </div>
+            {passwordErrors.confirmPassword && (
+              <div className={styles.errorText}>{passwordErrors.confirmPassword}</div>
+            )}
+          </div>
+
+          {passwordErrors.form && <div className={styles.errorText}>{passwordErrors.form}</div>}
+
+          <div className={styles.passwordButtons}>
+            <Button
+              type="primary"
+              onClick={handlePasswordSubmit}
+              disabled={
+                !passwordData.currentPassword ||
+                !passwordData.newPassword ||
+                !passwordData.confirmPassword ||
+                isLoading
+              }
+            >
+              {isLoading ? 'Сохранение...' : 'Сохранить пароль'}
+            </Button>
+            <Button type="secondary" onClick={() => setIsChangingPassword(false)}>
+              Отмена
+            </Button>
+          </div>
+        </div>
+      ) : (
+        <button
+          className={styles.profileChangePasswordBtn}
+          type="button"
+          onClick={() => setIsChangingPassword(true)}
+        >
+          Изменить пароль
+        </button>
+      )}
+
+      {/* Остальная часть формы */}
       <div className={styles.profileFormInputs}>
         <div className={styles.profileInputBlock}>
           <label>Имя</label>

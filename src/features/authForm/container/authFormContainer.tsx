@@ -31,7 +31,7 @@ export const AuthFormContainer = ({ isFirstStage = true }) => {
   const dispatch = useDispatch();
 
   const currentStep = useSelector((state: RootState) => state.step.currentStep);
-  
+
   const textContent = isFirstStage ? PAGE_TEXTS.registration : PAGE_TEXTS.firstStage;
 
   const validateEmail = (value: string) => {
@@ -81,7 +81,6 @@ export const AuthFormContainer = ({ isFirstStage = true }) => {
     }
   }, [email, password, touched.email, touched.password]);
 
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -102,7 +101,7 @@ export const AuthFormContainer = ({ isFirstStage = true }) => {
       });
       return;
     }
-    
+
     if (!isFirstStage) {
       try {
         await dispatch(loginUser({ email, password })).unwrap();
@@ -114,7 +113,7 @@ export const AuthFormContainer = ({ isFirstStage = true }) => {
       }
       return;
     }
-    
+
     if (isFirstStage) {
       if (currentStep === 2) {
         const firstUser = usersData[0];

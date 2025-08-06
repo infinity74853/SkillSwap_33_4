@@ -8,7 +8,7 @@ import { useDispatch } from '@/services/store/store';
 import { initializeLikes } from '@/services/slices/likeSlice';
 import { fetchCatalog } from '@/services/slices/catalogSlice';
 import { SuccessModal } from '@/features/successModal/successModal';
-import { RegistrationForms } from '@/features/registrationForms/registrationForms';
+import { RegistrationForms } from '@/features/RegistrationForms/registrationForms';
 import { ErrorPage } from '@/pages/ErrorPage/ErrorPage';
 import SkillPage from '@/pages/skillPage/skillPage';
 import { CatalogPage } from '@/pages/catalogPage/catalogPage';
@@ -40,16 +40,7 @@ function App() {
         <Route path="/" element={<MainLayout />}>
           {/* index-маршрут для корневого пути "/" */}
           <Route index element={<CatalogPage />} />
-
-          <Route path="/profile/details" element={<ProfileDetailsPage />} />
-          <Route
-            path="/profile/favorites"
-            element={
-              <ProtectedRoute>
-                <>{/* Страница избранных карточек в профиле, когда будет готова */}</>
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/profile/*" element={<ProfileDetailsPage />} />
           <Route path="/skill/:id" element={<SkillPage />} />
           <Route path="*" element={<ErrorPage type="404"></ErrorPage>} />
         </Route>

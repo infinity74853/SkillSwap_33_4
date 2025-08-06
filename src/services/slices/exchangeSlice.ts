@@ -1,34 +1,34 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-// Приблезительный интерфейс запроса
 interface ExchangeRequest {
   id: string | number;
   fromUserId: string | number;
   fromUserName: string;
-  toUserId?: string | number; // Необязательно поле, пока нет логики для этого
-  isRead: boolean; // Просмотрено ли уведомление
-  createdAt: string; // Дата создания для сортировки
+  toUserId: string | number;
+  isRead: boolean;
+  createdAt: string;
 }
 
 interface ExchangeState {
   requests: ExchangeRequest[];
 }
 
-// Фейковые запросы на обмен
 const initialState: ExchangeState = {
   requests: [
     {
       id: 1,
       fromUserName: 'Алексей',
-      fromUserId: 101,
+      fromUserId: 'user_001',
+      toUserId: 'user_002',
       createdAt: new Date().toISOString(),
       isRead: false,
     },
     {
       id: 2,
       fromUserName: 'Мария',
-      fromUserId: 205,
-      createdAt: new Date(Date.now() - 1000 * 60 * 60).toISOString(), // Час назад
+      fromUserId: 'user_002',
+      toUserId: 'user_001',
+      createdAt: new Date(Date.now() - 1000 * 60 * 60).toISOString(),
       isRead: false,
     },
   ],
