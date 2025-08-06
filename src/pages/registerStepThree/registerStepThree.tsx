@@ -11,13 +11,19 @@ import * as yup from 'yup';
 import boardIcon from '@/app/assets/static/images/background/school-board.svg';
 import { DragAndDrop } from '@/widgets/dragAndDrop/dragAndDrop';
 import { useDispatch } from '@/services/store/store';
-import { resetStepThreeData, updateStepThreeData } from '@/services/slices/registrationSlice';
+import {
+  registerUser,
+  resetStepThreeData,
+  updateStepThreeData,
+} from '@/services/slices/registrationSlice';
 import { RegistrationInfoPanel } from '@/shared/ui/registrationInfoPanel/registrationInfoPanel';
 import { stepActions } from '@/services/slices/stepSlice';
 import { ProposalPreviewModal } from '@/features/auth/proposalPreviewModal/proposalPreviewModal';
 import { SuccessModal } from '@/features/successModal/successModal';
 import { TeachableSkill } from '@/widgets/skillCard/skillCard';
 import { usersData } from '@/shared/mocks/usersData';
+import { userSliceActions } from '@/services/slices/authSlice';
+import { generateToken } from '@/shared/mocks/authMock';
 
 export const RegisterStepThree: FC = () => {
   const dispatch = useDispatch();
@@ -86,7 +92,7 @@ export const RegisterStepThree: FC = () => {
       })) || []
     : [];
 
-  const onSubmit = (data: any) => {
+  const onSubmit = async (data: any) => {
     dispatch(updateStepThreeData(data));
     const firstUser = usersData[0];
     localStorage.setItem('registrationUserId', firstUser._id);
@@ -102,6 +108,23 @@ export const RegisterStepThree: FC = () => {
     setIsPreviewOpen(true);
   };
 
+  const handleCompleteRegistration = async () => {
+    try {
+      const userData = await dispatch(registerUser()).unwrap();
+
+      dispatch(userSliceActions.setUserData(userData.user));
+
+      const accessToken = generateToken();
+      const refreshToken = generateToken();
+
+      localStorage.setItem('refreshToken', refreshToken);
+      document.cookie = `accessToken=${accessToken}; max-age=${60 * 60 * 24 * 7}; path=/; samesite=lax`;
+      localStorage.setItem('currentUser', JSON.stringify(userData));
+    } catch (error) {
+      console.error('Ошибка регистрации:', error);
+    }
+  };
+
   const handleBack = () => {
     dispatch(resetStepThreeData());
     dispatch(stepActions.prevStep());
@@ -114,6 +137,7 @@ export const RegisterStepThree: FC = () => {
   const handleSuccess = () => {
     setIsPreviewOpen(false);
     setIsSuccessOpen(true);
+    handleCompleteRegistration();
   };
 
   return (

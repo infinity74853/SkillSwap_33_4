@@ -49,14 +49,14 @@ export const ProposalPreviewModal: React.FC<ProposalPreviewModalProps> = ({
                 <button
                   type="button"
                   className={`${styles.primaryButton} ${styles.button}`}
-                  onClick={() => {
+                  onClick={async () => {
                     if (userId) {
                       localStorage.setItem(
                         'postProposalRedirect',
                         JSON.stringify({ userId, skill }),
                       );
                     }
-                    onSuccess(); 
+                    onSuccess();
                   }}
                 >
                   Готово

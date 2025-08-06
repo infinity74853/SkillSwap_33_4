@@ -1,6 +1,8 @@
-import { SkillCategory } from '@/entities/skill/model/types';
+import { CustomSkill, SkillCategory } from '@/entities/skill/model/types';
+import { User } from '@/entities/user/model/types';
 import { skillsCategories } from '@/shared/lib/categories';
 import { russianCities } from '@/shared/lib/cities';
+import { generateToken, setCookie, setToStorage } from '@/shared/mocks/authMock';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 type AllSkillSubcategories = (typeof skillsCategories)[SkillCategory][number];
@@ -56,8 +58,78 @@ const initialState: RegistrationState = {
   loading: false,
 };
 
-export const registerUser = createAsyncThunk('registration/submit', async data => {
-  localStorage.setItem('registrationData', JSON.stringify(data));
+export const registerUser = createAsyncThunk('registration/submit', async (_, { getState }) => {
+  const rootState = getState() as { register: RegistrationState };
+
+  if (!rootState.register) {
+    throw new Error('Registration state is not available');
+  }
+
+  const { stepOneData, stepTwoData, stepThreeData } = rootState.register;
+
+  const wantsToLearnSkills: Omit<CustomSkill, 'description' | 'image'>[] = [];
+
+  if (stepTwoData.categories && stepTwoData.subcategories) {
+    for (let i = 0; i < stepTwoData.categories.length; i++) {
+      const category = stepTwoData.categories[i];
+      const subcategory = stepTwoData.subcategories[i];
+
+      if (category && subcategory) {
+        wantsToLearnSkills.push({
+          category,
+          subcategory,
+          subcategoryId: `subcat_${Date.now()}_${i}`,
+          name: subcategory,
+          customSkillId: `want_${Date.now()}_${i}`,
+        });
+      }
+    }
+  }
+  const skillImageUrls = stepThreeData.images?.map(file => URL.createObjectURL(file)) || [];
+  const userAvatarUrl = stepTwoData.avatar?.[0] ? URL.createObjectURL(stepTwoData.avatar[0]) : '';
+
+  const newUser: User = {
+    _id: `user_${Date.now()}`,
+    email: stepOneData.email || '',
+    name: stepTwoData.name || '',
+    gender: stepTwoData.gender === 'Мужской' ? 'male' : 'female',
+    city: stepTwoData.city || '',
+    birthdayDate: stepTwoData.birthdate || '',
+    description: stepThreeData.description || '',
+    likes: [],
+    createdAt: new Date().toString(),
+    canTeach: {
+      category: stepThreeData.skill || '',
+      subcategory: stepThreeData.subcategories?.[0] || '',
+      subcategoryId: `subcat_${Date.now()}`,
+      name: stepThreeData.skillName || '',
+      description: stepThreeData.description || '',
+      image: skillImageUrls,
+      customSkillId: `skill_${Date.now()}`,
+    } as CustomSkill,
+    wantsToLearn: wantsToLearnSkills,
+    image: userAvatarUrl,
+  };
+
+  const users = JSON.parse(localStorage.getItem('users') || '{}');
+  users[stepOneData.email || ''] = {
+    password: stepOneData.password,
+    userData: newUser,
+  };
+  localStorage.setItem('users', JSON.stringify(users));
+
+  const accessToken = generateToken();
+  const refreshToken = generateToken();
+
+  setToStorage('refreshToken', refreshToken);
+  setCookie('accessToken', accessToken);
+  localStorage.setItem('currentUser', JSON.stringify(newUser));
+
+  return {
+    user: newUser,
+    accessToken,
+    refreshToken,
+  };
 });
 
 const registrationSlice = createSlice({

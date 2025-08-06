@@ -54,19 +54,19 @@ const MOCK_USER: User = {
 
 const MOCK_DELAY = 500;
 
-const generateToken = () =>
+export const generateToken = () =>
   Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
 
-const setToStorage = (key: string, value: string) => localStorage.setItem(key, value);
+export const setToStorage = (key: string, value: string) => localStorage.setItem(key, value);
 
-const getFromStorage = (key: string) => localStorage.getItem(key);
+export const getFromStorage = (key: string) => localStorage.getItem(key);
 
-const setCookie = (name: string, value: string) => {
+export const setCookie = (name: string, value: string) => {
   const maxAge = 60 * 60 * 24 * 7;
   document.cookie = `${name}=${value}; max-age=${maxAge}; path=/; samesite=lax`;
 };
 
-const getCookie = (name: string) => {
+export const getCookie = (name: string) => {
   const match = document.cookie.match(new RegExp(`(^| )${name}=([^;]+)`));
   return match?.[2] || null;
 };
@@ -100,16 +100,17 @@ export const getUserApi = (): Promise<TUserResponse> => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       const accessToken = getCookie('accessToken');
+      const refreshToken = getFromStorage('refreshToken');
+      const currentUser = localStorage.getItem('currentUser');
 
-      if (!accessToken) {
-        reject({ message: 'Unauthorized' });
-        return;
+      if (accessToken && refreshToken && currentUser) {
+        resolve({
+          success: true,
+          user: JSON.parse(currentUser),
+        });
+      } else {
+        reject({ message: 'Не авторизован' });
       }
-
-      resolve({
-        success: true,
-        user: MOCK_USER,
-      });
     }, MOCK_DELAY);
   });
 };
@@ -118,11 +119,10 @@ export const logoutApi = (): Promise<TServerResponse<object>> => {
   return new Promise(resolve => {
     setTimeout(() => {
       localStorage.removeItem('refreshToken');
+      localStorage.removeItem('currentUser');
       document.cookie = 'accessToken=; max-age=0; path=/';
 
-      resolve({
-        success: true,
-      });
+      resolve({ success: true });
     }, MOCK_DELAY);
   });
 };
@@ -130,12 +130,16 @@ export const logoutApi = (): Promise<TServerResponse<object>> => {
 export const loginUserApi = (data: TLoginData): Promise<TAuthResponse> => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
+      const users = JSON.parse(localStorage.getItem('users') || '{}');
+      const userRecord = users[data.email];
+
       if (data.email === 'test@example.com' && data.password === 'password') {
         const accessToken = generateToken();
         const refreshToken = generateToken();
 
         setToStorage('refreshToken', refreshToken);
         setCookie('accessToken', accessToken);
+        localStorage.setItem('currentUser', JSON.stringify(MOCK_USER));
 
         resolve({
           success: true,
@@ -143,10 +147,24 @@ export const loginUserApi = (data: TLoginData): Promise<TAuthResponse> => {
           accessToken,
           refreshToken,
         });
+      } else if (userRecord && userRecord.password === data.password) {
+        const accessToken = generateToken();
+        const refreshToken = generateToken();
+
+        setToStorage('refreshToken', refreshToken);
+        setCookie('accessToken', accessToken);
+        localStorage.setItem('currentUser', JSON.stringify(userRecord.userData));
+
+        resolve({
+          success: true,
+          user: userRecord.userData,
+          accessToken,
+          refreshToken,
+        });
       } else {
         reject({
           success: false,
-          message: 'Invalid credentials',
+          message: 'Неверные учетные данные',
         });
       }
     }, MOCK_DELAY);
