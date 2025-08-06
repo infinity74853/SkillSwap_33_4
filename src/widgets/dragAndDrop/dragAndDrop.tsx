@@ -9,6 +9,7 @@ type DragAndDropUploaderProps = {
   onChange?: (files: File[]) => void;
   error?: string;
   onBlur?: () => void;
+  className?: string;
 };
 
 export const DragAndDrop: React.FC<DragAndDropUploaderProps> = ({
@@ -18,6 +19,7 @@ export const DragAndDrop: React.FC<DragAndDropUploaderProps> = ({
   onChange,
   error,
   onBlur,
+  className,
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -37,7 +39,7 @@ export const DragAndDrop: React.FC<DragAndDropUploaderProps> = ({
   };
 
   return (
-    <div>
+    <div className={className}>
       <div
         className={`${styles.picsContainer} ${isDragging ? styles.dragging : ''}`}
         onDragOver={e => {
