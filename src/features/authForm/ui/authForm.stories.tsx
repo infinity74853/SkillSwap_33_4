@@ -26,6 +26,7 @@ export const Default: Story = {
       email: '',
       password: '',
       form: '',
+      passwordIsFirstStage: '',
     },
     handleSubmit: () => console.log('Form submitted'),
     togglePasswordVisibility: () => console.log('Toggle password'),
@@ -42,6 +43,7 @@ export const WithErrors: Story = {
       email: '',
       password: '',
       form: 'Общая ошибка формы',
+      passwordIsFirstStage: '',
     },
   },
 };
@@ -65,6 +67,7 @@ export const RegistrationModeWithErrors: Story = {
       email: 'Некорректный email',
       password: 'Слишком короткий пароль',
       form: '',
+      passwordIsFirstStage: '',
     },
   },
 };
