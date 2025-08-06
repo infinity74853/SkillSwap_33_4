@@ -2,11 +2,11 @@ import { SkillCategory } from '@/entities/skill/model/types';
 import { skillsCategories } from '@/shared/lib/categories';
 import { russianCities } from '@/shared/lib/cities';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+
 type AllSkillSubcategories = (typeof skillsCategories)[SkillCategory][number];
-type cities = (typeof russianCities)[number];
+type City = (typeof russianCities)[number];
 
 type RegistrationState = {
-  step: 1 | 2 | 3 | null;
   stepOneData: {
     email: string | undefined;
     password: string | undefined;
@@ -15,24 +15,23 @@ type RegistrationState = {
     name: string | undefined;
     birthdate: string | undefined;
     gender: 'Мужской' | 'Женский' | undefined;
-    city: cities | undefined;
-    skillCategory: SkillCategory[] | undefined;
-    skillSubCategory: AllSkillSubcategories[] | undefined;
+    city: City | undefined;
+    categories: SkillCategory[] | undefined;
+    subcategories: AllSkillSubcategories[] | undefined;
+    avatar: File[] | undefined;
   };
-
   stepThreeData: {
     skillName: string | undefined;
-    skillCategory: SkillCategory | undefined;
-    skillSubCategory: AllSkillSubcategories[] | undefined;
+    skill: SkillCategory | undefined;
+    subcategories: AllSkillSubcategories[] | undefined;
     description: string | undefined;
-    pics: File[] | undefined;
+    images: File[] | undefined;
   };
   error: string | undefined;
   loading: boolean;
 };
 
 const initialState: RegistrationState = {
-  step: null,
   stepOneData: {
     email: undefined,
     password: undefined,
@@ -42,15 +41,16 @@ const initialState: RegistrationState = {
     birthdate: undefined,
     gender: undefined,
     city: undefined,
-    skillCategory: undefined,
-    skillSubCategory: undefined,
+    categories: undefined,
+    subcategories: undefined,
+    avatar: undefined,
   },
   stepThreeData: {
     skillName: undefined,
-    skillCategory: undefined,
-    skillSubCategory: undefined,
+    skill: undefined,
+    subcategories: undefined,
     description: undefined,
-    pics: undefined,
+    images: undefined,
   },
   error: undefined,
   loading: false,
@@ -67,11 +67,9 @@ const registrationSlice = createSlice({
     getAllRegistrationInfo: state => ({
       data: [state.stepOneData, state.stepTwoData, state.stepThreeData],
     }),
+    getStepThreeData: state => state.stepThreeData,
   },
   reducers: {
-    setStep: (state, action: PayloadAction<1 | 2 | 3 | null>) => {
-      state.step = action.payload;
-    },
     updateStepOneData: (
       state,
       action: PayloadAction<Partial<RegistrationState['stepOneData']>>,
@@ -115,7 +113,6 @@ const registrationSlice = createSlice({
 });
 
 export const {
-  setStep,
   updateStepOneData,
   updateStepTwoData,
   updateStepThreeData,
@@ -123,4 +120,6 @@ export const {
   resetStepTwoData,
   resetStepThreeData,
 } = registrationSlice.actions;
+
 export const registrationReducer = registrationSlice.reducer;
+export const registrationSelectors = registrationSlice.selectors;

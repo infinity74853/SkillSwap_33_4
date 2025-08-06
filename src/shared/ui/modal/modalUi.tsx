@@ -25,14 +25,26 @@ const ModalUIComponent: FC<TModalUIProps> = ({
       <ModalOverlayUI onClick={onClose} />
 
       {/* Модальное окно */}
-      <div className={`${styles.modal} ${className || ''}`}>
+      <div
+        className={`${styles.modal} ${className || ''}`}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title"
+      >
         {/* Показываем изображение только для типа confirmation */}
         {type === 'confirmation' && image && (
-          <img src={image} alt="Status" className={styles.img} />
+          <img
+            src={image}
+            alt="Status"
+            className={styles.img}
+            onError={e => (e.currentTarget.src = '/default-image.png')}
+          />
         )}
 
         <div className={styles.header}>
-          <h2 className={styles.title}>{title}</h2>
+          <h2 id="modal-title" className={styles.title}>
+            {title || 'Модальное окно'}
+          </h2>
           {description && <p className={styles.description}>{description}</p>}
         </div>
 

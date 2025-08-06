@@ -8,7 +8,7 @@ export type AutocompleteProps = Omit<TextInputProps, 'onChange'> & {
   onChange?: (value: string) => void;
   onSelect?: (value: string) => void;
   className?: string;
-  error: string;
+  error?: string;
   value: string;
 };
 
@@ -35,7 +35,9 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
     }, [value, suggestions]);
 
     const handleInputChange = (newValue: string) => {
-      onChange!(newValue);
+      if (onChange) {
+        onChange(newValue);
+      }
     };
 
     const handleSelect = (suggestion: string) => {

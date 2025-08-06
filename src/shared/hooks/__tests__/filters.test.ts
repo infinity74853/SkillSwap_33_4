@@ -111,12 +111,12 @@ const mockState = (filters: Partial<RootState['filters']>, searchQuery = ''): Ro
     skill: [],
     ...filters,
   },
-  register: {} as any,
-  exchange: {} as any,
-  skills: {} as any,
-  step: {} as any,
-  likes: {} as any,
-  authUser: {} as any,
+  register: {} as RootState['register'],
+  exchange: {} as RootState['exchange'],
+  skills: {} as RootState['skills'],
+  step: {} as RootState['step'],
+  likes: {} as RootState['likes'],
+  authUser: {} as RootState['authUser'],
 });
 
 describe('Фильтрация карточек навыков', () => {
