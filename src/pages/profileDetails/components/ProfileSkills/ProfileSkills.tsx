@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import { useSelector, useDispatch } from '@/services/store/store';
 import { userSliceSelectors, userSliceActions } from '@/services/slices/authSlice';
 import { skillsCategories } from '@/shared/lib/categories';
@@ -6,7 +7,6 @@ import { Button } from '@/shared/ui/button/button';
 import styles from './ProfileSkills.module.css';
 import { CustomSkill } from '@/entities/skill/model/types';
 
-// Вспомогательный тип для проверки категорий
 type SkillCategory = keyof typeof skillsCategories;
 
 export function ProfileSkills() {
@@ -25,11 +25,11 @@ export function ProfileSkills() {
       const updatedSkills = {
         category: formData.category,
         subcategory: formData.subcategory,
-        subcategoryId: `${formData.category.toLowerCase()}_${formData.subcategory.toLowerCase()}`,
+        subcategoryId: `${formData.category.toLowerCase()}_${formData.subcategory.toLowerCase()}_${uuidv4()}`,
         name: formData.name,
         description: formData.description || '',
         image: user.canTeach?.image || [],
-        customSkillId: user.canTeach?.customSkillId || Date.now().toString(),
+        customSkillId: user.canTeach?.customSkillId || uuidv4(),
       } as CustomSkill;
 
       dispatch(

@@ -1,4 +1,5 @@
 import { useState, useRef, ChangeEvent } from 'react';
+import { PasswordChangeForm } from '../../components/PasswordChangeForm/PasswordChangeForm';
 import { useDispatch, useSelector } from '@/services/store/store';
 import { updateStepTwoData } from '@/services/slices/registrationSlice';
 import { userSliceSelectors, userSliceActions } from '@/services/slices/authSlice';
@@ -135,7 +136,6 @@ export function ProfileForm() {
     try {
       setIsLoading(true);
       // Здесь должна быть логика обновления пароля на бэкенде
-      // Например: await updatePasswordApi(passwordData.currentPassword, passwordData.newPassword);
 
       // После успешного обновления:
       setIsChangingPassword(false);
@@ -242,102 +242,16 @@ export function ProfileForm() {
 
       {/* Блок изменения пароля */}
       {isChangingPassword ? (
-        <div className={styles.passwordChangeBlock}>
-          <div className={styles.profileInputBlock}>
-            <label>Текущий пароль</label>
-            <div className={styles.passwordInputWrapper}>
-              <input
-                type={showPassword ? 'text' : 'password'}
-                name="currentPassword"
-                value={passwordData.currentPassword}
-                onChange={handlePasswordChange}
-                className={`${styles.profileEmailInput} ${passwordErrors.currentPassword ? styles.inputError : ''}`}
-                placeholder="Введите текущий пароль"
-              />
-              <button
-                type="button"
-                className={styles.togglePasswordButton}
-                onClick={togglePasswordVisibility}
-                aria-label={showPassword ? 'Скрыть пароль' : 'Показать пароль'}
-              >
-                <span className={showPassword ? styles.eyeOpen : styles.eyeClosed} />
-              </button>
-            </div>
-            {passwordErrors.currentPassword && (
-              <div className={styles.errorText}>{passwordErrors.currentPassword}</div>
-            )}
-          </div>
-
-          <div className={styles.profileInputBlock}>
-            <label>Новый пароль</label>
-            <div className={styles.passwordInputWrapper}>
-              <input
-                type={showPassword ? 'text' : 'password'}
-                name="newPassword"
-                value={passwordData.newPassword}
-                onChange={handlePasswordChange}
-                className={`${styles.profileEmailInput} ${passwordErrors.newPassword ? styles.inputError : ''}`}
-                placeholder="Введите новый пароль"
-              />
-              <button
-                type="button"
-                className={styles.togglePasswordButton}
-                onClick={togglePasswordVisibility}
-                aria-label={showPassword ? 'Скрыть пароль' : 'Показать пароль'}
-              >
-                <span className={showPassword ? styles.eyeOpen : styles.eyeClosed} />
-              </button>
-            </div>
-            {passwordErrors.newPassword && (
-              <div className={styles.errorText}>{passwordErrors.newPassword}</div>
-            )}
-          </div>
-
-          <div className={styles.profileInputBlock}>
-            <label>Подтвердите пароль</label>
-            <div className={styles.passwordInputWrapper}>
-              <input
-                type={showPassword ? 'text' : 'password'}
-                name="confirmPassword"
-                value={passwordData.confirmPassword}
-                onChange={handlePasswordChange}
-                className={`${styles.profileEmailInput} ${passwordErrors.confirmPassword ? styles.inputError : ''}`}
-                placeholder="Повторите новый пароль"
-              />
-              <button
-                type="button"
-                className={styles.togglePasswordButton}
-                onClick={togglePasswordVisibility}
-                aria-label={showPassword ? 'Скрыть пароль' : 'Показать пароль'}
-              >
-                <span className={showPassword ? styles.eyeOpen : styles.eyeClosed} />
-              </button>
-            </div>
-            {passwordErrors.confirmPassword && (
-              <div className={styles.errorText}>{passwordErrors.confirmPassword}</div>
-            )}
-          </div>
-
-          {passwordErrors.form && <div className={styles.errorText}>{passwordErrors.form}</div>}
-
-          <div className={styles.passwordButtons}>
-            <Button
-              type="primary"
-              onClick={handlePasswordSubmit}
-              disabled={
-                !passwordData.currentPassword ||
-                !passwordData.newPassword ||
-                !passwordData.confirmPassword ||
-                isLoading
-              }
-            >
-              {isLoading ? 'Сохранение...' : 'Сохранить пароль'}
-            </Button>
-            <Button type="secondary" onClick={() => setIsChangingPassword(false)}>
-              Отмена
-            </Button>
-          </div>
-        </div>
+        <PasswordChangeForm
+          passwordData={passwordData}
+          passwordErrors={passwordErrors}
+          showPassword={showPassword}
+          isLoading={isLoading}
+          onPasswordChange={handlePasswordChange}
+          onTogglePasswordVisibility={togglePasswordVisibility}
+          onSubmit={handlePasswordSubmit}
+          onCancel={() => setIsChangingPassword(false)}
+        />
       ) : (
         <button
           className={styles.profileChangePasswordBtn}
