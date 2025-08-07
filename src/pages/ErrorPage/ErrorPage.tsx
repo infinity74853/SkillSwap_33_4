@@ -24,7 +24,7 @@ const errorConfig = {
   },
 };
 
-export const ErrorPage: FC<ErrorPageProps> = ({ type }) => {
+const ErrorPage: FC<ErrorPageProps> = ({ type }) => {
   const config = errorConfig[type];
   const navigate = useNavigate();
   return (
@@ -40,3 +40,5 @@ export const ErrorPage: FC<ErrorPageProps> = ({ type }) => {
     </div>
   );
 };
+
+export default ErrorPage;

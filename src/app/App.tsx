@@ -1,22 +1,32 @@
 import { MainLayout } from '@/widgets/Layout/MainLayout';
-import ProfileDetailsPage from '@/pages/profileDetails/ProfileDetailsPage';
 import './styles/index.css';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
-import { Suspense, useEffect } from 'react';
+import { ComponentType, lazy, Suspense, useEffect } from 'react';
 import { ProtectedRoute } from '@/shared/ui/protectedRoute/protectedRoute';
 import { useDispatch } from '@/services/store/store';
 import { initializeLikes } from '@/services/slices/likeSlice';
 import { fetchCatalog } from '@/services/slices/catalogSlice';
-import { SuccessModal } from '@/features/successModal/successModal';
-import { RegistrationForms } from '@/features/RegistrationForms/registrationForms';
-import { ErrorPage } from '@/pages/ErrorPage/ErrorPage';
-import SkillPage from '@/pages/skillPage/skillPage';
 import { CatalogPage } from '@/pages/catalogPage/catalogPage';
 import { fetchUser } from '@/services/thunk/authUser';
 import { AboutPage } from '@/pages/AboutPage/AboutPage';
 import { fetchExchanges } from '@/services/slices/exchangeSlice';
 import { getSkills } from '@/services/slices/skillsSlice';
-import { RegisterPreviewPage } from '@/pages/registerPreviewPage/registerPreviewPage';
+import Loader from '@/shared/ui/Loader/loader';
+const ProfileDetailsPage = lazy(
+  () =>
+    new Promise<{ default: ComponentType<any> }>(resolve => {
+      setTimeout(() => {
+        import('@/pages/profileDetails/ProfileDetailsPage').then(module =>
+          resolve({ default: module.default }),
+        );
+      }, 2000);
+    }),
+);
+const SkillPage = lazy(() => import('@/pages/skillPage/skillPage'));
+const RegistrationForms = lazy(() => import('@/features/RegistrationForms/registrationForms'));
+const SuccessModal = lazy(() => import('@/features/successModal/successModal'));
+const RegisterPreviewPage = lazy(() => import('@/pages/registerPreviewPage/registerPreviewPage'));
+const ErrorPage = lazy(() => import('@/pages/ErrorPage/ErrorPage'));
 
 function App() {
   const navigate = useNavigate();
@@ -33,7 +43,7 @@ function App() {
   }, [dispatch]);
 
   return (
-    <Suspense fallback={<></> /*Loader, когда будет готов*/}>
+    <Suspense fallback={<Loader />}>
       {/* 
         Основной блок <Routes> для отображения страниц.
         Мы передаем ему `location={backgroundLocation || location}`.
