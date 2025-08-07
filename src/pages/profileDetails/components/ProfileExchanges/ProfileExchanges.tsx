@@ -5,6 +5,7 @@ import { usersData } from '@/shared/mocks/usersData';
 import { Button } from '@/shared/ui/button/button';
 import { useNavigate } from 'react-router-dom';
 import styles from './ProfileExchanges.module.css';
+import { Key } from 'react';
 
 export function ProfileExchanges() {
   const requests = useSelector(selectFromUserExchangeRequest);
@@ -23,7 +24,7 @@ export function ProfileExchanges() {
 
   return (
     <div className={styles.container}>
-      {requests.map(request => {
+      {requests.map((request: { toUserId: string; id: Key | null | undefined }) => {
         const user = usersData.find(u => u._id === request.toUserId);
         if (!user) return null;
 

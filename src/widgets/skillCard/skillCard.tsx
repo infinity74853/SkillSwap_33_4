@@ -8,6 +8,8 @@ import { CopyLinkDropdownItem } from '@/features/copyLink';
 import arrowLeft from '@/app/assets/static/images/icons/arrow-chevron-left.svg';
 import arrowRight from '@/app/assets/static/images/icons/arrow-chevron-right.svg';
 import styles from './skillCard.module.css';
+import { Button } from '@/shared/ui/button/button';
+import { useExchange } from '@/shared/hooks/useExchange';
 
 export interface TeachableSkill {
   customSkillId: string;
@@ -24,6 +26,8 @@ export interface SkillCardProps {
   renderButton?: () => React.ReactNode;
   className?: string;
   onExchangeClick?: () => void;
+  ownerId: string;
+  ownerName?: string;
 }
 
 const SkillCard: React.FC<SkillCardProps> = ({
@@ -33,7 +37,11 @@ const SkillCard: React.FC<SkillCardProps> = ({
   renderButton,
   className,
   onExchangeClick,
+  ownerId,
 }) => {
+  const { sendExchangeRequest, hasSentRequest } = useExchange();
+  const alreadyRequested = hasSentRequest(ownerId);
+
   // === Извлечение изображений ===
   const mainImage = useMemo(
     () => (skill.image && skill.image[0]) || '/placeholder.jpg',
@@ -66,6 +74,12 @@ const SkillCard: React.FC<SkillCardProps> = ({
     },
     [totalImages],
   );
+
+  const handleClick = async () => {
+    if (alreadyRequested) return;
+    await sendExchangeRequest(ownerId);
+    onExchangeClick?.();
+  };
 
   const dropdownItems = useMemo(
     () => [
@@ -110,21 +124,25 @@ const SkillCard: React.FC<SkillCardProps> = ({
         {/* === Основной контент === */}
         <div className={styles.skillDetails}>
           <div className={styles.skillContent}>
-            <h1 className={styles.title}>{skill.name}</h1>
-            <p className={styles.category}>{skill.category}</p>
-            <p className={styles.description}>{skill.description}</p>
+            <div className={styles.contentBeforeButton}>
+              <h1 className={styles.title}>{skill.name}</h1>
+              <p className={styles.category}>{skill.category}</p>
+              <p className={styles.description}>{skill.description}</p>
+            </div>
 
             {renderButton ? (
               renderButton()
+            ) : alreadyRequested ? (
+              <Button onClick={() => {}} type="secondary">
+                <span className={styles.contentClock}>
+                  <div className={styles.clock}></div>
+                  <span>Обмен предложен</span>
+                </span>
+              </Button>
             ) : (
-              <button
-                type="button"
-                className={styles.button}
-                onClick={onExchangeClick}
-                aria-label="Предложить обмен"
-              >
+              <Button onClick={handleClick} type="primary">
                 Предложить обмен
-              </button>
+              </Button>
             )}
           </div>
 

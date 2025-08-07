@@ -67,4 +67,4 @@ const catalogSlice = createSlice({
 });
 
 export const { setSearchQuery } = catalogSlice.actions;
-export default catalogSlice.reducer;
+export const catalogReducer = catalogSlice.reducer;

@@ -1,5 +1,5 @@
-import { selectExchageRequests } from '@/services/selectors/exchangeSelectors';
-import { removeRequest } from '@/services/slices/exchangeSlice';
+import { selectToUserExchangeRequest } from '@/services/selectors/exchangeSelectors';
+import { markAsRead } from '@/services/slices/exchangeSlice';
 import { useDispatch, useSelector } from '@/services/store/store';
 import styles from './requestPanel.module.css';
 
@@ -8,12 +8,14 @@ import styles from './requestPanel.module.css';
 //Боковая панель с уведомлениями об обменах
 
 const RequestPanel = () => {
-  const requests = useSelector(selectExchageRequests);
+  const requests = useSelector(selectToUserExchangeRequest);
   const dispatch = useDispatch();
 
-  // TODO: На данный момет нажатие по крестику удаляет запрос из среза, возможно нужно будет сделать что-то другое
+  // Фильтруем только непрочитанные запросы
+  const unreadRequests = requests.filter(request => !request.isRead);
+
   const handleRemove = (id: string | number) => {
-    dispatch(removeRequest(id));
+    dispatch(markAsRead(id));
   };
 
   if (requests.length === 0) {
@@ -22,7 +24,7 @@ const RequestPanel = () => {
 
   return (
     <div className={styles.sidePanel}>
-      {requests.map(request => (
+      {unreadRequests.map(request => (
         <div key={request.id} className={styles.requestCard}>
           <div className={styles.cardContent}>
             <div className={styles.requestTextContainer}>

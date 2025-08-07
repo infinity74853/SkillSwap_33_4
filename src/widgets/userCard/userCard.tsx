@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from '@/services/store/store';
 import { selectIsLiked } from '@/services/selectors/likeSelectors';
 import { toggleLike } from '@/services/slices/likeSlice';
 import { useNavigate } from 'react-router-dom';
+import { useExchange } from '@/shared/hooks/useExchange';
 
 type UserCardProps = User & {
   // Дополнительные пропсы, если нужны
@@ -30,7 +31,10 @@ export const UserCard: React.FC<UserCardProps> = ({
 }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  // const [isExchange, setExchange] = useState(false);
+
+  const { hasSentRequest } = useExchange();
+  const alreadyRequested = hasSentRequest(_id);
+
   const learnSkill = wantsToLearn.slice(0, 2);
   const moreSkills = wantsToLearn.length - learnSkill.length;
 
@@ -85,11 +89,19 @@ export const UserCard: React.FC<UserCardProps> = ({
           </div>
         </div>
       </div>
-      {showDetails && (
-        <Button onClick={openProfile} type="primary">
-          Подробнее
-        </Button>
-      )}
+      {showDetails &&
+        (alreadyRequested ? (
+          <Button onClick={openProfile} type="secondary">
+            <span className={styles.contentClock}>
+              <div className={styles.clock}></div>
+              <span>Обмен предложен</span>
+            </span>
+          </Button>
+        ) : (
+          <Button onClick={openProfile} type="primary">
+            Подробнее
+          </Button>
+        ))}
     </div>
   );
 };
