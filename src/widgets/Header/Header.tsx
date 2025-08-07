@@ -54,7 +54,10 @@ export const Header = () => {
   }, []);
 
   return (
-    <header className={styles.header} data-auth={userData ? 'true' : 'false'}>
+    <header
+      className={`${styles.header} ${currentTheme === 'dark' ? styles.dark : ''}`}
+      data-auth={userData ? 'true' : 'false'}
+    >
       <div className={styles.container}>
         <div className={styles.leftSection}>
           <Link to="/" className={styles.logoLink}>
