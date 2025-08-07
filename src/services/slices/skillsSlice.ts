@@ -1,9 +1,9 @@
 import { createAsyncThunk, createSelector, createSlice } from '@reduxjs/toolkit';
 import { getSkillsApi } from '@/api/skillSwapApi';
-import { Skill } from '@/entities/skill/model/types';
+import { Skill, SkillCategory } from '@/entities/skill/model/types';
 
 type SkillsState = {
-  skills: Array<Skill>;
+  skills: Skill[];
   loading: boolean;
   error: string | undefined;
 };
@@ -14,9 +14,7 @@ const initialState: SkillsState = {
   error: undefined,
 };
 // СТАЛО
-export const getSkills = createAsyncThunk<{ data: Skill[] }>('skills/getAll', async () =>
-  getSkillsApi(),
-);
+export const getSkills = createAsyncThunk<Skill[]>('skills/getAll', async () => getSkillsApi());
 
 const skillsSlice = createSlice({
   name: 'skills',
@@ -34,7 +32,7 @@ const skillsSlice = createSlice({
         state.error = 'Не удалось загрузить данные о навыках';
       })
       .addCase(getSkills.fulfilled, (state, action) => {
-        state.skills = action.payload.data;
+        state.skills = action.payload;
         state.loading = false;
       });
   },
@@ -50,4 +48,23 @@ export const getCategoriesSelector = createSelector(getSkillsSelector, skills =>
 export const getSkillsBySubcategoryPrefixSelector = createSelector(
   [getSkillsSelector, (_, prefix: string) => prefix],
   (skills, prefix) => skills.filter(skill => skill.subcategoryId.startsWith(prefix)),
+);
+
+export const getSubcategoriesByCategory = createSelector(
+  [
+    getSkillsSelector,
+    (_, selectedCategories: SkillCategory[] | SkillCategory) => selectedCategories,
+  ],
+  (skills, selectedCategories) => {
+    const filtered = skills.filter(skill => selectedCategories.includes(skill.category));
+    return Array.from(new Set(filtered.map(skill => skill.subcategory)));
+  },
+);
+
+export const getSubcategoryIdByName = createSelector(
+  [getSkillsSelector, (_, subcategoryName: string) => subcategoryName],
+  (skills, subcategoryName) => {
+    const skill = skills.find(s => s.subcategory === subcategoryName);
+    return skill ? skill.subcategoryId : undefined;
+  },
 );
