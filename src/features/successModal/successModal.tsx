@@ -2,7 +2,7 @@ import { Modal } from '@/features/modal/modal';
 import done from '@/app/assets/static/images/icons/successDone.svg';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-export const SuccessModal = ({ onClose }: { onClose: () => void }) => {
+const SuccessModal = ({ onClose }: { onClose: () => void }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const handleDone = () => {
@@ -45,3 +45,5 @@ export const SuccessModal = ({ onClose }: { onClose: () => void }) => {
     />
   );
 };
+
+export default SuccessModal;

@@ -5,7 +5,7 @@ import { TeachableSkill } from '@/widgets/skillCard/skillCard';
 import { FC } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-export const RegisterPreviewPage: FC = () => {
+const RegisterPreviewPage: FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
@@ -49,3 +49,5 @@ export const RegisterPreviewPage: FC = () => {
     />
   );
 };
+
+export default RegisterPreviewPage;
