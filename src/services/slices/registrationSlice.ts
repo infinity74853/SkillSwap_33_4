@@ -1,32 +1,40 @@
-import { SkillCategory } from '@/entities/skill/model/types';
-import { skillsCategories } from '@/shared/lib/categories';
+import { SkillCategory, SkillSubcategory } from '@/entities/skill/model/types';
 import { russianCities } from '@/shared/lib/cities';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-
-type AllSkillSubcategories = (typeof skillsCategories)[SkillCategory][number];
 type City = (typeof russianCities)[number];
 
+export type TFullRegistrationData = TStepOneData & TStepTwoData & TStepThreeData;
+
+export type TStepOneData = {
+  email: string | undefined;
+  password: string | undefined;
+};
+
+export type TStepTwoData = {
+  avatar: string | undefined;
+  name: string | undefined;
+  birthdate: string | undefined;
+  gender: 'Мужской' | 'Женский' | undefined;
+  city: City | undefined;
+  categories: SkillCategory[] | undefined;
+  subcategories: SkillSubcategory<SkillCategory>[] | undefined;
+};
+
+export type TStepThreeData = {
+  skillName: string | undefined;
+  skillCategory: SkillCategory | undefined;
+  skillSubCategory: SkillSubcategory<SkillCategory> | undefined;
+  description: string | undefined;
+  images: string[] | undefined;
+  customSkillId: string | undefined;
+  subcategoryId: string | undefined;
+  userId: string | undefined;
+};
+
 type RegistrationState = {
-  stepOneData: {
-    email: string | undefined;
-    password: string | undefined;
-  };
-  stepTwoData: {
-    name: string | undefined;
-    birthdate: string | undefined;
-    gender: 'Мужской' | 'Женский' | undefined;
-    city: City | undefined;
-    categories: SkillCategory[] | undefined;
-    subcategories: AllSkillSubcategories[] | undefined;
-    avatar: File[] | undefined;
-  };
-  stepThreeData: {
-    skillName: string | undefined;
-    skill: SkillCategory | undefined;
-    subcategories: AllSkillSubcategories[] | undefined;
-    description: string | undefined;
-    images: File[] | undefined;
-  };
+  stepOneData: TStepOneData;
+  stepTwoData: TStepTwoData;
+  stepThreeData: TStepThreeData;
   error: string | undefined;
   loading: boolean;
 };
@@ -47,18 +55,24 @@ const initialState: RegistrationState = {
   },
   stepThreeData: {
     skillName: undefined,
-    skill: undefined,
-    subcategories: undefined,
+    skillCategory: undefined,
     description: undefined,
     images: undefined,
+    customSkillId: undefined,
+    subcategoryId: undefined,
+    skillSubCategory: undefined,
+    userId: undefined,
   },
   error: undefined,
   loading: false,
 };
 
-export const registerUser = createAsyncThunk('registration/submit', async data => {
-  localStorage.setItem('registrationData', JSON.stringify(data));
-});
+export const registerUser = createAsyncThunk(
+  'registration/submit',
+  async (data: TFullRegistrationData) => {
+    localStorage.setItem('registrationData', JSON.stringify(data));
+  },
+);
 
 const registrationSlice = createSlice({
   name: 'registration',

@@ -144,7 +144,7 @@ export const AuthFormUI = ({
             <Button type="primary" disabled={!!(errors.email || errors.password)}>
               {textContent.buttonText}
             </Button>
-            {isFirstStage && (
+            {!isFirstStage && (
               <a href="/register" className={styles.link}>
                 Зарегистрироваться
               </a>

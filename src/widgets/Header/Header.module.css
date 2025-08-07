@@ -216,3 +216,37 @@
     flex-wrap: wrap;
   }
 }
+
+/* Темная тема для хедера */
+.header.dark {
+  background: #253017;
+  border-bottom: 1px solid #333;
+}
+
+.header.dark .linkAbout,
+.header.dark .linkSkills {
+  color: #f0f0f0;
+}
+
+.header.dark .link:hover,
+.header.dark .themeToggle:hover,
+.header.dark .linkAbout:hover,
+.header.dark .iconWrapper:hover,
+.header.dark .linkSkillsIcon:hover {
+  background-color: #333;
+}
+
+.header.dark .linkSkills.active {
+  background-color: #2a3a1f;
+}
+
+.header.dark .chevronIcon {
+  background-color: #f0f0f0;
+}
+
+/* Обновляем медиа-запросы для темной темы */
+@media (max-width: 768px) {
+  .header.dark .rightSection {
+    border-top: 1px solid #333;
+  }
+}

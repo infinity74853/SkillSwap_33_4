@@ -20,13 +20,9 @@ export const authSlice = createSlice({
   name: AUTH_USER_SLICE,
   initialState,
   reducers: {
-    // Добавляем редюсер для обновления данных пользователя
-    setUserData: (state, action: PayloadAction<Partial<User>>) => {
-      if (state.data) {
-        state.data = { ...state.data, ...action.payload };
-      }
+    setUserData: (state, action: PayloadAction<User>) => {
+      state.data = action.payload;
     },
-    // Можно добавить другие редюсеры по необходимости
     clearUserData: state => {
       state.data = null;
       state.authStatus = RequestStatus.Idle;

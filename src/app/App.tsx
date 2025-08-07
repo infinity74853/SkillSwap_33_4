@@ -1,22 +1,25 @@
 import { MainLayout } from '@/widgets/Layout/MainLayout';
 import ProfileDetailsPage from '@/pages/profileDetails/ProfileDetailsPage';
 import './styles/index.css';
-import { Route, Routes, useLocation } from 'react-router-dom';
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { Suspense, useEffect } from 'react';
 import { ProtectedRoute } from '@/shared/ui/protectedRoute/protectedRoute';
 import { useDispatch } from '@/services/store/store';
 import { initializeLikes } from '@/services/slices/likeSlice';
 import { fetchCatalog } from '@/services/slices/catalogSlice';
 import { SuccessModal } from '@/features/successModal/successModal';
-import { RegistrationForms } from '@/features/registrationForms/registrationForms';
+import { RegistrationForms } from '@/features/RegistrationForms/registrationForms';
 import { ErrorPage } from '@/pages/ErrorPage/ErrorPage';
 import SkillPage from '@/pages/skillPage/skillPage';
 import { CatalogPage } from '@/pages/catalogPage/catalogPage';
 import { fetchUser } from '@/services/thunk/authUser';
 import { AboutPage } from '@/pages/AboutPage/AboutPage';
 import { fetchExchanges } from '@/services/slices/exchangeSlice';
+import { getSkills } from '@/services/slices/skillsSlice';
+import { RegisterPreviewPage } from '@/pages/registerPreviewPage/registerPreviewPage';
 
 function App() {
+  const navigate = useNavigate();
   const location = useLocation();
   const backgroundLocation = location.state && location.state.background;
   const dispatch = useDispatch();
@@ -26,6 +29,7 @@ function App() {
     dispatch(fetchUser());
     dispatch(fetchCatalog());
     dispatch(fetchExchanges());
+    dispatch(getSkills());
   }, [dispatch]);
 
   return (
@@ -94,7 +98,7 @@ function App() {
             path="/register/preview"
             element={
               <ProtectedRoute onlyUnAuth>
-                <>{/* Модалка с превью своего предложения */}</>
+                <RegisterPreviewPage />
               </ProtectedRoute>
             }
           />
@@ -102,7 +106,11 @@ function App() {
             path="/register/success"
             element={
               <ProtectedRoute onlyUnAuth>
-                <>{/* Модалка об успешной регистрации */}</>
+                <SuccessModal
+                  onClose={() => {
+                    navigate('/');
+                  }}
+                />
               </ProtectedRoute>
             }
           />

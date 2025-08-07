@@ -13,7 +13,7 @@ export type Skill = {
 
 export type CustomSkill = Skill & {
   name: string;
-  image: string[];
+  image: string[] | File[];
   description: string;
   customSkillId: string;
 };

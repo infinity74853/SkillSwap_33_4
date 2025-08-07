@@ -1,18 +1,35 @@
 import { Link } from 'react-router-dom';
 import { Logo } from '@/shared/ui/Logo/Logo';
 import styles from './Footer.module.css';
+import { useEffect, useState } from 'react';
 
 export const Footer = () => {
+  const [currentTheme, setCurrentTheme] = useState<'light' | 'dark'>('light');
+
+  useEffect(() => {
+    const checkTheme = () => {
+      const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
+      if (savedTheme) {
+        setCurrentTheme(savedTheme);
+      }
+    };
+
+    checkTheme();
+
+    // Проверяем изменения темы каждые 200мс
+    const interval = setInterval(checkTheme, 200);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <footer className={styles.footer}>
+    <footer className={`${styles.footer} ${currentTheme === 'dark' ? styles.dark : ''}`}>
       <div className={styles.container}>
-        {/* Секция 1: Лого и копирайт */}
         <div className={styles.logoSection}>
           <Logo />
           <p className={styles.copyright}>SkillSwap — {new Date().getFullYear()}</p>
         </div>
 
-        {/* Секция 2: Навигация с точками */}
         <div className={styles.section}>
           <ul className={`${styles.linksList} ${styles.withBullets}`}>
             <li>
@@ -24,7 +41,6 @@ export const Footer = () => {
           </ul>
         </div>
 
-        {/* Секция 3: Контакты */}
         <div className={styles.section}>
           <ul className={styles.linksList}>
             <li>
@@ -36,7 +52,6 @@ export const Footer = () => {
           </ul>
         </div>
 
-        {/* Секция 4: Политика */}
         <div className={styles.section}>
           <ul className={styles.linksList}>
             <li>

@@ -4,36 +4,11 @@ import { RequestStatus } from '@/entities/auth/model/types';
 import { User } from '@/entities/user/model/types';
 import { userSliceActions } from '../authSlice';
 
-const mockUser: User = {
-  _id: '1',
-  name: 'John',
-  image: 'image-url',
-  city: '',
-  gender: 'male',
-  birthdayDate: '1990-01-01',
-  description: '',
-  likes: [],
-  canTeach: {
-    name: 'JavaScript',
-    description: 'Могу научить основам JS',
-    image: ['https://example.com/js-icon.png'], // ✅ без пробелов
-    category: 'Творчество и искусство',
-    subcategory: 'Рисование и иллюстрация',
-    subcategoryId: 'drawing',
-    customSkillId: 'js-skill-1',
-  },
-  wantsToLearn: [
-    {
-      name: 'Английский разговорный',
-      category: 'Иностранные языки',
-      subcategory: 'Английский',
-      subcategoryId: 'english',
-      customSkillId: 'english-skill-1',
-    },
-  ],
-  email: 'john@test.com',
-  createdAt: new Date().toISOString(),
-};
+// Используем реальные данные из usersData
+import { usersData } from '@/shared/mocks/usersData';
+
+// Берём первого пользователя как mockUser
+const mockUser: User = usersData[0];
 
 const mockAuthResponse = {
   user: mockUser,
@@ -75,25 +50,23 @@ describe('authSlice', () => {
 
       expect(state.data).toBeDefined();
       if (state.data) {
-        expect(state.data._id).toBe('1');
-        expect(state.data.name).toBe('John');
+        expect(state.data._id).toBe(mockUser._id);
+        expect(state.data.name).toBe(mockUser.name);
         expect(typeof state.data.image).toBe('string');
 
         // Проверяем canTeach
-        expect(state.data.canTeach.name).toBe('JavaScript');
-        expect(state.data.canTeach.description).toBe('Могу научить основам JS');
+        expect(state.data.canTeach.name).toBe(mockUser.canTeach.name);
         expect(Array.isArray(state.data.canTeach.image)).toBe(true);
-        expect(state.data.canTeach.image).toContain('https://example.com/js-icon.png');
-        expect(state.data.canTeach.category).toBe('Творчество и искусство');
-        expect(state.data.canTeach.subcategory).toBe('Рисование и иллюстрация');
-        expect(state.data.canTeach.customSkillId).toBe('js-skill-1');
+        expect(state.data.canTeach.category).toBe(mockUser.canTeach.category);
+        expect(state.data.canTeach.subcategory).toBe(mockUser.canTeach.subcategory);
+        expect(state.data.canTeach.customSkillId).toBe(mockUser.canTeach.customSkillId);
 
         // Проверяем wantsToLearn
         const want = state.data.wantsToLearn[0];
-        expect(want.name).toBe('Английский разговорный');
-        expect(want.category).toBe('Иностранные языки');
-        expect(want.subcategory).toBe('Английский');
-        expect(want.customSkillId).toBe('english-skill-1');
+        expect(want.name).toBe(mockUser.wantsToLearn[0].name);
+        expect(want.category).toBe(mockUser.wantsToLearn[0].category);
+        expect(want.subcategory).toBe(mockUser.wantsToLearn[0].subcategory);
+        expect(want.customSkillId).toBe(mockUser.wantsToLearn[0].customSkillId);
         expect(want).not.toHaveProperty('description');
         expect(want).not.toHaveProperty('image');
       }
@@ -124,14 +97,12 @@ describe('authSlice', () => {
 
       expect(state.data).toBeDefined();
       if (state.data) {
-        expect(state.data._id).toBe('1');
-        expect(state.data.name).toBe('John');
+        expect(state.data._id).toBe(mockUser._id);
+        expect(state.data.name).toBe(mockUser.name);
 
-        expect(state.data.canTeach.name).toBe('JavaScript');
-        expect(state.data.canTeach.description).toBe('Могу научить основам JS');
-        expect(Array.isArray(state.data.canTeach.image)).toBe(true);
-        expect(state.data.canTeach.image).toContain('https://example.com/js-icon.png');
-        expect(state.data.canTeach.customSkillId).toBe('js-skill-1');
+        expect(state.data.canTeach.name).toBe(mockUser.canTeach.name);
+        expect(state.data.canTeach.category).toBe(mockUser.canTeach.category);
+        expect(state.data.canTeach.customSkillId).toBe(mockUser.canTeach.customSkillId);
       }
 
       expect(state.authStatus).toBe(RequestStatus.Success);
@@ -141,7 +112,7 @@ describe('authSlice', () => {
     it('should handle logoutUserApi.fulfilled', () => {
       const stateWithUser = {
         ...initialState,
-        data: mockUser,
+        mockUser,
         authStatus: RequestStatus.Success,
         userCheck: true,
       };
@@ -159,42 +130,66 @@ describe('authSlice', () => {
 
   describe('reducers', () => {
     it('should handle setUserData', () => {
-      const stateWithUser = {
-        ...initialState,
-        data: { ...mockUser, description: 'Old description', city: 'London' },
+      const updatedUser: User = {
+        ...mockUser,
+        name: 'Updated Name',
+        city: 'Tokyo',
+        description: 'Updated description',
       };
 
-      const action = userSliceActions.setUserData({
-        description: 'Updated description',
-        city: 'Moscow',
-        name: 'John Updated',
-      });
-
-      const state = authSlice.reducer(stateWithUser, action);
+      const action = userSliceActions.setUserData(updatedUser);
+      const state = authSlice.reducer(initialState, action);
 
       expect(state.data).toBeDefined();
       if (state.data) {
+        expect(state.data.name).toBe('Updated Name');
+        expect(state.data.city).toBe('Tokyo');
         expect(state.data.description).toBe('Updated description');
-        expect(state.data.city).toBe('Moscow');
-        expect(state.data.name).toBe('John Updated');
       }
     });
 
-    it('should not modify state if data is null in setUserData', () => {
-      const action = userSliceActions.setUserData({
-        name: 'New Name',
-        city: 'Tokyo',
-      });
+    it('should replace user data completely in setUserData', () => {
+      const newUser: User = {
+        _id: 'new-123',
+        name: 'Alice',
+        image: 'https://example.com/alice.jpg',
+        city: 'Paris',
+        gender: 'female',
+        birthdayDate: '1995-01-01',
+        description: 'New user',
+        likes: [],
+        email: 'alice@test.com',
+        createdAt: new Date().toISOString(),
+        canTeach: {
+          name: 'French',
+          category: 'Иностранные языки',
+          subcategory: 'Французский',
+          subcategoryId: 'lang_french_001',
+          description: 'Teach French',
+          image: ['https://example.com/french.jpg'],
+          customSkillId: 'skill_french_002',
+        },
+        wantsToLearn: [
+          {
+            name: 'Cooking',
+            category: 'Дом и уют',
+            subcategory: 'Приготовление еды',
+            subcategoryId: 'home_cooking_001',
+            customSkillId: 'want_cooking_001',
+          },
+        ],
+      };
 
+      const action = userSliceActions.setUserData(newUser);
       const state = authSlice.reducer(initialState, action);
 
-      expect(state.data).toBeNull();
+      expect(state.data).toEqual(newUser);
     });
 
     it('should handle clearUserData', () => {
       const stateWithUser = {
         ...initialState,
-        data: mockUser,
+        mockUser,
         authStatus: RequestStatus.Success,
         userCheck: true,
       };
