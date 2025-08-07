@@ -3,11 +3,12 @@ import { registerUser } from '@/services/slices/registrationSlice';
 import { useDispatch, useSelector } from '@/services/store/store';
 import { TeachableSkill } from '@/widgets/skillCard/skillCard';
 import { FC } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export const RegisterPreviewPage: FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const { stepOneData, stepTwoData, stepThreeData } = useSelector(state => state.register);
   const isOpen = Object.values(stepThreeData).every(
     value => value !== undefined && (Array.isArray(value) ? value.length > 0 : true),
@@ -28,10 +29,10 @@ export const RegisterPreviewPage: FC = () => {
       skill={skill}
       isOpen={isOpen}
       onClose={() => {
-        navigate(-2);
+        navigate('/register');
       }}
       onEdit={() => {
-        navigate(-2);
+        navigate('/register');
       }}
       onSuccess={() => {
         dispatch(
@@ -41,7 +42,9 @@ export const RegisterPreviewPage: FC = () => {
             ...stepThreeData,
           }),
         );
-        navigate('/success', { state: { background: '/' } });
+        navigate('/register/success', {
+          state: { background: location },
+        });
       }}
     />
   );
