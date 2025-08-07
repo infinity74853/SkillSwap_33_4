@@ -1,9 +1,9 @@
-import { CustomSkill, SkillCategory, SkillSubcategory } from '@/entities/skill/model/types';
-import { User } from '@/entities/user/model/types';
+import { SkillCategory, SkillSubcategory } from '@/entities/skill/model/types';
 import { russianCities } from '@/shared/lib/cities';
-import { generateToken, setCookie, setToStorage } from '@/shared/mocks/authMock';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 type City = (typeof russianCities)[number];
+
+export type TFullRegistrationData = TStepOneData & TStepTwoData & TStepThreeData;
 
 export type TStepOneData = {
   email: string | undefined;
@@ -67,9 +67,12 @@ const initialState: RegistrationState = {
   loading: false,
 };
 
-export const registerUser = createAsyncThunk('registration/submit', async data => {
-  localStorage.setItem('registrationData', JSON.stringify(data));
-});
+export const registerUser = createAsyncThunk(
+  'registration/submit',
+  async (data: TFullRegistrationData) => {
+    localStorage.setItem('registrationData', JSON.stringify(data));
+  },
+);
 
 const registrationSlice = createSlice({
   name: 'registration',

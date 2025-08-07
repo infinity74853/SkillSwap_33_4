@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 export const RegisterPreviewPage: FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const stepThreeData = useSelector(state => state.register.stepThreeData);
+  const { stepOneData, stepTwoData, stepThreeData } = useSelector(state => state.register);
   const isOpen = Object.values(stepThreeData).every(
     value => value !== undefined && (Array.isArray(value) ? value.length > 0 : true),
   );
@@ -34,7 +34,13 @@ export const RegisterPreviewPage: FC = () => {
         navigate(-2);
       }}
       onSuccess={() => {
-        dispatch(registerUser());
+        dispatch(
+          registerUser({
+            ...stepOneData,
+            ...stepTwoData,
+            ...stepThreeData,
+          }),
+        );
         navigate('/success', { state: { background: '/' } });
       }}
     />
