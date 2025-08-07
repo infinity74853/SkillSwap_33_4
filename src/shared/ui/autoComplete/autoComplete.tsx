@@ -2,28 +2,33 @@ import { useState, useRef, useEffect, forwardRef } from 'react';
 import { TextInput, TextInputProps } from '../textInput/textInput.tsx';
 import styles from './Autocomplete.module.css';
 import { useClickOutside } from '@/shared/hooks/useClickOutside.ts';
+import { useDebounce } from '@/shared/hooks/useDebounce.ts';
 
 export type AutocompleteProps = Omit<TextInputProps, 'onChange'> & {
   suggestions: string[];
   onChange?: (value: string) => void;
   onSelect?: (value: string) => void;
   className?: string;
-  error?: string;
+  error: string;
   value: string;
+  onBlur?: (value: string) => void;
 };
 
 export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
-  ({ suggestions, onChange, onSelect, value = '', className, ...textInputProps }, ref) => {
+  ({ suggestions, onChange, onSelect, value = '', className, onBlur, ...textInputProps }, ref) => {
     const [isOpen, setIsOpen] = useState(false);
     const [filteredSuggestions, setFilteredSuggestions] = useState<string[]>([]);
     const [selectedIndex, setSelectedIndex] = useState(-1);
     const containerRef = useRef<HTMLDivElement>(null);
+    const [selectionMade, setSelectionMade] = useState(false);
+    const debouncedInputValue = useDebounce(value, 300);
+
     useClickOutside(containerRef, () => setIsOpen(false));
 
     useEffect(() => {
-      if (value) {
+      if (debouncedInputValue && !selectionMade) {
         const filtered = suggestions
-          .filter(item => item.toLowerCase().includes(value.toLowerCase()))
+          .filter(item => item.toLowerCase().includes(debouncedInputValue.toLowerCase()))
           .sort((a, b) => a.localeCompare(b));
         setFilteredSuggestions(filtered);
         setIsOpen(filtered.length > 0);
@@ -32,12 +37,13 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
         setIsOpen(false);
       }
       setSelectedIndex(-1);
-    }, [value, suggestions]);
+    }, [debouncedInputValue, suggestions, selectionMade]);
 
     const handleInputChange = (newValue: string) => {
-      if (onChange) {
-        onChange(newValue);
+      if (selectionMade) {
+        setSelectionMade(false);
       }
+      onChange?.(newValue);
     };
 
     const handleSelect = (suggestion: string) => {
@@ -45,6 +51,14 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
       onSelect?.(suggestion);
       setIsOpen(false);
       setSelectedIndex(-1);
+      onBlur?.(suggestion);
+      setSelectionMade(true);
+    };
+
+    const handleInputClick = () => {
+      if (!selectionMade && filteredSuggestions.length > 0) {
+        setIsOpen(true);
+      }
     };
 
     const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -85,7 +99,7 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
             {...textInputProps}
             ref={ref}
             value={value}
-            onClick={() => setIsOpen(filteredSuggestions.length > 0)}
+            onClick={handleInputClick}
             inputClassName={`${styles.wrapper} ${isOpen ? styles.wrapperOpen : ''}`}
             onChange={e => handleInputChange(e.target.value)}
             hideError={isOpen}
