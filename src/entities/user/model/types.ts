@@ -4,7 +4,7 @@ export type User = {
   createdAt: string | number | Date;
   _id: string;
   name: string;
-  image: string;
+  image: string | File[];
   city: string;
   gender: GenderOption['value'];
   birthdayDate: string;

@@ -11,13 +11,19 @@ import * as yup from 'yup';
 import boardIcon from '@/app/assets/static/images/background/school-board.svg';
 import { DragAndDrop } from '@/widgets/dragAndDrop/dragAndDrop';
 import { useDispatch } from '@/services/store/store';
-import { resetStepThreeData, updateStepThreeData } from '@/services/slices/registrationSlice';
+import {
+  registerUser,
+  resetStepThreeData,
+  TStepThreeData,
+  updateStepThreeData,
+} from '@/services/slices/registrationSlice';
 import { RegistrationInfoPanel } from '@/shared/ui/registrationInfoPanel/registrationInfoPanel';
 import { stepActions } from '@/services/slices/stepSlice';
 import { ProposalPreviewModal } from '@/features/auth/proposalPreviewModal/proposalPreviewModal';
 import { SuccessModal } from '@/features/successModal/successModal';
 import { TeachableSkill } from '@/widgets/skillCard/skillCard';
 import { usersData } from '@/shared/mocks/usersData';
+import { userSliceActions } from '@/services/slices/authSlice';
 
 export const RegisterStepThree: FC = () => {
   const dispatch = useDispatch();
@@ -86,20 +92,29 @@ export const RegisterStepThree: FC = () => {
       })) || []
     : [];
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: TStepThreeData) => {
     dispatch(updateStepThreeData(data));
     const firstUser = usersData[0];
     localStorage.setItem('registrationUserId', firstUser._id);
 
     const skillForPreview: TeachableSkill = {
       customSkillId: `skill_${Date.now()}`,
-      name: data.skillName,
-      category: `${data.skill} / ${data.subcategories.join(', ')}`,
-      description: data.description,
-      image: data.images.map((file: File) => URL.createObjectURL(file)),
+      name: data.skillName ? data.skillName : '',
+      category: `${data.skill} / ${data.subcategories?.join(', ')}`,
+      description: data.description ? data.description : '',
+      image: data.images ? data.images.map((file: File) => URL.createObjectURL(file)) : [],
     };
     setPreviewSkill(skillForPreview);
     setIsPreviewOpen(true);
+  };
+
+  const handleCompleteRegistration = async () => {
+    try {
+      const userData = await dispatch(registerUser()).unwrap();
+      dispatch(userSliceActions.setUserData(userData.user));
+    } catch (error) {
+      console.error('Ошибка регистрации:', error);
+    }
   };
 
   const handleBack = () => {
@@ -114,6 +129,7 @@ export const RegisterStepThree: FC = () => {
   const handleSuccess = () => {
     setIsPreviewOpen(false);
     setIsSuccessOpen(true);
+    handleCompleteRegistration();
   };
 
   return (
