@@ -10,6 +10,7 @@ export default defineConfig({
     setupFiles: './src/setupTests.ts',
 
     coverage: {
+      exclude: ['**/*stories.tsx', '**/*.stories.ts'],
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
     },
