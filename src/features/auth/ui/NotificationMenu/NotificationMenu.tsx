@@ -71,15 +71,21 @@ export const NotificationMenu = ({ isOpen }: NotificationMenuProps) => {
   };
 
   return (
-    <div className={styles.notificationMenu}>
+    <div className={styles.notificationMenu} data-testid="notification-menu">
       <div className={styles.headerMenu}>
         <h3 className={styles.headerMenuTitle}>Новые уведомления</h3>
-        <button className={styles.readAll}>Прочитать все</button>
+        <button className={styles.readAll} data-testid="read-all-btn">
+          Прочитать все
+        </button>
       </div>
 
       <div className={styles.notificationList}>
         {newNotifications.map(notification => (
-          <div key={notification.id} className={styles.notificationItem}>
+          <div
+            key={notification.id}
+            className={styles.notificationItem}
+            data-testid="new-notification"
+          >
             <div className={styles.notificationHeader}>
               <img src={IdeaIcon} alt="Иконка" className={styles.icon} />
               <div className={styles.notificationInfo}>
@@ -97,6 +103,7 @@ export const NotificationMenu = ({ isOpen }: NotificationMenuProps) => {
               <Link
                 to={notification.type === 'incoming' ? '/obmen' : '/profile'}
                 className={styles.buttonNotificationMenu}
+                data-testid={notification.type === 'incoming' ? 'link-to-obmen' : 'link-to-profile'}
               >
                 <Button type="primary">Перейти</Button>
               </Link>
@@ -105,13 +112,19 @@ export const NotificationMenu = ({ isOpen }: NotificationMenuProps) => {
         ))}
       </div>
       {viewedNotifications.length > 0 && (
-        <div className={styles.viewedSection}>
+        <div className={styles.viewedSection} data-testid="viewed-section">
           <div className={styles.viewedHeader}>
             <h3 className={styles.viewedHeaderTitle}>Просмотренные</h3>
-            <button className={styles.clearButton}>Очистить</button>
+            <button className={styles.clearButton} data-testid="clear-btn">
+              Очистить
+            </button>
           </div>
           {viewedNotifications.map(notification => (
-            <div key={notification.id} className={styles.notificationItem}>
+            <div
+              key={notification.id}
+              className={styles.notificationItem}
+              data-testid="viewed-notification"
+            >
               <div className={styles.notificationView}>
                 <img src={IdeaIcon} alt="Иконка" className={styles.icon} />
                 <div className={styles.notificationInfo}>
