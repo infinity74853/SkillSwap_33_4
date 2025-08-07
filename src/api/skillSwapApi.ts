@@ -13,17 +13,10 @@ const assertSuccess = <T>(response: { success: boolean; data: T }, errorText: st
   return response.data;
 };
 
-type SkillResponse = ServerResponse<{
-  data: Skill[];
-}>;
+type SkillResponse = ServerResponse<Skill[]>;
 
-type UsersResponse = ServerResponse<{
-  data: User[];
-}>;
-
-type AuthResponse = ServerResponse<{
-  data: { accessToken: string; refreshToken: string };
-}>;
+type UsersResponse = ServerResponse<User[]>;
+type AuthResponse = ServerResponse<{ accessToken: string; refreshToken: string }>;
 
 export const getSkillsApi = async () => {
   const res = await fetch(`${URL}/api/skills`);
