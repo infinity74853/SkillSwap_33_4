@@ -8,7 +8,7 @@ import { useDispatch } from '@/services/store/store';
 import { initializeLikes } from '@/services/slices/likeSlice';
 import { fetchCatalog } from '@/services/slices/catalogSlice';
 import { SuccessModal } from '@/features/successModal/successModal';
-import { RegistrationForms } from '@/features/registrationForms/registrationForms';
+import { RegistrationForms } from '@/features/RegistrationForms/registrationForms';
 import { ErrorPage } from '@/pages/ErrorPage/ErrorPage';
 import SkillPage from '@/pages/skillPage/skillPage';
 import { CatalogPage } from '@/pages/catalogPage/catalogPage';
