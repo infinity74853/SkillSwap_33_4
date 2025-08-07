@@ -13,6 +13,7 @@ import { ErrorPage } from '@/pages/ErrorPage/ErrorPage';
 import SkillPage from '@/pages/skillPage/skillPage';
 import { CatalogPage } from '@/pages/catalogPage/catalogPage';
 import { fetchUser } from '@/services/thunk/authUser';
+import { AboutPage } from '@/pages/AboutPage/AboutPage';
 
 function App() {
   const location = useLocation();
@@ -30,7 +31,7 @@ function App() {
       {/* 
         Основной блок <Routes> для отображения страниц.
         Мы передаем ему `location={backgroundLocation || location}`.
-        Это "замораживает" фоновую страницу, когда модальное окно активно.
+        Это "замораживает" фоновую страницу, когда модальное окно активнo.
       */}
       <Routes location={backgroundLocation || location}>
         {/*
@@ -42,6 +43,7 @@ function App() {
           <Route index element={<CatalogPage />} />
           <Route path="/profile/*" element={<ProfileDetailsPage />} />
           <Route path="/skill/:id" element={<SkillPage />} />
+          <Route path="/about" element={<AboutPage />} />
           <Route path="*" element={<ErrorPage type="404"></ErrorPage>} />
         </Route>
 
