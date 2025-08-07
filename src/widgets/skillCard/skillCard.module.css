@@ -53,6 +53,10 @@
   min-height: 0;
 }
 
+.contentBeforeButton {
+  flex: 1;
+}
+
 .title,
 .category,
 .description {

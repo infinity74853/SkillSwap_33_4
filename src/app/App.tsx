@@ -14,6 +14,7 @@ import SkillPage from '@/pages/skillPage/skillPage';
 import { CatalogPage } from '@/pages/catalogPage/catalogPage';
 import { fetchUser } from '@/services/thunk/authUser';
 import { AboutPage } from '@/pages/AboutPage/AboutPage';
+import { fetchExchanges } from '@/services/slices/exchangeSlice';
 import { getSkills } from '@/services/slices/skillsSlice';
 import { RegisterPreviewPage } from '@/pages/registerPreviewPage/registerPreviewPage';
 
@@ -27,6 +28,7 @@ function App() {
     dispatch(initializeLikes());
     dispatch(fetchUser());
     dispatch(fetchCatalog());
+    dispatch(fetchExchanges());
     dispatch(getSkills());
   }, [dispatch]);
 

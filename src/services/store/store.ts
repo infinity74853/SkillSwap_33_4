@@ -6,8 +6,8 @@ import {
 } from 'react-redux';
 
 import { registrationReducer } from '@/services/slices/registrationSlice';
-import catalogReducer from '@/services/slices/catalogSlice';
-import exchangeReducer from '@/services/slices/exchangeSlice';
+import { catalogReducer } from '@/services/slices/catalogSlice';
+import { exchangeReducer } from '@/services/slices/exchangeSlice';
 import { skillsReducer } from '../slices/skillsSlice';
 
 import stepsSlice from '@/services/slices/stepSlice';

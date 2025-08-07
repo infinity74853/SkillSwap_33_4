@@ -71,7 +71,12 @@ const SkillPage: React.FC = () => {
       <div className={styles.skillPage}>
         <div className={styles.userOffer}>
           <UserInfo user={currentUser} />
-          <SkillCard skill={currentUser.canTeach} onExchangeClick={handleExchangeProposal} />
+          <SkillCard
+            skill={currentUser.canTeach}
+            ownerId={currentUser._id} // Четко передаем ownerId
+            ownerName={currentUser.name}
+            onExchangeClick={handleExchangeProposal}
+          />
         </div>
         {/* Передаём данные в SameOffers */}
         <SameOffers currentUser={currentUser} users={usersData} />
