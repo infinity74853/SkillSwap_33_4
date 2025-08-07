@@ -67,16 +67,17 @@
   top: 100%;
   left: 0;
   background-color: var(--color-card);
-  border: 1px solid var(--color-caption);
+  border: transparent;
   border-radius: 0 0 16px 16px;
-  border-top: transparent;
-}
+} /* оставил прозрачный бордер чтобы не перекрывало другие элементы */
 
 .li {
   padding: 4px 20px;
   list-style-type: none;
   line-height: 24px;
   z-index: 2;
+  border-left: 1px solid var(--color-caption);
+  border-right: 1px solid var(--color-caption);
 }
 
 .error {
@@ -104,4 +105,10 @@
 
 .selectOpenError {
   border-bottom: 1px solid var(--color-error);
+}
+
+.li:last-child {
+  border-bottom: 1px var(--color-caption) solid;
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
 }
