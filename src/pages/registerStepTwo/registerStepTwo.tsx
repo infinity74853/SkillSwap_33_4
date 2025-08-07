@@ -14,7 +14,11 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { russianCities } from '@/shared/lib/cities';
 import userIcon from '@/app/assets/static/images/background/user-info.svg';
-import { resetStepTwoData, updateStepTwoData } from '@/services/slices/registrationSlice';
+import {
+  resetStepTwoData,
+  TStepTwoData,
+  updateStepTwoData,
+} from '@/services/slices/registrationSlice';
 import { useDispatch } from '@/services/store/store';
 import { RegistrationInfoPanel } from '@/shared/ui/registrationInfoPanel/registrationInfoPanel';
 import { stepActions } from '@/services/slices/stepSlice';
@@ -96,7 +100,7 @@ export const RegisterStepTwo: FC = () => {
     .flatMap(category => skillsCategories[category as keyof typeof skillsCategories] || [])
     .map(val => ({ value: val, label: val }));
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: TStepTwoData) => {
     dispatch(
       updateStepTwoData({
         ...data,

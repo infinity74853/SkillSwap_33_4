@@ -8,27 +8,33 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 type AllSkillSubcategories = (typeof skillsCategories)[SkillCategory][number];
 type City = (typeof russianCities)[number];
 
+export type TStepOneData = {
+  email: string | undefined;
+  password: string | undefined;
+};
+
+export type TStepTwoData = {
+  name: string | undefined;
+  birthdate: string | undefined;
+  gender: 'Мужской' | 'Женский' | undefined;
+  city: City | undefined;
+  categories: SkillCategory[] | undefined;
+  subcategories: AllSkillSubcategories[] | undefined;
+  avatar: File[] | undefined;
+};
+
+export type TStepThreeData = {
+  skillName: string | undefined;
+  skill: SkillCategory | undefined;
+  subcategories: AllSkillSubcategories[] | undefined;
+  description: string | undefined;
+  images: File[] | undefined;
+};
+
 type RegistrationState = {
-  stepOneData: {
-    email: string | undefined;
-    password: string | undefined;
-  };
-  stepTwoData: {
-    name: string | undefined;
-    birthdate: string | undefined;
-    gender: 'Мужской' | 'Женский' | undefined;
-    city: City | undefined;
-    categories: SkillCategory[] | undefined;
-    subcategories: AllSkillSubcategories[] | undefined;
-    avatar: File[] | undefined;
-  };
-  stepThreeData: {
-    skillName: string | undefined;
-    skill: SkillCategory | undefined;
-    subcategories: AllSkillSubcategories[] | undefined;
-    description: string | undefined;
-    images: File[] | undefined;
-  };
+  stepOneData: TStepOneData;
+  stepTwoData: TStepTwoData;
+  stepThreeData: TStepThreeData;
   error: string | undefined;
   loading: boolean;
 };

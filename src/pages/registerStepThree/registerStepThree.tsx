@@ -14,6 +14,7 @@ import { useDispatch } from '@/services/store/store';
 import {
   registerUser,
   resetStepThreeData,
+  TStepThreeData,
   updateStepThreeData,
 } from '@/services/slices/registrationSlice';
 import { RegistrationInfoPanel } from '@/shared/ui/registrationInfoPanel/registrationInfoPanel';
@@ -23,7 +24,6 @@ import { SuccessModal } from '@/features/successModal/successModal';
 import { TeachableSkill } from '@/widgets/skillCard/skillCard';
 import { usersData } from '@/shared/mocks/usersData';
 import { userSliceActions } from '@/services/slices/authSlice';
-import { generateToken } from '@/shared/mocks/authMock';
 
 export const RegisterStepThree: FC = () => {
   const dispatch = useDispatch();
@@ -92,17 +92,17 @@ export const RegisterStepThree: FC = () => {
       })) || []
     : [];
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = (data: TStepThreeData) => {
     dispatch(updateStepThreeData(data));
     const firstUser = usersData[0];
     localStorage.setItem('registrationUserId', firstUser._id);
 
     const skillForPreview: TeachableSkill = {
       customSkillId: `skill_${Date.now()}`,
-      name: data.skillName,
-      category: `${data.skill} / ${data.subcategories.join(', ')}`,
-      description: data.description,
-      image: data.images.map((file: File) => URL.createObjectURL(file)),
+      name: data.skillName ? data.skillName : '',
+      category: `${data.skill} / ${data.subcategories?.join(', ')}`,
+      description: data.description ? data.description : '',
+      image: data.images ? data.images.map((file: File) => URL.createObjectURL(file)) : [],
     };
     setPreviewSkill(skillForPreview);
     setIsPreviewOpen(true);
@@ -111,15 +111,7 @@ export const RegisterStepThree: FC = () => {
   const handleCompleteRegistration = async () => {
     try {
       const userData = await dispatch(registerUser()).unwrap();
-
       dispatch(userSliceActions.setUserData(userData.user));
-
-      const accessToken = generateToken();
-      const refreshToken = generateToken();
-
-      localStorage.setItem('refreshToken', refreshToken);
-      document.cookie = `accessToken=${accessToken}; max-age=${60 * 60 * 24 * 7}; path=/; samesite=lax`;
-      localStorage.setItem('currentUser', JSON.stringify(userData));
     } catch (error) {
       console.error('Ошибка регистрации:', error);
     }
