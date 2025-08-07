@@ -7,6 +7,7 @@ import {
   TUserResponse,
 } from '../utils/api';
 import { User } from '@/entities/user/model/types';
+import { TFullRegistrationData } from '@/services/slices/registrationSlice';
 
 const MOCK_USER: User = {
   _id: 'user_002',
@@ -147,6 +148,67 @@ export const loginUserApi = (data: TLoginData): Promise<TAuthResponse> => {
           accessToken,
           refreshToken,
         });
+      } else if (localStorage.getItem('registrationData')) {
+        try {
+          const registerUserinfo = JSON.parse(
+            localStorage.getItem('registrationData')!,
+          ) as TFullRegistrationData;
+
+          if (
+            data.email !== registerUserinfo.email ||
+            data.password !== registerUserinfo.password
+          ) {
+            throw new Error('Неверные учетные данные');
+          }
+          users[data.email] = {
+            password: data.password,
+            userData: registerUserinfo,
+          };
+          localStorage.setItem('users', JSON.stringify(users));
+          localStorage.setItem('currentUser', JSON.stringify(registerUserinfo));
+          localStorage.removeItem('registrationData');
+
+          const accessToken = generateToken();
+          const refreshToken = generateToken();
+
+          setToStorage('refreshToken', refreshToken);
+          setCookie('accessToken', accessToken);
+
+          const newUser: User = {
+            _id: registerUserinfo.userId || '',
+            email: registerUserinfo.email || '',
+            name: registerUserinfo.name || '',
+            gender: registerUserinfo.gender === 'Мужской' ? 'male' : 'female',
+            city: registerUserinfo.city || '',
+            birthdayDate: registerUserinfo.birthdate || '',
+            description: registerUserinfo.description || '',
+            likes: [],
+            createdAt: new Date().toString(),
+            canTeach: {
+              category: registerUserinfo.skillCategory || '',
+              subcategory: registerUserinfo.subcategories?.[0] || '',
+              subcategoryId: registerUserinfo.subcategoryId,
+              name: registerUserinfo.skillName || '',
+              description: registerUserinfo.description || '',
+              image: registerUserinfo.images,
+              customSkillId: registerUserinfo.customSkillId,
+            } as CustomSkill,
+            wantsToLearn: [],
+            image: registerUserinfo.avatar || '',
+          };
+
+          resolve({
+            success: true,
+            user: newUser,
+            accessToken,
+            refreshToken,
+          });
+        } catch {
+          reject({
+            success: false,
+            message: 'Ошибка обработки данных регистрации',
+          });
+        }
       } else if (userRecord && userRecord.password === data.password) {
         const accessToken = generateToken();
         const refreshToken = generateToken();
