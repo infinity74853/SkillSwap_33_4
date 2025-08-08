@@ -10,7 +10,6 @@ import { useNavigate } from 'react-router-dom';
 import { useExchange } from '@/shared/hooks/useExchange';
 
 type UserCardProps = User & {
-  // Дополнительные пропсы, если нужны
   showLike?: boolean;
   showDescription?: boolean;
   showDetails?: boolean;
@@ -31,34 +30,32 @@ export const UserCard: React.FC<UserCardProps> = ({
 }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
   const { hasSentRequest } = useExchange();
   const alreadyRequested = hasSentRequest(_id);
-
   const learnSkill = wantsToLearn.slice(0, 2);
   const moreSkills = wantsToLearn.length - learnSkill.length;
-
-  // Получаем состояние лайка из Redux
   const isLiked = useSelector(state => selectIsLiked(state, _id));
 
   const handleLikeClick = () => {
-    dispatch(toggleLike(_id)); // Отправляем действие в Redux
+    dispatch(toggleLike(_id));
   };
 
   const openProfile = () => {
     navigate(`/skill/${_id}`);
   };
 
+  const imageUrl = typeof image === 'string' ? image : undefined;
+
   return (
     <div className={styles.cardContainer}>
       <div className={styles.headerCard}>
-        <img src={image} alt={`Avatar ${name}`} className={styles.image} />
+        <img src={imageUrl} alt={`Avatar ${name}`} className={styles.image} />
         {showLike && (
           <div className={styles.cardLike}>
             <button
               onClick={handleLikeClick}
               className={`${styles.likeButton} ${isLiked ? styles.likeButtonActive : ''}`}
-            ></button>
+            />
           </div>
         )}
         <div className={styles.userInfo}>
@@ -93,7 +90,7 @@ export const UserCard: React.FC<UserCardProps> = ({
         (alreadyRequested ? (
           <Button onClick={openProfile} type="secondary">
             <span className={styles.contentClock}>
-              <div className={styles.clock}></div>
+              <div className={styles.clock} />
               <span>Обмен предложен</span>
             </span>
           </Button>

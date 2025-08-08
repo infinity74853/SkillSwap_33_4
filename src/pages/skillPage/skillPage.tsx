@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import SkillCard from '@/widgets/skillCard/skillCard';
+import SkillCard, { TeachableSkill } from '@/widgets/skillCard/skillCard';
 import SameOffers from '@/widgets/sameOffers/sameOffers';
 import UserInfo from '@/widgets/userInfo/userInfo';
 import { usersData } from '@/shared/mocks/usersData';
@@ -12,7 +12,6 @@ const SkillPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [modalState, setModalState] = useState<'none' | 'login' | 'alreadyProposed'>('none');
 
-  // Сохраняем ID навыка при первой загрузке
   useEffect(() => {
     if (id) {
       localStorage.setItem('lastViewedSkillId', id);
@@ -23,22 +22,18 @@ const SkillPage: React.FC = () => {
     return usersData.find(user => user._id === id);
   }, [id]);
 
-  // const { isAuthenticated } = useAuth();
-  const isAuthenticated = true; //временно
+  const isAuthenticated = true;
 
-  // === Обработчик "Предложить обмен" ===
   const handleExchangeProposal = useCallback(() => {
     if (!isAuthenticated) {
-      setModalState('login'); // → LoginRequiredModal
+      setModalState('login');
     } else {
-      setModalState('alreadyProposed'); // → AlreadyProposedModal
+      setModalState('alreadyProposed');
     }
   }, [isAuthenticated]);
 
-  // === Рендер нужной модалки ===
   const renderModal = () => {
     const closeModal = () => setModalState('none');
-
     switch (modalState) {
       case 'login':
         return <LoginRequiredModal onClose={closeModal} />;
@@ -57,14 +52,21 @@ const SkillPage: React.FC = () => {
   if (!id) {
     return <div className={styles.error}>Неверный ID</div>;
   }
-
   if (!currentUser) {
     return <div className={styles.error}>Пользователь не найден</div>;
   }
-
   if (!currentUser.canTeach) {
     return <div className={styles.error}>Нет доступного навыка</div>;
   }
+
+  const teachableSkill: TeachableSkill = {
+    customSkillId: currentUser.canTeach.customSkillId,
+    name: currentUser.canTeach.name,
+    category: currentUser.canTeach.category,
+    description: currentUser.canTeach.description,
+
+    image: currentUser.canTeach.image as string[],
+  };
 
   return (
     <>
@@ -72,17 +74,15 @@ const SkillPage: React.FC = () => {
         <div className={styles.userOffer}>
           <UserInfo user={currentUser} />
           <SkillCard
-            skill={currentUser.canTeach}
-            ownerId={currentUser._id} // Четко передаем ownerId
+            skill={teachableSkill}
+            ownerId={currentUser._id}
             ownerName={currentUser.name}
             onExchangeClick={handleExchangeProposal}
           />
         </div>
-        {/* Передаём данные в SameOffers */}
         <SameOffers currentUser={currentUser} users={usersData} />
       </div>
 
-      {/* === Единый портал для модалок === */}
       {modalState !== 'none' && renderModal()}
     </>
   );

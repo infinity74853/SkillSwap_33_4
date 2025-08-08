@@ -33,6 +33,7 @@ export const ProposalPreviewModal: React.FC<ProposalPreviewModalProps> = ({
         <SkillCard
           className={`${styles.skillCard} ${styles.skillDetails}`}
           skill={skill}
+          ownerId={userId}
           hideActions
           hideSliderControls
           renderButton={() => (
