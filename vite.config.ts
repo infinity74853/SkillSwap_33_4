@@ -35,6 +35,9 @@ export default defineConfig(({ command }) => {
         "@": path.resolve(__dirname, "src"),
       },
     },
+      server: {
+      open: true,
+    },
     build: {
       cssCodeSplit: false,
       rollupOptions: {
