@@ -5,20 +5,20 @@ import { UserPanel } from '@/features/auth/ui/UserPanel/UserPanel';
 import { GuestPanel } from '@/features/auth/ui/GuestPanel/GuestPanel';
 import styles from './Header.module.css';
 import { useState, useEffect, useRef } from 'react';
-import { RootState, useDispatch, useSelector } from '@/services/store/store';
+import { useDispatch, useSelector } from '@/services/store/store';
 import { setSearchQuery } from '@/services/slices/catalogSlice';
-import { userSliceSelectors } from '@/services/slices/authSlice';
 import { SkillsDropdown } from '@/widgets/skillsDropdown/skillsDropdown';
 import { getSkills } from '@/services/slices/skillsSlice';
+import { useAuth } from '@/features/auth/context/AuthContext';
 
 export const Header = () => {
   const [currentTheme, setCurrentTheme] = useState<'light' | 'dark'>('light');
   const dispatch = useDispatch();
-
+  const { isAuthenticated } = useAuth();
   const [isSkillsDropdownOpen, setIsSkillsDropdownOpen] = useState(false);
   const skillsButtonRef = useRef<HTMLButtonElement>(null);
-  const userData = useSelector(userSliceSelectors.selectUser);
-  const searchQuery = useSelector((state: RootState) => state.catalog.searchQuery);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const searchQuery = useSelector(state => state.catalog.searchQuery);
 
   useEffect(() => {
     dispatch(getSkills());
@@ -37,6 +37,24 @@ export const Header = () => {
     setIsSkillsDropdownOpen(false);
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node) &&
+        skillsButtonRef.current &&
+        !skillsButtonRef.current.contains(event.target as Node)
+      ) {
+        closeSkillsDropdown();
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   const toggleTheme = () => {
     const newTheme = currentTheme === 'light' ? 'dark' : 'light';
     setCurrentTheme(newTheme);
@@ -54,10 +72,7 @@ export const Header = () => {
   }, []);
 
   return (
-    <header
-      className={`${styles.header} ${currentTheme === 'dark' ? styles.dark : ''}`}
-      data-auth={userData ? 'true' : 'false'}
-    >
+    <header className={`${styles.header} ${currentTheme === 'dark' ? styles.dark : ''}`}>
       <div className={styles.container}>
         <div className={styles.leftSection}>
           <Link to="/" className={styles.logoLink}>
@@ -77,11 +92,17 @@ export const Header = () => {
               <span className={styles.chevronIcon} />
             </button>
             {isSkillsDropdownOpen && (
-              <SkillsDropdown isOpen={isSkillsDropdownOpen} onClose={closeSkillsDropdown} />
+              <SkillsDropdown
+                isOpen={isSkillsDropdownOpen}
+                onClose={closeSkillsDropdown}
+                ref={dropdownRef}
+              />
             )}
           </nav>
         </div>
+
         <SearchInput placeholder="Искать навык" onSearch={handleSearch} value={searchQuery || ''} />
+
         <div className={styles.rightSection}>
           <button className={styles.themeToggle} onClick={toggleTheme}>
             <span
@@ -90,7 +111,7 @@ export const Header = () => {
               }`}
             />
           </button>
-          {userData ? <UserPanel /> : <GuestPanel />}
+          {isAuthenticated ? <UserPanel /> : <GuestPanel />}
         </div>
       </div>
     </header>

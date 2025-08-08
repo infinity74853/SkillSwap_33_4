@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { RegisterStepTwo } from '@/pages/registerStepTwo/registerStepTwo';
 import { RegisterStepThree } from '@/pages/registerStepThree/registerStepThree';
 
-export const RegistrationForms = ({ isRegister = true }) => {
+const RegistrationForms = ({ isRegister = true }) => {
   const forms = [
     <AuthFormContainer key="step1" isFirstStage={true} />,
     <RegisterStepTwo key="step2" />,
@@ -43,3 +43,5 @@ export const RegistrationForms = ({ isRegister = true }) => {
     </div>
   );
 };
+
+export default RegistrationForms;
