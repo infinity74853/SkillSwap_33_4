@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from '@/services/store/store';
 import { loginUser } from '@/services/thunk/authUser';
 import { TeachableSkill } from '@/widgets/skillCard/skillCard';
 import { FC } from 'react';
-import { loginUser } from '@/services/thunk/authUser';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const RegisterPreviewPage: FC = () => {

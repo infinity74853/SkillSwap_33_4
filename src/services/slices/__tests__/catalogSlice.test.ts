@@ -1,15 +1,17 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import catalogReducer, { fetchCatalog, setSearchQuery } from '../catalogSlice';
-//import { User } from '@/entities/user/model/types';
-import { usersData } from '@/shared/mocks/usersData'; // ✅ импортируем реальные данные
+import { catalogReducer, fetchCatalog, setSearchQuery } from '../catalogSlice';
+import { usersData } from '@/shared/mocks/usersData';
 
-// Мок localStorage
 const localStorageMock = {
   getItem: vi.fn(),
   setItem: vi.fn(),
+  clear: vi.fn(),
+  removeItem: vi.fn(),
+  key: vi.fn(),
+  length: 0,
 };
 
-global.localStorage = localStorageMock as unknown as Storage;
+global.localStorage = localStorageMock;
 
 describe('catalogSlice', () => {
   beforeEach(() => {
@@ -51,7 +53,7 @@ describe('catalogSlice', () => {
 
     describe('fetchCatalog.fulfilled', () => {
       it('should load users from cache if available', () => {
-        const cachedUsers = [usersData[0], usersData[1]]; // Берём первых двух
+        const cachedUsers = [usersData[0], usersData[1]];
         localStorageMock.getItem.mockReturnValue(JSON.stringify(cachedUsers));
 
         const action = { type: fetchCatalog.fulfilled.type, payload: cachedUsers };

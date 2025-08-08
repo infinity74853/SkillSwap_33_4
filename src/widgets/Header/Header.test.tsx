@@ -1,58 +1,62 @@
 import { render, screen } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach, beforeAll } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach, beforeAll } from 'vitest';
 import { BrowserRouter } from 'react-router-dom';
 import { Header } from './Header';
 import { AuthProvider } from '../../features/auth/context/AuthContext';
+import { Provider } from 'react-redux';
+import { configureStore } from '@reduxjs/toolkit';
+import { catalogReducer } from '@/services/slices/catalogSlice';
+import { skillsReducer } from '@/services/slices/skillsSlice';
 
-// Объявляем все моки с помощью vi.hoisted
 const mockUserPanel = vi.hoisted(() =>
   vi.fn(() => <div data-testid="user-panel-mock">UserPanel Mock</div>),
 );
-const mockGuestPanel = vi.hoisted(() =>
-  vi.fn(() => (
-    <div data-testid="guest-panel-mock">
-      <button>Login</button>
-      <button>Register</button>
-    </div>
-  )),
-);
+const mockGuestPanel = vi.hoisted(() => vi.fn(() => <div data-testid="guest-panel-mock" />));
 const mockLogo = vi.hoisted(() => vi.fn(() => <img alt="logo" src="/logo.png" />));
 const mockSearchInput = vi.hoisted(() =>
   vi.fn(({ value }: { value: string }) => (
-    <input type="text" value={value} readOnly data-testid="search-input" />
+    <input type="text" value={value || ''} readOnly data-testid="search-input" />
   )),
 );
-const mockUseSelector = vi.hoisted(() => vi.fn());
-const mockUseDispatch = vi.hoisted(() => vi.fn(() => () => {}));
+const mockSkillsDropdown = vi.hoisted(() =>
+  vi.fn(() => <div data-testid="skills-dropdown-mock" />),
+);
 
-// Настраиваем мокирование модулей перед всеми тестами
 beforeAll(() => {
-  vi.mock('@/features/auth/ui/UserPanel/UserPanel', () => ({
-    UserPanel: mockUserPanel,
-  }));
-
-  vi.mock('@/features/auth/ui/GuestPanel/GuestPanel', () => ({
-    GuestPanel: mockGuestPanel,
-  }));
-
-  vi.mock('@/shared/ui/Logo/Logo', () => ({
-    Logo: mockLogo,
-  }));
-
-  vi.mock('@/shared/ui/SearchInput/SearchInput', () => ({
-    SearchInput: mockSearchInput,
-  }));
-
-  vi.mock('@/services/store/store', () => ({
-    useSelector: mockUseSelector,
-    useDispatch: mockUseDispatch,
-    RootState: {},
+  vi.mock('@/features/auth/ui/UserPanel/UserPanel', () => ({ UserPanel: mockUserPanel }));
+  vi.mock('@/features/auth/ui/GuestPanel/GuestPanel', () => ({ GuestPanel: mockGuestPanel }));
+  vi.mock('@/shared/ui/Logo/Logo', () => ({ Logo: mockLogo }));
+  vi.mock('@/shared/ui/SearchInput/SearchInput', () => ({ SearchInput: mockSearchInput }));
+  vi.mock('@/widgets/skillsDropdown/skillsDropdown', () => ({
+    SkillsDropdown: mockSkillsDropdown,
   }));
 });
 
+const mockStore = configureStore({
+  reducer: {
+    catalog: catalogReducer,
+    skills: skillsReducer,
+  },
+  preloadedState: {
+    catalog: { users: [], loading: false, error: null, searchQuery: '' },
+    skills: { skills: [], loading: false, error: undefined },
+  },
+});
+
+const renderHeader = () => {
+  return render(
+    <Provider store={mockStore}>
+      <BrowserRouter>
+        <AuthProvider>
+          <Header />
+        </AuthProvider>
+      </BrowserRouter>
+    </Provider>,
+  );
+};
+
 describe('Header Component', () => {
   beforeEach(() => {
-    // Мокаем window.matchMedia
     Object.defineProperty(window, 'matchMedia', {
       writable: true,
       value: vi.fn().mockImplementation(query => ({
@@ -66,14 +70,7 @@ describe('Header Component', () => {
         dispatchEvent: vi.fn(),
       })),
     });
-
-    // Мокаем localStorage
-    Storage.prototype.getItem = vi.fn(key => {
-      if (key === 'theme') return 'light';
-      return null;
-    });
-
-    // Сбрасываем моки
+    Storage.prototype.getItem = vi.fn(key => (key === 'theme' ? 'light' : null));
     vi.clearAllMocks();
   });
 
@@ -82,59 +79,17 @@ describe('Header Component', () => {
   });
 
   it('renders without crashing', () => {
-    mockUseSelector.mockImplementation(selector => {
-      if (selector.toString().includes('selectUser')) {
-        return null;
-      }
-      return '';
-    });
-
-    render(
-      <AuthProvider>
-        <BrowserRouter>
-          <Header />
-        </BrowserRouter>
-      </AuthProvider>,
-    );
-
+    renderHeader();
     expect(screen.getByRole('banner')).toBeInTheDocument();
   });
 
   it('contains logo', () => {
-    mockUseSelector.mockImplementation(selector => {
-      if (selector.toString().includes('selectUser')) {
-        return null;
-      }
-      return '';
-    });
-
-    render(
-      <AuthProvider>
-        <BrowserRouter>
-          <Header />
-        </BrowserRouter>
-      </AuthProvider>,
-    );
-
+    renderHeader();
     expect(screen.getByAltText('logo')).toBeInTheDocument();
   });
 
   it('shows auth buttons when not authenticated', () => {
-    mockUseSelector.mockImplementation(selector => {
-      if (selector.toString().includes('selectUser')) {
-        return null;
-      }
-      return '';
-    });
-
-    render(
-      <AuthProvider>
-        <BrowserRouter>
-          <Header />
-        </BrowserRouter>
-      </AuthProvider>,
-    );
-
+    renderHeader();
     expect(screen.getByTestId('guest-panel-mock')).toBeInTheDocument();
   });
 });

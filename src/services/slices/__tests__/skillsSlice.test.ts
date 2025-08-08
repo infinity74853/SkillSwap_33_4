@@ -61,7 +61,7 @@ describe('skillsSlice', () => {
 
     it('rejected: должен установить ошибку и отключить loading', () => {
       const newState = skillsReducer(initialState, { type: getSkills.rejected.type });
-      expect(newState.error).toBe('Не удалось загрузить данные о навыках    ');
+      expect(newState.error).toBe('Не удалось загрузить данные о навыках');
       expect(newState.loading).toBe(false);
     });
   });

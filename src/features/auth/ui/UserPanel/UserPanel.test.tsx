@@ -3,6 +3,7 @@ import { AuthProvider } from '@/features/auth/context/AuthContext';
 import { UserPanel } from './UserPanel';
 import { vi } from 'vitest';
 import userEvent from '@testing-library/user-event';
+import { BrowserRouter } from 'react-router-dom';
 
 vi.mock('../NotificationMenu/NotificationMenu', () => ({
   NotificationMenu: ({ isOpen }: { isOpen: boolean }) => (
@@ -17,11 +18,13 @@ const renderWithAuth = () => {
   const authState = { isAuthenticated: true, user };
   localStorage.setItem('auth', JSON.stringify(authState));
   return render(
-    <AuthProvider>
-      <div data-testid="app-container">
-        <UserPanel />
-      </div>
-    </AuthProvider>,
+    <BrowserRouter>
+      <AuthProvider>
+        <div data-testid="app-container">
+          <UserPanel />
+        </div>
+      </AuthProvider>
+    </BrowserRouter>,
   );
 };
 
@@ -102,17 +105,8 @@ describe('UserPanel', () => {
 
     await user.click(document.body);
 
-    await waitFor(
-      () => {
-        expect(screen.queryByText('Личный кабинет')).not.toBeInTheDocument();
-      },
-      {
-        timeout: 2000,
-        onTimeout: (error: Error) => {
-          screen.debug();
-          return error;
-        },
-      },
-    );
+    await waitFor(() => {
+      expect(screen.queryByText('Личный кабинет')).not.toBeInTheDocument();
+    });
   });
 });
