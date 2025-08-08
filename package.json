@@ -15,7 +15,9 @@
     "test": "vitest run --coverage",
     "cypress:open": "cypress open",
     "stylelint": "stylelint '**/*.module.css' --fix",
-    "stylelint:check": "stylelint '**/*.module.css'"
+    "stylelint:check": "stylelint '**/*.module.css'",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",
