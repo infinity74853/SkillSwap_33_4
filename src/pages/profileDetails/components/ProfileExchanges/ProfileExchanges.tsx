@@ -5,10 +5,12 @@ import { usersData } from '@/shared/mocks/usersData';
 import { Button } from '@/shared/ui/button/button';
 import { useNavigate } from 'react-router-dom';
 import styles from './ProfileExchanges.module.css';
-import { Key } from 'react';
+import { useAuth } from '@/features/auth/context/AuthContext';
 
 export function ProfileExchanges() {
-  const requests = useSelector(selectFromUserExchangeRequest);
+  const { user } = useAuth();
+  const allRequests = useSelector(selectFromUserExchangeRequest);
+  const requests = allRequests.filter(request => request.fromUserId === user?.id);
   const navigate = useNavigate();
 
   if (requests.length === 0) {
@@ -24,7 +26,7 @@ export function ProfileExchanges() {
 
   return (
     <div className={styles.container}>
-      {requests.map((request: { toUserId: string; id: Key | null | undefined }) => {
+      {requests.map(request => {
         const user = usersData.find(u => u._id === request.toUserId);
         if (!user) return null;
 

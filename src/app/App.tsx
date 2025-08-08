@@ -23,7 +23,7 @@ const ProfileDetailsPage = lazy(
     }),
 );
 const SkillPage = lazy(() => import('@/pages/skillPage/skillPage'));
-const RegistrationForms = lazy(() => import('@/features/RegistrationForms/registrationForms'));
+const RegistrationForms = lazy(() => import('@/features/registrationForms/registrationForms'));
 const SuccessModal = lazy(() => import('@/features/successModal/successModal'));
 const RegisterPreviewPage = lazy(() => import('@/pages/registerPreviewPage/registerPreviewPage'));
 const ErrorPage = lazy(() => import('@/pages/ErrorPage/ErrorPage'));
@@ -57,7 +57,14 @@ function App() {
         <Route path="/" element={<MainLayout />}>
           {/* index-маршрут для корневого пути "/" */}
           <Route index element={<CatalogPage />} />
-          <Route path="/profile/*" element={<ProfileDetailsPage />} />
+          <Route
+            path="/profile/*"
+            element={
+              <ProtectedRoute>
+                <ProfileDetailsPage />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/skill/:id" element={<SkillPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="*" element={<ErrorPage type="404"></ErrorPage>} />

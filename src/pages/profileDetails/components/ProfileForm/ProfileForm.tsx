@@ -8,10 +8,31 @@ import { russianCities } from '@/shared/lib/cities';
 import { updateProfileApi } from '@/api/skillSwapApi';
 import * as yup from 'yup';
 import styles from './ProfileForm.module.css';
+import { useAuth } from '@/features/auth/context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 type GenderType = 'Мужской' | 'Женский';
 
-// Схема для валидации профиля
+const formatDateForInput = (dateString?: string) => {
+  if (!dateString) return '';
+
+  try {
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) {
+      const parts = dateString.split('.');
+      if (parts.length === 3) {
+        const [day, month, year] = parts;
+        const isoDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+        return isoDate;
+      }
+      return '';
+    }
+    return date.toISOString().split('T')[0];
+  } catch {
+    return '';
+  }
+};
+
 const profileSchema = yup.object().shape({
   name: yup
     .string()
@@ -38,7 +59,6 @@ const profileSchema = yup.object().shape({
   about: yup.string().max(500, 'Описание должно содержать максимум 500 символов'),
 });
 
-// Схема для валидации пароля (из формы авторизации)
 const passwordSchema = yup
   .string()
   .required('Пароль обязателен')
@@ -49,24 +69,23 @@ const passwordSchema = yup
   );
 
 export function ProfileForm() {
+  const { login } = useAuth();
+  const navigate = useNavigate();
   const dateInputRef = useRef<HTMLInputElement>(null);
   const dispatch = useDispatch();
   const user = useSelector(userSliceSelectors.selectUser);
-  const registrationData = useSelector(state => state.register.stepTwoData);
+  const registrationData = JSON.parse(localStorage.getItem('registrationData') || '{}');
 
-  // Состояние для основной формы
   const [formData, setFormData] = useState({
-    email: user?.email || '',
+    email: registrationData?.email || user?.email || '',
     name: registrationData?.name || user?.name || '',
-    birthDate: registrationData?.birthdate || '1995-10-28',
+    birthDate: formatDateForInput(registrationData?.birthdate || user?.birthdayDate) || '',
     gender: (registrationData?.gender === 'Мужской' ? 'male' : 'female') as 'male' | 'female',
-    city: registrationData?.city || 'Москва',
-    about:
-      user?.description ||
-      'Люблю учиться новому, особенно если это можно делать за чаем и в пижаме. Всегда готова пообщаться и обменяться чем‑то интересным!',
+    city: registrationData?.city || user?.city || 'Москва',
+    about: registrationData?.description || user?.description || '',
+    avatar: registrationData?.avatar || user?.image || '',
   });
 
-  // Состояние для изменения пароля
   const [isChangingPassword, setIsChangingPassword] = useState(false);
   const [passwordData, setPasswordData] = useState({
     currentPassword: '',
@@ -80,7 +99,6 @@ export function ProfileForm() {
     form: '',
   });
   const [showPassword, setShowPassword] = useState(false);
-
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -101,7 +119,6 @@ export function ProfileForm() {
     }
   };
 
-  // Обработчики для формы пароля
   const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setPasswordData(prev => ({ ...prev, [name]: value }));
@@ -136,8 +153,6 @@ export function ProfileForm() {
     try {
       setIsLoading(true);
       // Здесь должна быть логика обновления пароля на бэкенде
-
-      // После успешного обновления:
       setIsChangingPassword(false);
       setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
       setPasswordErrors({ currentPassword: '', newPassword: '', confirmPassword: '', form: '' });
@@ -159,28 +174,35 @@ export function ProfileForm() {
 
       const gender: GenderType = formData.gender === 'male' ? 'Мужской' : 'Женский';
 
-      const updatedData = {
+      const updatedUser = {
+        id: user?._id || registrationData?.userId,
         name: formData.name,
-        birthdate: formData.birthDate,
+        email: formData.email,
+        birthdayDate: new Date(formData.birthDate).toISOString(),
+        gender: formData.gender,
+        city: formData.city,
+        description: formData.about,
+        image: formData.avatar,
+      };
+
+      // Обновляем данные в localStorage
+      const updatedRegistrationData = {
+        ...registrationData,
+        name: formData.name,
+        birthdate: new Date(formData.birthDate).toISOString(),
         gender,
         city: formData.city,
         description: formData.about,
+        avatar: formData.avatar,
       };
+      localStorage.setItem('registrationData', JSON.stringify(updatedRegistrationData));
 
-      // Сначала отправляем на бэкенд
-      const response = await updateProfileApi(updatedData);
-
-      if (!response.success) {
-        throw new Error('Ошибка при обновлении профиля');
-      }
-
-      // Затем обновляем в Redux
       dispatch(
         updateStepTwoData({
-          name: updatedData.name,
-          birthdate: updatedData.birthdate,
-          gender: updatedData.gender,
-          city: updatedData.city,
+          name: formData.name,
+          birthdate: new Date(formData.birthDate).toISOString(),
+          gender,
+          city: formData.city,
         }),
       );
 
@@ -188,13 +210,27 @@ export function ProfileForm() {
         dispatch(
           userSliceActions.setUserData({
             ...user,
-            name: updatedData.name,
-            description: updatedData.description,
+            ...updatedUser,
           }),
         );
       }
 
+      login(updatedUser);
+
+      const response = await updateProfileApi({
+        name: formData.name,
+        birthdate: new Date(formData.birthDate).toISOString(),
+        gender,
+        city: formData.city,
+        description: formData.about,
+      });
+
+      if (!response.success) {
+        throw new Error('Ошибка при обновлении профиля');
+      }
+
       setIsLoading(false);
+      navigate('/profile/details');
     } catch (err) {
       setIsLoading(false);
 
@@ -218,10 +254,12 @@ export function ProfileForm() {
 
   const isDirty =
     formData.name !== (registrationData?.name || user?.name) ||
-    formData.birthDate !== registrationData?.birthdate ||
+    formatDateForInput(formData.birthDate) !==
+      formatDateForInput(registrationData?.birthdate || user?.birthdayDate) ||
     formData.gender !== (registrationData?.gender === 'Мужской' ? 'male' : 'female') ||
-    formData.city !== registrationData?.city ||
-    formData.about !== user?.description;
+    formData.city !== (registrationData?.city || user?.city) ||
+    formData.about !== (registrationData?.description || user?.description) ||
+    formData.avatar !== (registrationData?.avatar || user?.image);
 
   return (
     <div className={styles.profileForm}>
@@ -240,7 +278,6 @@ export function ProfileForm() {
         </div>
       </div>
 
-      {/* Блок изменения пароля */}
       {isChangingPassword ? (
         <PasswordChangeForm
           passwordData={passwordData}
@@ -262,7 +299,6 @@ export function ProfileForm() {
         </button>
       )}
 
-      {/* Остальная часть формы */}
       <div className={styles.profileFormInputs}>
         <div className={styles.profileInputBlock}>
           <label>Имя</label>

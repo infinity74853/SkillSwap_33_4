@@ -3,6 +3,7 @@ import { registerUser } from '@/services/slices/registrationSlice';
 import { useDispatch, useSelector } from '@/services/store/store';
 import { TeachableSkill } from '@/widgets/skillCard/skillCard';
 import { FC } from 'react';
+import { loginUser } from '@/services/thunk/authUser';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const RegisterPreviewPage: FC = () => {
@@ -41,7 +42,17 @@ const RegisterPreviewPage: FC = () => {
             ...stepTwoData,
             ...stepThreeData,
           }),
-        );
+        )
+          .unwrap()
+          .then(() => {
+            // Вход
+            dispatch(
+              loginUser({
+                email: stepOneData.email || '',
+                password: stepOneData.password || '',
+              }),
+            );
+          });
         navigate('/register/success', {
           state: { background: location },
         });

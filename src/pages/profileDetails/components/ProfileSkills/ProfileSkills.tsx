@@ -12,12 +12,13 @@ type SkillCategory = keyof typeof skillsCategories;
 export function ProfileSkills() {
   const dispatch = useDispatch();
   const user = useSelector(userSliceSelectors.selectUser);
+  const registrationData = JSON.parse(localStorage.getItem('registrationData') || '{}');
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
-    category: user?.canTeach?.category || '',
-    subcategory: user?.canTeach?.subcategory || '',
-    name: user?.canTeach?.name || '',
-    description: user?.canTeach?.description || '',
+    category: registrationData?.skillCategory || user?.canTeach?.category || '',
+    subcategory: registrationData?.skillSubCategory || user?.canTeach?.subcategory || '',
+    name: registrationData?.skillName || user?.canTeach?.name || '',
+    description: registrationData?.description || user?.canTeach?.description || '',
   });
 
   const handleAddSkill = () => {
@@ -28,7 +29,7 @@ export function ProfileSkills() {
         subcategoryId: `${formData.category.toLowerCase()}_${formData.subcategory.toLowerCase()}_${uuidv4()}`,
         name: formData.name,
         description: formData.description || '',
-        image: user.canTeach?.image || [],
+        image: registrationData?.images || user.canTeach?.image || [],
         customSkillId: user.canTeach?.customSkillId || uuidv4(),
       } as CustomSkill;
 
@@ -38,6 +39,16 @@ export function ProfileSkills() {
           canTeach: updatedSkills,
         }),
       );
+
+      // Обновляем данные в localStorage
+      const updatedRegistrationData = {
+        ...registrationData,
+        skillCategory: formData.category,
+        skillSubCategory: formData.subcategory,
+        skillName: formData.name,
+        description: formData.description,
+      };
+      localStorage.setItem('registrationData', JSON.stringify(updatedRegistrationData));
 
       setIsEditing(false);
     }
