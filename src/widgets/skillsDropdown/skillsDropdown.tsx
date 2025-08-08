@@ -1,6 +1,5 @@
-import React, { useRef, useEffect, useState } from 'react';
+import { useEffect, useState, forwardRef } from 'react';
 import { skillsCategories, skillsMapping } from '@/shared/lib/categories';
-import { useClickOutside } from '@/shared/hooks/useClickOutside';
 import styles from './SkillsDropdown.module.css';
 import { useSelector } from '@/services/store/store';
 import { getSkillsSelector } from '@/services/slices/skillsSlice';
@@ -10,16 +9,9 @@ interface SkillsDropdownProps {
   onClose: () => void;
 }
 
-export const SkillsDropdown: React.FC<SkillsDropdownProps> = ({ isOpen, onClose }) => {
-  const dropdownRef = useRef<HTMLDivElement>(null);
+export const SkillsDropdown = forwardRef<HTMLDivElement, SkillsDropdownProps>(({ isOpen }, ref) => {
   const [isMobile, setIsMobile] = useState(false);
   const skills = useSelector(getSkillsSelector);
-
-  useClickOutside(dropdownRef, () => {
-    if (isOpen) {
-      onClose();
-    }
-  });
 
   useEffect(() => {
     const handleResize = () => {
@@ -31,7 +23,6 @@ export const SkillsDropdown: React.FC<SkillsDropdownProps> = ({ isOpen, onClose 
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Группируем навыки по категориям
   const groupedSkills = skills.reduce(
     (acc, skill) => {
       if (!acc[skill.category]) {
@@ -87,7 +78,7 @@ export const SkillsDropdown: React.FC<SkillsDropdownProps> = ({ isOpen, onClose 
   const secondColumnCategories = [categories[1], categories[3], categories[5]];
 
   return (
-    <div ref={dropdownRef} className={styles.skillsDropdown}>
+    <div ref={ref} className={styles.skillsDropdown}>
       <div className={styles.skillsdropdownContent}>
         {!isMobile && (
           <>
@@ -116,4 +107,6 @@ export const SkillsDropdown: React.FC<SkillsDropdownProps> = ({ isOpen, onClose 
       </div>
     </div>
   );
-};
+});
+
+SkillsDropdown.displayName = 'SkillsDropdown';

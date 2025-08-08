@@ -1,12 +1,14 @@
 import { useRef, ChangeEvent, useState } from 'react';
-import { useSelector } from '@/services/store/store';
-import { userSliceSelectors } from '@/services/slices/authSlice';
+import { useSelector, useDispatch } from '@/services/store/store';
+import { userSliceSelectors, userSliceActions } from '@/services/slices/authSlice';
 import styles from './ProfileAvatar.module.css';
 
 export function ProfileAvatar() {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const dispatch = useDispatch();
   const user = useSelector(userSliceSelectors.selectUser);
-  const [avatarPreview, setAvatarPreview] = useState(user?.image || '');
+  const registrationData = JSON.parse(localStorage.getItem('registrationData') || '{}');
+  const [avatarPreview, setAvatarPreview] = useState(registrationData?.avatar || user?.image || '');
   const [error, setError] = useState('');
 
   const handleAvatarChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -26,8 +28,26 @@ export function ProfileAvatar() {
     const reader = new FileReader();
     reader.onload = event => {
       if (event.target?.result) {
-        setAvatarPreview(event.target.result as string);
+        const avatarUrl = event.target.result as string;
+        setAvatarPreview(avatarUrl);
         setError('');
+
+        // Обновляем в localStorage
+        const updatedRegistrationData = {
+          ...registrationData,
+          avatar: avatarUrl,
+        };
+        localStorage.setItem('registrationData', JSON.stringify(updatedRegistrationData));
+
+        // Обновляем в Redux
+        if (user) {
+          dispatch(
+            userSliceActions.setUserData({
+              ...user,
+              image: avatarUrl,
+            }),
+          );
+        }
       }
     };
     reader.readAsDataURL(file);
@@ -39,6 +59,10 @@ export function ProfileAvatar() {
         src={avatarPreview || '/default-avatar.png'}
         alt="Аватар"
         className={styles.profileAvatar}
+        onError={e => {
+          const target = e.target as HTMLImageElement;
+          target.src = '/default-avatar.png';
+        }}
       />
       <input
         type="file"
