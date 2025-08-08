@@ -1,6 +1,7 @@
 import { ProposalPreviewModal } from '@/features/auth/proposalPreviewModal/proposalPreviewModal';
 import { registerUser } from '@/services/slices/registrationSlice';
 import { useDispatch, useSelector } from '@/services/store/store';
+import { loginUser } from '@/services/thunk/authUser';
 import { TeachableSkill } from '@/widgets/skillCard/skillCard';
 import { FC } from 'react';
 import { loginUser } from '@/services/thunk/authUser';
